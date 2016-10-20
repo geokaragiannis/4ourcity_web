@@ -24,6 +24,16 @@ db.define_table('categories',
                 Field('cat_title', 'string')
                 )
 
+
+# status:   0 --> 'pending'
+#           1 --> 'accepted'
+#           2 --> 'rejected'
+
+# progress: 0 --> 'N/A'
+#           1 --> 'seen'
+#           2 --> 'in progress'
+#           3 --> 'finished'
+
 db.define_table('reports',
                 Field('mun_id', db.municipalities),
                 Field('user_id', db.auth_user),
@@ -35,23 +45,21 @@ db.define_table('reports',
                 Field('square_key', 'integer'),
                 Field('want_updates', 'boolean'),
                 Field('created_on', 'datetime', default=datetime.datetime.utcnow()),
-                Field('status', 'integer'),
-                Field('progress', 'integer'),
+                Field('status', 'integer', default=0),
+                Field('progress', 'integer', default=0),
                 )
 
 db.define_table('progress',
                 Field('progress_title', 'string')
                 )
 
-
-
-
-
-
-
-
-
-
+db.define_table('messages',
+                Field('report_id', db.reports),
+                Field('employee_id', db.auth_user),
+                Field('title', 'string'),
+                Field('msg_content', 'text' , requires=IS_NOT_EMPTY()),
+                Field('created_on', 'datetime'),
+                )
 
 # after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)
