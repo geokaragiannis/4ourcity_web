@@ -21,6 +21,34 @@ def index():
     response.flash = T("Hello World")
     return dict(message=T('Welcome to web2py!'))
 
+@auth.requires_login()
+def submit():
+
+    db.reports.created_on.readable = db.reports.created_on.writable = False
+    db.reports.status.readable = db.reports.status.writable = False
+    db.reports.progress.readable = db.reports.progress.writable = False
+
+    form = SQLFORM(db.reports)
+
+
+    if form.process().accepted:
+        # At this point, the record has already been inserted.
+        session.flash = T("cool")
+        redirect(URL('default', 'index'))
+    elif form.errors:
+        session.flash = T('Please enter correct values.')
+
+    return dict(form=form)
+
+
+def view():
+
+    reports = db(db.reports).select(db.reports.ALL)
+
+    for r in reports:
+        logger.info("category id is: %r ", r.description)
+    return dict(reports=reports)
+
 
 def user():
     """

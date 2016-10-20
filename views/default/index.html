@@ -1,1 +1,13 @@
 {{extend 'layout.html'}}
+
+
+<!-- if logged in -->
+{{if auth.user_id:}}
+
+    <div class="login text-right">
+    <a href="{{=URL('default', 'submit')}}" class="btn btn-warning">
+    <i class="fa fa-plus"></i> New Report
+    </a>
+    </div>
+
+{{pass}}

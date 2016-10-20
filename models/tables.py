@@ -21,7 +21,7 @@ db.define_table('employees',
                 )
 
 db.define_table('categories',
-                Field('cat_title', 'string')
+                Field('cat_title', 'string'),
                 )
 
 
@@ -37,17 +37,26 @@ db.define_table('categories',
 db.define_table('reports',
                 Field('mun_id', db.municipalities),
                 Field('user_id', db.auth_user),
-                Field('cat_id', db.categories),
-                Field('description', 'text'),
+                Field('cat_id', db.categories, label='Categories', requires=IS_NOT_EMPTY()),
+                Field('description', 'text', requires=IS_NOT_EMPTY()),
                 Field('latitude', 'double'),
                 Field('longitude', 'double'),
                 Field('lat_long', 'string'),
                 Field('square_key', 'integer'),
-                Field('want_updates', 'boolean'),
                 Field('created_on', 'datetime', default=datetime.datetime.utcnow()),
                 Field('status', 'integer', default=0),
                 Field('progress', 'integer', default=0),
+                Field('photo','upload'),
+                Field('want_updates', 'boolean'),
                 )
+
+db.reports.mun_id.readable = db.reports.mun_id.writable = False
+db.reports.user_id.readable = db.reports.user_id.writable = False
+db.reports.latitude.readable = db.reports.latitude.writable = False
+db.reports.longitude.readable = db.reports.longitude.writable = False
+db.reports.square_key.readable = db.reports.square_key.writable = False
+db.reports.lat_long.readable = db.reports.lat_long.writable = False
+
 
 db.define_table('progress',
                 Field('progress_title', 'string')
@@ -60,6 +69,12 @@ db.define_table('messages',
                 Field('msg_content', 'text' , requires=IS_NOT_EMPTY()),
                 Field('created_on', 'datetime'),
                 )
+
+
+db.categories.insert(cat_title='trash')
+db.categories.insert(cat_title='graffiti')
+db.categories.insert(cat_title='pothole')
+db.categories.insert(cat_title='broken light')
 
 # after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)
