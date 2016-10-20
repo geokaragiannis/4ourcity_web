@@ -9,8 +9,6 @@
 
 import datetime
 
-auth.settings.extra_fields['auth_user'] =[Field('is_employee')]
-
 db.define_table('municipalities',
                 Field('mun_name', 'string'),
                 Field('mun_address', 'string')
