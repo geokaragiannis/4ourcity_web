@@ -9,6 +9,8 @@
 
 import datetime
 
+auth.settings.extra_fields['auth_user'] =[Field('is_employee')]
+
 db.define_table('municipalities',
                 Field('mun_name', 'string'),
                 Field('mun_address', 'string')
@@ -35,33 +37,16 @@ db.define_table('reports',
                 Field('square_key', 'integer'),
                 Field('want_updates', 'boolean'),
                 Field('created_on', 'datetime', default=datetime.datetime.utcnow()),
+                Field('status', 'integer'),
+                Field('progress', 'integer'),
                 )
 
 db.define_table('progress',
                 Field('progress_title', 'string')
                 )
 
-db.define_table('pending_reports',
-                Field('employee_id', db.employees),
-                Field('report_id', db.reports),
-                Field('mun_id', db.municipalities),
 
-                )
 
-db.define_table('accepted_reports',
-                Field('employee_id', db.employees),
-                Field('report_id', db.reports),
-                Field('mun_id', db.municipalities),
-                Field('progress_flag', db.progress),
-                Field('accepted_time', 'datetime')
-                )
-
-db.define_table('rejected_reports',
-                Field('employee_id', db.employees),
-                Field('report_id'), db.reports,
-                Field('mun_id', db.municipalities),
-                Field('rejected_time', 'datetime')
-                )
 
 
 
