@@ -2,3 +2,14 @@
 .colorful {
   color: #bb8833;
 }
+
+/* line 5, ../sass/_main.scss */
+table {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+/* line 10, ../sass/_main.scss */
+th {
+  column-span: 2;
+}

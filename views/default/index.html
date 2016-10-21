@@ -4,9 +4,15 @@
 <!-- if logged in -->
 {{if auth.user_id:}}
 
-    <div class="login text-right">
+    <div class="make_report text-right">
     <a href="{{=URL('default', 'submit')}}" class="btn btn-warning">
     <i class="fa fa-plus"></i> New Report
+    </a>
+    </div>
+
+    <div class="view_report text-right" style="margin-top: 30px;" >
+    <a href="{{=URL('default', 'view')}}" class="btn btn-success">
+                View Reports
     </a>
     </div>
 
