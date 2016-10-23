@@ -1,0 +1,30 @@
+{{extend 'layout.html'}}
+
+<div >
+    <table class="report_table" style="width:100%" BORDER="5">
+        <thead>
+            <tr>
+                <th>cat_id</th>
+                <th>description</th>
+                <th>user_id</th>
+                <th>Created On</th>
+                <th>Status</th>
+                <th>Progress</th>
+            </tr>
+        </thead>
+        <tbody>
+    <!-- tracks is a js array, that we have available. -->
+    <tr {{for r in reports:}}>
+        <td></td>
+        <!-- ${js expr} evaluate js expression inside braces and display it in the page -->
+        <td>{{=r.cat_id}}</td>
+        <td>{{=r.description}}</td>
+        <td>{{=r.user_id}}</td>
+        <td>{{=r.created_on}}</td>
+        <td>{{=r.status}}</td>
+        <td>{{=r.progress}}</td>
+        {{pass}}
+        </tr>
+        </tbody>
+    </table>
+</div>
