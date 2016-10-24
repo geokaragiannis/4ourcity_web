@@ -8,6 +8,7 @@
 # - download is for downloading files uploaded in the db (does streaming)
 # -------------------------------------------------------------------------
 
+import json
 
 def index():
     """
@@ -17,8 +18,23 @@ def index():
     if you need a simple wiki simply replace the two lines below with:
     return auth.wiki()
     """
+    reports = db(db.reports).select(db.reports.ALL)
 
-    return dict(message=T('Welcome to web2py!'))
+    for r in reports:
+        logger.info("user_name: %r", r.user_id.type)
+
+    # python list
+    locations = db(db.banana).select(db.banana.ALL)
+
+    #lat_json = json.dumps((locations[0].latitude))
+    #long_json = json.dumps((locations[0].longitude))
+    lat_json = 127
+    long_json = 45
+
+    logger.info("location in python list:  %r %r", locations[0].latitude, locations[0].longitude)
+    logger.info("location in json list:  %r %r", lat_json, long_json)
+
+    return dict(locations=locations, lat_json=lat_json, long_json=long_json, reports = reports)
 
 @auth.requires_login()
 def submit():

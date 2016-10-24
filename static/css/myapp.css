@@ -13,3 +13,13 @@ table {
 th {
   column-span: 2;
 }
+
+/* line 14, ../sass/_main.scss */
+div.make_report, div.view_report {
+  display: inline;
+}
+
+/* line 19, ../sass/_main.scss */
+.report_list {
+  margin-top: 50px;
+}

@@ -1,19 +1,69 @@
 {{extend 'layout.html'}}
 
 
-<!-- if logged in -->
+        <!-- if logged in -->
 {{if auth.user_id:}}
 
-    <div class="make_report text-right">
+    <div class="make_report text-left">
     <a href="{{=URL('default', 'submit')}}" class="btn btn-warning">
     <i class="fa fa-plus"></i> New Report
     </a>
     </div>
 
-    <div class="view_report text-right" style="margin-top: 30px;" >
+    <div class="view_report text-left"  >
     <a href="{{=URL('default', 'view')}}" class="btn btn-success">
                 View Reports
     </a>
     </div>
 
 {{pass}}
+
+<div class="report_list">
+    <ul>
+        {{for r in reports:}}
+       <li>{{=r.cat_id.cat_title}}</li>
+        {{pass}}
+    </ul>
+</div>
+
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #map {
+        width:70%;
+        height:550px;
+        margin-left: 30%;
+       }
+
+      html,body{
+        width:100%;
+
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+    <script>
+      function initMap() {
+
+        var uluru = {lat: -25.363, lng: 131.044};
+//        var my_loc = {lat: lat_json, lgn: long_json};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: uluru
+        });
+        var marker = new google.maps.Marker({
+          position: uluru,
+          map: map
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATlgK06ECpUjfJC5zF9IIkaK1czediuxM&callback=initMap">
+    </script>
+  </body>
+</html>
+
+

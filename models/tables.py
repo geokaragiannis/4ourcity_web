@@ -70,6 +70,14 @@ db.define_table('messages',
                 Field('created_on', 'datetime'),
                 )
 
+db.define_table('banana',
+                Field('latitude', 'double'),
+                Field('longitude', 'double'),
+                Field('map_popup', 'string')
+                )
+
+db.banana.insert(latitude=36.996164,longitude=-122.058640,map_popup='im here')
+
 
 db.categories.insert(cat_title='trash')
 db.categories.insert(cat_title='graffiti')
