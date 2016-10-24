@@ -21,7 +21,8 @@ def index():
     reports = db(db.reports).select(db.reports.ALL)
 
     for r in reports:
-        logger.info("user_name: %r", r.user_id.type)
+        logger.info("user_id: %r", r.user_id)
+        logger.info("cat_id: %r", r.cat_id)
 
     # python list
     locations = db(db.banana).select(db.banana.ALL)

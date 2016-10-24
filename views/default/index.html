@@ -21,7 +21,7 @@
 <div class="report_list">
     <ul>
         {{for r in reports:}}
-       <li>{{=r.cat_id.cat_title}}</li>
+       <li>{{=r.cat_id.cat_title}} by {{=r.user_id.first_name}} {{=r.user_id.last_name}}</li>
         {{pass}}
     </ul>
 </div>

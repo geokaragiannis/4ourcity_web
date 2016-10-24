@@ -36,8 +36,8 @@ db.define_table('categories',
 
 db.define_table('reports',
                 Field('mun_id', db.municipalities),
-                Field('user_id', db.auth_user),
-                Field('cat_id', db.categories, label='Categories', requires=IS_NOT_EMPTY()),
+                Field('user_id', db.auth_user ),
+                Field('cat_id', 'reference categories', label='Categories', requires=IS_NOT_EMPTY()),
                 Field('description', 'text', requires=IS_NOT_EMPTY()),
                 Field('latitude', 'double'),
                 Field('longitude', 'double'),
@@ -52,6 +52,8 @@ db.define_table('reports',
 
 db.reports.mun_id.readable = db.reports.mun_id.writable = False
 db.reports.user_id.readable = db.reports.user_id.writable = False
+db.reports.user_id.default = auth.user_id
+db.reports.cat_id.requires = IS_IN_DB(db,'categories.id', '%(cat_title)s', zero=T('choose one'))
 db.reports.latitude.readable = db.reports.latitude.writable = False
 db.reports.longitude.readable = db.reports.longitude.writable = False
 db.reports.square_key.readable = db.reports.square_key.writable = False
@@ -79,10 +81,6 @@ db.define_table('banana',
 db.banana.insert(latitude=36.996164,longitude=-122.058640,map_popup='im here')
 
 
-db.categories.insert(cat_title='trash')
-db.categories.insert(cat_title='graffiti')
-db.categories.insert(cat_title='pothole')
-db.categories.insert(cat_title='broken light')
-
+#db.categories.truncate()
 # after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)
