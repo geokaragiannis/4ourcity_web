@@ -31,7 +31,7 @@ def index():
     long_json = json.dumps((locations[0].longitude))
 
     logger.info("location in python list:  %r %r", locations[0].latitude, locations[0].longitude)
-    
+
 
     return dict(locations=locations, lat_json=lat_json, long_json=long_json, reports = reports)
 
