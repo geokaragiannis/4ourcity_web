@@ -78,9 +78,9 @@ db.define_table('banana',
                 Field('map_popup', 'string')
                 )
 
-db.banana.insert(latitude=36.996164,longitude=-122.058640,map_popup='im here')
+#db.banana.insert(latitude=36.996164,longitude=-122.058640,map_popup='im here')
 
 
-#db.categories.truncate()
+#b.banana.truncate()
 # after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)

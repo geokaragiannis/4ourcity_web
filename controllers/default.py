@@ -27,13 +27,11 @@ def index():
     # python list
     locations = db(db.banana).select(db.banana.ALL)
 
-    #lat_json = json.dumps((locations[0].latitude))
-    #long_json = json.dumps((locations[0].longitude))
-    lat_json = 127
-    long_json = 45
+    lat_json = json.dumps((locations[0].latitude))
+    long_json = json.dumps((locations[0].longitude))
 
     logger.info("location in python list:  %r %r", locations[0].latitude, locations[0].longitude)
-    logger.info("location in json list:  %r %r", lat_json, long_json)
+    
 
     return dict(locations=locations, lat_json=lat_json, long_json=long_json, reports = reports)
 
