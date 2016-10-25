@@ -1,6 +1,15 @@
 {{extend 'layout.html'}}
 
 
+{{block head}}
+<script src="{{=URL('static', 'js/vue.js')}}"></script>
+<script>
+    var api_url = "{{=URL('api', 'get_coordinates')}}";
+</script>
+{{end}}
+
+
+
         <!-- if logged in -->
 {{if auth.user_id:}}
 
@@ -44,19 +53,64 @@
     </style>
   </head>
   <body>
-    <div id="map"></div>
+    <div id="map">
+        <table>
+        <tr v-for="l in locations">
+            <td>${l.latitude}</td>
+        </tr>
+    </table>
+
+    </div>
     <script>
       function initMap() {
+          locations=[];
 
-        var uluru = {lat: -25.363, lng: 131.044};
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 4,
-          center: uluru
-        });
-        var marker = new google.maps.Marker({
-          position: uluru,
-          map: map
-        });
+        // this does not work, as it is an asynchronous request. This means that
+        // the program execution does not stop to wait for the result of $.getJSON
+          // we need to make a synchronous request
+
+
+//          obj.get_coordinates = function() {
+//              $.getJSON(api_url, function (data) {
+//
+//                  console.log(data);
+//                  obj.locations = data.locations;
+//
+//                  var myloc = data.items.map
+//
+//              });
+//          };
+//
+//          obj.get_coordinates();
+          //var k = obj.locations[0].latitude;
+
+
+          // make a synchronous request and get the lat-long
+           $.ajax({
+                url: api_url,
+                async: false,
+                dataType: 'json',
+                success: function(data) {
+                    locations = data.locations;
+                }
+           });
+
+          var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 7,
+              // center is set for now as the first element in banana table
+                center: {lat:locations[0].latitude, lng:locations[0].longitude}
+          });
+
+        for(var i = 0; i < locations.length; i++) {
+            var my_lat = locations[i].latitude;
+            var my_long = locations[i].longitude;
+            var uluru = {lat: my_lat, lng: my_long};
+
+            var marker = new google.maps.Marker({
+                position: uluru,
+                map: map
+            });
+        }
       }
     </script>
     <script async defer
@@ -64,5 +118,7 @@
     </script>
   </body>
 </html>
+
+<script src="{{=URL('static', 'js/default_index.js')}}"></script>
 
 
