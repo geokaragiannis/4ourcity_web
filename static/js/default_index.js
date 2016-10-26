@@ -15,8 +15,6 @@ var app = function(){
         })
     };
 
-
-
     self.vue = new Vue({
 
         el:"#map",
