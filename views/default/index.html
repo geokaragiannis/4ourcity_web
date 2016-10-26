@@ -8,8 +8,6 @@
 </script>
 {{end}}
 
-
-
         <!-- if logged in -->
 {{if auth.user_id:}}
 
@@ -62,57 +60,48 @@
 
     </div>
     <script>
+//        function getLocations() {
+//            $.getJSON(api_url, function (data) {
+//                //locations = data.locations;
+//                $.each(data, function (key, val) {
+//                    addMarker(val.latitude, val.longitude);
+//                })
+//            });
+//        }
+//
+//         function addMarker(lat,lng) {
+//            marker = new google.maps.Marker({
+//                position: new google.maps.LatLng(lat,lng),
+//                setMap: map
+//            });
+//            //markersArray.push(marker);
+//        }
       function initMap() {
-          locations=[];
-
-        // this does not work, as it is an asynchronous request. This means that
-        // the program execution does not stop to wait for the result of $.getJSON
-          // we need to make a synchronous request
-
-
-//          obj.get_coordinates = function() {
-//              $.getJSON(api_url, function (data) {
-//
-//                  console.log(data);
-//                  obj.locations = data.locations;
-//
-//                  var myloc = data.items.map
-//
-//              });
-//          };
-//
-//          obj.get_coordinates();
-          //var k = obj.locations[0].latitude;
+          $.getJSON(api_url, function(data) {
+          $.each(data, function(key, value) {
+              for (var i = 0; i < value.length; i++) {
+                  var latLng = new google.maps.LatLng(value[i].latitude, value[i].longitude);
+                  //alert(latLng);
 
 
-          // make a synchronous request and get the lat-long
-           $.ajax({
-                url: api_url,
-                async: false,
-                dataType: 'json',
-                success: function(data) {
-                    locations = data.locations;
-                }
-           });
+                  // Creating a marker and putting it on the map
+                  var marker = new google.maps.Marker({
+                      position: latLng,
+                      title: data.title
+                  });
+                  marker.setMap(map);
+              }
+          });
+        });
 
           var map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 7,
               // center is set for now as the first element in banana table
-                center: {lat:locations[0].latitude, lng:locations[0].longitude}
+                center: {lat:36.996164, lng:-122.05864}
           });
 
-        for(var i = 0; i < locations.length; i++) {
-            var my_lat = locations[i].latitude;
-            var my_long = locations[i].longitude;
-            var uluru = {lat: my_lat, lng: my_long};
 
-            var marker = new google.maps.Marker({
-                position: uluru,
-                map: map
-            });
-        }
 
-        
       }
     </script>
     <script async defer
