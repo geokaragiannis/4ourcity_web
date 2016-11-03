@@ -100,16 +100,26 @@
                 center: {lat:36.996164, lng:-122.05864}
           });
 
+          // add a marker on every click. Temporary
+          google.maps.event.addListener(map, 'click', function(event) {
+              //APP.vue.addmarker`9`
+            placeMarker(event.latLng);
+            });
 
-
-      }
+        function placeMarker(location) {
+            var marker = new google.maps.Marker({
+                position: location,
+                map: map
+            });
+        }
+}
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATlgK06ECpUjfJC5zF9IIkaK1czediuxM&callback=initMap">
     </script>
+    <script src="{{=URL('static', 'js/default_index.js')}}"></script>
   </body>
 </html>
 
-<script src="{{=URL('static', 'js/default_index.js')}}"></script>
 
 
