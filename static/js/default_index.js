@@ -1,44 +1,22 @@
 var app = function(){
 
-    // self.show_map = function() {
-    //
-    //       $.getJSON(api_url, function(data) {
-    //       $.each(data, function(key, value) {
-    //           for (var i = 0; i < value.length; i++) {
-    //               var latLng = new google.maps.LatLng(value[i].latitude, value[i].longitude);
-    //               //alert(latLng);
-    //
-    //
-    //               // Creating a marker and putting it on the map
-    //               var marker = new google.maps.Marker({
-    //                   position: latLng,
-    //                   title: data.title
-    //               });
-    //               marker.setMap(map);
-    //           }
-    //       });
-    //     });
-    //
-    //       var map = new google.maps.Map(document.getElementById('map'), {
-    //             zoom: 7,
-    //           // center is set for now as the first element in banana table
-    //             center: {lat:36.996164, lng:-122.05864}
-    //       });
-    //
-    //       // add a marker on every click. Temporary
-    //       google.maps.event.addListener(map, 'click', function(event) {
-    //         placeMarker(event.latLng);
-    //         });
-    //
-    //     function placeMarker(location) {
-    //         var marker = new google.maps.Marker({
-    //             position: location,
-    //             map: map
-    //         });
-    //     }
-    //
-    //
-    // };
+    self.show_map = function() {
+
+        $.getJSON(api_url, function(data) {
+         $.each(data, function(key, value) {
+             for (var i = 0; i < value.length; i++) {
+                 var latLng = new google.maps.LatLng(value[i].latitude, value[i].longitude);
+
+                 // Creating a marker and putting it on the map
+                 var marker = new google.maps.Marker({
+                     position: latLng,
+                     title: data.title
+                 });
+                 marker.setMap(map);
+             }
+         });
+       });
+    };
 
 
     function get_coordinates_url(){
@@ -57,14 +35,13 @@ var app = function(){
 
     self.vue = new Vue({
 
-        el:"#map",
+        el:"#vue-div",
         delimiters: ['${', '}'],
         unsafeDelimiters: ['!{', '}'],
         data: {
             locations: []
         },
         methods: {
-            //show_map: self.show_map
 
         }
     });
@@ -72,8 +49,8 @@ var app = function(){
     // initiate that in the beginning. Fetch the stuff from the server
     // happens once in the beginning.
     self.get_coordinates();
-    //self.show_map();
-    $("#map").show();
+    self.show_map();
+    $("#vue-div").show();
 
 
     return self;

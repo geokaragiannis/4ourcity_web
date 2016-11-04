@@ -6,8 +6,8 @@
 <script>
     var api_url = "{{=URL('api', 'get_coordinates')}}";
 </script>
-{{end}}
 
+{{end}}
         <!-- if logged in -->
 {{if auth.user_id:}}
 
@@ -25,13 +25,17 @@
 
 {{pass}}
 
-<div class="report_list">
+<div id="vue-div">
+    <div class="report_list">
     <ul>
         {{for r in reports:}}
        <li>{{=r.cat_id.cat_title}} by {{=r.user_id.first_name}} {{=r.user_id.last_name}}</li>
         {{pass}}
     </ul>
+    </div>
 </div>
+
+
 
 
 <!DOCTYPE html>
@@ -41,7 +45,7 @@
       #map {
         width:70%;
         height:550px;
-        margin-left: 30%;
+        float:right;
        }
 
       html,body{
@@ -52,49 +56,13 @@
   </head>
   <body>
     <div id="map">
-        <table>
-        <tr v-for="l in locations">
-            <td>${l.latitude}</td>
-        </tr>
-    </table>
-
     </div>
     <script>
-//        function getLocations() {
-//            $.getJSON(api_url, function (data) {
-//                //locations = data.locations;
-//                $.each(data, function (key, val) {
-//                    addMarker(val.latitude, val.longitude);
-//                })
-//            });
-//        }
-//
-//         function addMarker(lat,lng) {
-//            marker = new google.maps.Marker({
-//                position: new google.maps.LatLng(lat,lng),
-//                setMap: map
-//            });
-//            //markersArray.push(marker);
-//        }
+
       function initMap() {
-          $.getJSON(api_url, function(data) {
-          $.each(data, function(key, value) {
-              for (var i = 0; i < value.length; i++) {
-                  var latLng = new google.maps.LatLng(value[i].latitude, value[i].longitude);
-                  //alert(latLng);
 
-
-                  // Creating a marker and putting it on the map
-                  var marker = new google.maps.Marker({
-                      position: latLng,
-                      title: data.title
-                  });
-                  marker.setMap(map);
-              }
-          });
-        });
-
-          var map = new google.maps.Map(document.getElementById('map'), {
+          // make map obj global by not doing: var map = ...
+          map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 7,
               // center is set for now as the first element in banana table
                 center: {lat:36.996164, lng:-122.05864}
@@ -106,13 +74,13 @@
             placeMarker(event.latLng);
             });
 
-        function placeMarker(location) {
-            var marker = new google.maps.Marker({
-                position: location,
-                map: map
-            });
+            function placeMarker(location) {
+                var marker = new google.maps.Marker({
+                    position: location,
+                    map: map
+                });
+            }
         }
-}
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATlgK06ECpUjfJC5zF9IIkaK1czediuxM&callback=initMap">
