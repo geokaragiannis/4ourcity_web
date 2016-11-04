@@ -45,7 +45,8 @@ var app = function(){
         data: {
             locations: [],
             is_making_report: false,
-            form_report_content: null
+            form_report_content: null,
+            municipality: null
         },
         methods: {
             add_report_div: self.add_report_div

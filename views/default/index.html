@@ -90,32 +90,74 @@
                 center: {lat:36.996164, lng:-122.05864}
           });
 
+          // used for reverse geocoding (to get the municipality from location given by the user)
+          var geocoder = new google.maps.Geocoder;
+          var infowindow = new google.maps.InfoWindow;
+
           // add a marker on every click.
           google.maps.event.addListener(map, 'click', function(event) {
+
+              // location of click
+              var click_location = new google.maps.LatLng(event.latLng.lat(), event.latLng.lng());
+
               // if not null (user clicks for second/third/... time) delete the previous marker
               // and add a new one via function placeMarker
-            if(prev_marker != null){
+              if(prev_marker != null){
                 prev_marker.setMap(null);
             }
 
-            placeMarker(event.latLng);
+            var clicked_marker = placeMarker(click_location);
+
               // we're creating a report
               if(APP.vue.is_making_report === false)
                 APP.vue.add_report_div();
-            });
+
+              reverse_geocoding(geocoder,map,infowindow,click_location,clicked_marker);
+          });
 
         }
 
-
+            // function to place the marker on the map
             function placeMarker(location) {
                 var marker = new google.maps.Marker({
                     position: location,
                     map: map
                 });
-
                 // make the current marker the prev marker
                 prev_marker = marker;
+
+                return marker;
             }
+
+            function reverse_geocoding(geocoder,map,infowindow,location,marker){
+
+
+                geocoder.geocode({'location': location}, function(results, status) {
+                  if (status === 'OK') {
+                    if (results[0]) {
+
+                        // go through the address_components and for each address_component list go through
+                        // the types in it. If a type is administrative_area_level_2, then this is the name of the
+                        // county.
+                        for(var i = 0; i < results[0].address_components.length; i++){
+                            for(var j = 0; j < results[0].address_components[i].types.length; j++){
+                                if (results[0].address_components[i].types[j] === "administrative_area_level_2"){
+                                    APP.vue.municipality = results[0].address_components[i].long_name;
+                                    break;
+                                }
+                            }
+                        }
+                      infowindow.setContent(results[0].formatted_address);
+                      infowindow.open(map, marker);
+                    } else {
+                      window.alert('No results found');
+                    }
+                  } else {
+                    window.alert('Geocoder failed due to: ' + status);
+                  }
+                });
+            }
+
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATlgK06ECpUjfJC5zF9IIkaK1czediuxM&callback=initMap">
