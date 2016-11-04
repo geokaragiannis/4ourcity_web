@@ -23,3 +23,18 @@ div.make_report, div.view_report {
 .report_list {
   margin-top: 50px;
 }
+
+/* line 24, ../sass/_main.scss */
+.create_report {
+  float: left;
+}
+
+/* line 28, ../sass/_main.scss */
+.report_list {
+  float: left;
+}
+
+/* line 33, ../sass/_main.scss */
+#new-report {
+  width: 350px;
+}

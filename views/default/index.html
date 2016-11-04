@@ -26,12 +26,32 @@
 {{pass}}
 
 <div id="vue-div">
-    <div class="report_list">
+    <div class="report_list" v-if="!is_making_report">
     <ul>
         {{for r in reports:}}
        <li>{{=r.cat_id.cat_title}} by {{=r.user_id.first_name}} {{=r.user_id.last_name}}</li>
         {{pass}}
     </ul>
+    </div>
+
+    <div class="create_report" v-if="is_making_report">
+        <form action="#" v-on:submit.prevent="add_report" class="form-horizontal" enctype="multipart/form-data" method="post">
+                <div class="form-group" id="no_table_content__row">
+                    <div>
+                        <textarea class="form-control string" id="new-report" v-model="form_report_content" placeholder="Type message" type="text" rows="5"> </textarea>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+
+                <div class="form-group" id="post-button">
+                    <div>
+                        <!-- disable the button post, if 1) the content is null, 2) if the content only contains whitespace
+                        For condition 2 code taken from https://goo.gl/dv8NrQ -->
+                        <button class="post-button" id="post-button" type="submit" v-on:click="add_report_div()" v-bind:disabled="form_report_content===null ||  !(/\S/.test(form_report_content))" >Post </button>
+                    </div>
+                </div>
+
+            </form>
     </div>
 </div>
 
@@ -59,6 +79,8 @@
     </div>
     <script>
 
+        // used in deleting prvious marker if user clicks again
+        var prev_marker;
       function initMap() {
 
           // make map obj global by not doing: var map = ...
@@ -68,19 +90,32 @@
                 center: {lat:36.996164, lng:-122.05864}
           });
 
-          // add a marker on every click. Temporary
+          // add a marker on every click.
           google.maps.event.addListener(map, 'click', function(event) {
-              //APP.vue.addmarker`9`
+              // if not null (user clicks for second/third/... time) delete the previous marker
+              // and add a new one via function placeMarker
+            if(prev_marker != null){
+                prev_marker.setMap(null);
+            }
+
             placeMarker(event.latLng);
+              // we're creating a report
+              if(APP.vue.is_making_report === false)
+                APP.vue.add_report_div();
             });
+
+        }
+
 
             function placeMarker(location) {
                 var marker = new google.maps.Marker({
                     position: location,
                     map: map
                 });
+
+                // make the current marker the prev marker
+                prev_marker = marker;
             }
-        }
     </script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATlgK06ECpUjfJC5zF9IIkaK1czediuxM&callback=initMap">

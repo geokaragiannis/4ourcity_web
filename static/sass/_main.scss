@@ -20,3 +20,16 @@ div.make_report, div.view_report {
 
   margin-top:50px;
 }
+
+.create_report{
+  float:left;
+}
+
+.report_list{
+  float:left;
+}
+
+// the textarea to make a new report
+#new-report{
+  width:350px;
+}

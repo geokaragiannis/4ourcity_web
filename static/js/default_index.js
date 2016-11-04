@@ -18,6 +18,10 @@ var app = function(){
        });
     };
 
+    self.add_report_div = function() {
+      self.vue.is_making_report = !self.vue.is_making_report;
+    };
+
 
     function get_coordinates_url(){
 
@@ -39,9 +43,12 @@ var app = function(){
         delimiters: ['${', '}'],
         unsafeDelimiters: ['!{', '}'],
         data: {
-            locations: []
+            locations: [],
+            is_making_report: false,
+            form_report_content: null
         },
         methods: {
+            add_report_div: self.add_report_div
 
         }
     });
