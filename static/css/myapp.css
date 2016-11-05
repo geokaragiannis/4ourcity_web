@@ -38,3 +38,18 @@ div.make_report, div.view_report {
 #new-report {
   width: 350px;
 }
+
+/* line 37, ../sass/_main.scss */
+ul.report_list {
+  background: rgba(56, 142, 164, 0.71);
+  padding: 20px;
+  -moz-border-radius: 14px;
+  -webkit-border-radius: 14px;
+  border-radius: 14px;
+  width: 300px;
+}
+
+/* line 44, ../sass/_main.scss */
+li.report_list_item {
+  border-bottom: 55px;
+}

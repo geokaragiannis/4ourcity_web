@@ -24,15 +24,23 @@ db.define_table('categories',
                 Field('cat_title', 'string'),
                 )
 
+db.define_table('progress',
+                Field('progress_title', 'string')
+                )
 
-# status:   0 --> 'pending'
-#           1 --> 'accepted'
-#           2 --> 'rejected'
+db.define_table('status',
+                Field('status_title', 'string')
+                )
 
-# progress: 0 --> 'N/A'
-#           1 --> 'seen'
-#           2 --> 'in progress'
-#           3 --> 'finished'
+
+# status:   1 --> 'pending'
+#           2 --> 'accepted'
+#           3 --> 'rejected'
+
+# progress: 1 --> 'N/A'
+#           2 --> 'seen'
+#           3 --> 'in progress'
+#           4 --> 'finished'
 
 db.define_table('reports',
                 Field('mun_id', db.municipalities),
@@ -42,10 +50,11 @@ db.define_table('reports',
                 Field('latitude', 'double'),
                 Field('longitude', 'double'),
                 Field('lat_long', 'string'),
+                Field('pretty_address', 'string'),
                 Field('square_key', 'integer'),
                 Field('created_on', 'datetime', default=datetime.datetime.utcnow()),
-                Field('status', 'integer', default=0),
-                Field('progress', 'integer', default=0),
+                Field('status_id', db.status, default=1),
+                Field('progress_id', db.progress, default=1),
                 Field('photo','upload'),
                 Field('want_updates', 'boolean'),
                 )
@@ -54,15 +63,16 @@ db.reports.mun_id.readable = db.reports.mun_id.writable = False
 db.reports.user_id.readable = db.reports.user_id.writable = False
 db.reports.user_id.default = auth.user_id
 db.reports.cat_id.requires = IS_IN_DB(db,'categories.id', '%(cat_title)s', zero=T('choose one'))
+db.reports.mun_id.requires = IS_IN_DB(db,'municipalities.id', '%(mun_name)s', zero=T('choose one'))
+db.reports.status_id.requires = IS_IN_DB(db,'status.id', '%(status_title)s', zero=T('choose one'))
+db.reports.progress_id.requires = IS_IN_DB(db,'progress.id', '%(progress_title)s', zero=T('choose one'))
 db.reports.latitude.readable = db.reports.latitude.writable = False
 db.reports.longitude.readable = db.reports.longitude.writable = False
 db.reports.square_key.readable = db.reports.square_key.writable = False
 db.reports.lat_long.readable = db.reports.lat_long.writable = False
 
 
-db.define_table('progress',
-                Field('progress_title', 'string')
-                )
+
 
 db.define_table('messages',
                 Field('report_id', db.reports),

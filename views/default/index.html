@@ -6,32 +6,24 @@
 <script>
     var api_url = "{{=URL('api', 'get_coordinates')}}";
     var categories_url = "{{=URL('api', 'get_categories')}}";
+    var get_reports_url = "{{=URL('api', 'get_reports')}}";
 </script>
 
 {{end}}
         <!-- if logged in -->
-{{if auth.user_id:}}
-
-    <div class="make_report text-left">
-    <a href="{{=URL('default', 'submit')}}" class="btn btn-warning">
-    <i class="fa fa-plus"></i> New Report
-    </a>
-    </div>
-
-    <div class="view_report text-left"  >
-    <a href="{{=URL('default', 'view')}}" class="btn btn-success">
-                View Reports
-    </a>
-    </div>
-
-{{pass}}
 
 <div id="vue-div">
     <div class="report_list" v-if="!is_making_report">
-    <ul>
-        {{for r in reports:}}
-       <li>{{=r.cat_id.cat_title}} by {{=r.user_id.first_name}} {{=r.user_id.last_name}}</li>
-        {{pass}}
+    <ul class="report_list" >
+            <li v-for="r in reports" class="report_list_item">
+                <p class="report_list_item_description">descr: ${r.description}</p>
+                <p class="report_list_item_category">cat: ${r.category}</p>
+                <p class="report_list_item_created_on">date: ${r.created_on}</p>
+                <p class="report_list_item_created_on">address: ${r.pretty_address}</p>
+                <p class="report_list_item_created_on">status: ${r.status}</p>
+                <p class="report_list_item_created_on">progress: ${r.progress}</p>
+
+            </li>
     </ul>
     </div>
 
@@ -47,18 +39,32 @@
                 <div class="form-group" id="reports_cat_id__row">
                     <label class="control-label col-sm-3" for="reports_cat_id" id="reports_cat_id__label">Categories</label>
                     <div class="col-sm-9">
-                        <select class="generic-widget form-control" id="reports_cat_id" name="cat_id" >
+                        <select class="generic-widget form-control" id="reports_cat_id" name="cat_id" v-model="category_result">
                             <option v-for="c in categories">${c.cat_title}</option>
                         </select>
                         <span class="help-block"></span>
                     </div>
                 </div>
 
+                <div class="form-group" id="reports_want_updates__row">
+                    <div class="col-sm-offset-3 col-sm-9">
+                        <div class="checkbox">
+                            <label class="" id="reports_want_updates__label">
+                                <input v-model="want_updates" class="boolean" id="reports_want_updates" name="want_updates" type="checkbox" value="on"> Want Updates
+                            </label>
+                            <span class="help-block">
+
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="form-group" id="post-button">
                     <div>
                         <!-- disable the button post, if 1) the content is null, 2) if the content only contains whitespace
                         For condition 2 code taken from https://goo.gl/dv8NrQ -->
-                        <button class="post-button" id="post-button" type="submit" v-on:click="add_report_div()" v-bind:disabled="form_report_content===null ||  !(/\S/.test(form_report_content))" >Post </button>
+                        <button class="post-button" id="post-button" type="submit" v-on:click="add_report_div(), add_report()" v-bind:disabled="form_report_content===null ||  !(/\S/.test(form_report_content))" >Post </button>
                     </div>
                 </div>
 
@@ -101,6 +107,9 @@
                 center: {lat:36.996164, lng:-122.05864}
           });
 
+
+
+
           // used for reverse geocoding (to get the municipality from location given by the user)
           var geocoder = new google.maps.Geocoder;
           var infowindow = new google.maps.InfoWindow;
@@ -108,8 +117,17 @@
           // add a marker on every click.
           google.maps.event.addListener(map, 'click', function(event) {
 
+              if(!APP.vue.logged_in){
+                  window.alert('Log in to make a report');
+                  return;
+              }
+
               // location of click
               var click_location = new google.maps.LatLng(event.latLng.lat(), event.latLng.lng());
+
+              // get the lat,long in vue
+              APP.vue.latitude = event.latLng.lat();
+              APP.vue.longitude = event.latLng.lng();
 
               // if not null (user clicks for second/third/... time) delete the previous marker
               // and add a new one via function placeMarker
@@ -158,6 +176,8 @@
                                 }
                             }
                         }
+                        // get address in vue
+                      APP.vue.address = results[0].formatted_address;
                       infowindow.setContent(results[0].formatted_address);
                       infowindow.open(map, marker);
                     } else {

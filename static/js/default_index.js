@@ -37,15 +37,30 @@ var app = function(){
         })
     };
 
-    function get_categories_url(){
-        return categories_url;
-    }
+    self.get_reports = function(){
+        $.getJSON(get_reports_url, function (data) {
+
+            self.vue.reports = data.reports;
+            self.vue.logged_in = data.logged_in;
+            self.vue.logged_user = data.logged_user;
+
+        })
+    };
 
     self.get_categories = function(){
-        $.getJSON(get_categories_url(), function(data){
+        $.getJSON(categories_url, function(data){
             self.vue.categories = data.categories;
         })
     };
+
+
+
+
+    self.add_report = function() {
+
+
+    };
+
 
 
 
@@ -60,10 +75,25 @@ var app = function(){
             is_making_report: false,
             form_report_content: null,
             municipality: null,
-            categories: null
+            categories: null,
+            category_result: null,
+            latitude: null,
+            longitude: null,
+            // will be a dict with full_address,number,street, city, county,state,county. Now full address
+            address: null,
+            want_updates: null,
+            reports: [],
+            logged_in: false,
+            logged_user: null
+
+
         },
         methods: {
-            add_report_div: self.add_report_div
+            add_report_div: self.add_report_div,
+            get_categories: self.get_categories,
+            get_reports: self.get_reports,
+            add_report: self.add_report
+
         }
     });
 
@@ -71,6 +101,7 @@ var app = function(){
     // happens once in the beginning.
     self.get_coordinates();
     self.get_categories();
+    self.get_reports();
     self.show_map();
     $("#vue-div").show();
 

@@ -33,3 +33,14 @@ div.make_report, div.view_report {
 #new-report{
   width:350px;
 }
+
+ul.report_list{
+  background: rgba(56, 142, 164, 0.71);
+  padding: 20px;
+  @include border-radius(14px);
+  width:300px;
+}
+
+li.report_list_item{
+  border-bottom: 55px;
+}
