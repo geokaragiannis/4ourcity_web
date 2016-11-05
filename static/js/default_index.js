@@ -37,6 +37,19 @@ var app = function(){
         })
     };
 
+    function get_categories_url(){
+        return categories_url;
+    }
+
+    self.get_categories = function(){
+        $.getJSON(get_categories_url(), function(data){
+            self.vue.categories = data.categories;
+        })
+    };
+
+
+
+
     self.vue = new Vue({
 
         el:"#vue-div",
@@ -46,17 +59,18 @@ var app = function(){
             locations: [],
             is_making_report: false,
             form_report_content: null,
-            municipality: null
+            municipality: null,
+            categories: null
         },
         methods: {
             add_report_div: self.add_report_div
-
         }
     });
 
     // initiate that in the beginning. Fetch the stuff from the server
     // happens once in the beginning.
     self.get_coordinates();
+    self.get_categories();
     self.show_map();
     $("#vue-div").show();
 

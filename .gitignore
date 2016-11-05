@@ -7,4 +7,5 @@ uploads/*
 *~
 .sass-cache
 .sass-cache/*
+.idea/*
 

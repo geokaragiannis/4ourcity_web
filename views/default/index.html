@@ -5,6 +5,7 @@
 <script src="{{=URL('static', 'js/vue.js')}}"></script>
 <script>
     var api_url = "{{=URL('api', 'get_coordinates')}}";
+    var categories_url = "{{=URL('api', 'get_categories')}}";
 </script>
 
 {{end}}
@@ -39,6 +40,16 @@
                 <div class="form-group" id="no_table_content__row">
                     <div>
                         <textarea class="form-control string" id="new-report" v-model="form_report_content" placeholder="Type message" type="text" rows="5"> </textarea>
+                        <span class="help-block"></span>
+                    </div>
+                </div>
+
+                <div class="form-group" id="reports_cat_id__row">
+                    <label class="control-label col-sm-3" for="reports_cat_id" id="reports_cat_id__label">Categories</label>
+                    <div class="col-sm-9">
+                        <select class="generic-widget form-control" id="reports_cat_id" name="cat_id" >
+                            <option v-for="c in categories">${c.cat_title}</option>
+                        </select>
                         <span class="help-block"></span>
                     </div>
                 </div>
