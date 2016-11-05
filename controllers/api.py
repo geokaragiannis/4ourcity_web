@@ -49,16 +49,31 @@ def get_reports():
 @auth.requires_signature()
 def add_report():
 
-    p_id = db.posts.insert(
+    category = request.vars.category
+    cat_id = None
+
+    rows = db().select(db.categories.ALL)
+
+    logger.info("user id is: %r", auth.user_id)
+
+    for c in rows:
+        if category == c.cat_title:
+            cat_id=c.id
+            break
+
+    logger.info("cat id in api is: %r", cat_id)
+
+    p_id = db.reports.insert(
         latitude=request.vars.latitude,
         longitude=request.vars.longitude,
-        category=request.vars.category,
-        description=request.vars.post_content,
+        cat_id=cat_id,
+        description=request.vars.description,
         pretty_address=request.vars.pretty_address,
-        user_email=auth.user.email if auth.user.id else None,
         want_updates=request.vars.want_updates,
+        #user_id=auth.user_id #if auth.user else None
     )
 
+    return 'ok'
 
 
 

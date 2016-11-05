@@ -44,7 +44,7 @@ db.define_table('status',
 
 db.define_table('reports',
                 Field('mun_id', db.municipalities),
-                Field('user_id', db.auth_user ),
+                Field('user_id', db.auth_user),
                 Field('cat_id', 'reference categories', label='Categories', requires=IS_NOT_EMPTY()),
                 Field('description', 'text', requires=IS_NOT_EMPTY()),
                 Field('latitude', 'double'),
@@ -62,6 +62,7 @@ db.define_table('reports',
 db.reports.mun_id.readable = db.reports.mun_id.writable = False
 db.reports.user_id.readable = db.reports.user_id.writable = False
 db.reports.user_id.default = auth.user_id
+#db.reports.user_id.requires = IS_IN_DB(db,'auth_user.id', '%(id)s', zero=T('choose one'))
 db.reports.cat_id.requires = IS_IN_DB(db,'categories.id', '%(cat_title)s', zero=T('choose one'))
 db.reports.mun_id.requires = IS_IN_DB(db,'municipalities.id', '%(mun_name)s', zero=T('choose one'))
 db.reports.status_id.requires = IS_IN_DB(db,'status.id', '%(status_title)s', zero=T('choose one'))

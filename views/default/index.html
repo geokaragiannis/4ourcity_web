@@ -7,6 +7,7 @@
     var api_url = "{{=URL('api', 'get_coordinates')}}";
     var categories_url = "{{=URL('api', 'get_categories')}}";
     var get_reports_url = "{{=URL('api', 'get_reports')}}";
+    var add_report_url = "{{=URL('api', 'add_report', user_signature=True)}}";
 </script>
 
 {{end}}
@@ -64,7 +65,7 @@
                     <div>
                         <!-- disable the button post, if 1) the content is null, 2) if the content only contains whitespace
                         For condition 2 code taken from https://goo.gl/dv8NrQ -->
-                        <button class="post-button" id="post-button" type="submit" v-on:click="add_report_div(), add_report()" v-bind:disabled="form_report_content===null ||  !(/\S/.test(form_report_content))" >Post </button>
+                        <button class="post-button" id="post-button" type="submit" v-on:click="add_report_div()" v-bind:disabled="form_report_content===null ||  !(/\S/.test(form_report_content))" >Post </button>
                     </div>
                 </div>
 
@@ -102,7 +103,7 @@
 
           // make map obj global by not doing: var map = ...
           map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 7,
+                zoom: 14,
               // center is set for now as the first element in banana table
                 center: {lat:36.996164, lng:-122.05864}
           });

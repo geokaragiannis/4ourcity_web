@@ -58,7 +58,20 @@ var app = function(){
 
     self.add_report = function() {
 
+        $.post(add_report_url,
+            {
+                latitude: self.vue.latitude,
+                longitude: self.vue.longitude,
+                category: self.vue.category_result,
+                description: self.vue.form_report_content,
+                pretty_address: self.vue.address,
+                want_updates: self.vue.want_updates
+            },
+            function (data) {
+                $.web2py.enableElement($("#add_post_submit"));
+                // add the new post (get it from api/add_post) to self.vue.posts
 
+            });
     };
 
 
