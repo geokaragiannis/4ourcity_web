@@ -1,41 +1,77 @@
 var app = function(){
 
+    // Enumerates an array.
+    var enumerate = function(v) {
+        var k=0;
+        return v.map(function(e) {e._idx = k++;});
+    };
+
+
     self.show_map = function() {
 
-        $.getJSON(api_url, function(data) {
-         $.each(data, function(key, value) {
-             for (var i = 0; i < value.length; i++) {
-                 var latLng = new google.maps.LatLng(value[i].latitude, value[i].longitude);
+        for (var i = 0; i < self.vue.reports.length; i++) {
+            var latLng = new google.maps.LatLng(self.vue.reports[i].lat, self.vue.reports[i].lgn);
 
-                 // Creating a marker and putting it on the map
-                 var marker = new google.maps.Marker({
-                     position: latLng,
-                     title: data.title
-                 });
-                 marker.setMap(map);
-             }
-         });
-       });
+            //Creating a marker and putting it on the map
+            marker=createMarker(latLng,self.vue.reports[i]._idx);
+            //self.vue.markers.unshift(marker);
+
+            marker.setMap(map);
+        }
     };
+
+    // helper function that returns a marker of position: location and id: id
+    // taken from: https://goo.gl/PmNGud
+    function createMarker(location, idx) {
+
+        var marker = new google.maps.Marker({
+                position: location,
+                id: idx
+            });
+        google.maps.event.addListener(marker,'click',function(){
+            window.alert(marker.id);
+            //self.vue.display_report(marker.id);
+        });
+        return marker;
+    }
+
+    // to be implemented
+    self.display_report = function(idx){
+
+        //self.vue.reports[idx]
+
+    };
+
+
+
+
+       //  $.getJSON(get_coordinates_url, function(data) {
+       //   $.each(data, function(key, value) {
+       //       for (var i = 0; i < value.length; i++) {
+       //           var latLng = new google.maps.LatLng(value[i].latitude, value[i].longitude);
+       //
+       //           // Creating a marker and putting it on the map
+       //           var marker = new google.maps.Marker({
+       //               position: latLng,
+       //               title: data.title
+       //           });
+       //           marker.setMap(map);
+       //       }
+       //   });
+       // });
 
     self.add_report_div = function() {
       self.vue.is_making_report = !self.vue.is_making_report;
     };
-
-
-    function get_coordinates_url(){
-
-        return api_url;
-    }
     
-    self.get_coordinates = function(){
-      
-        $.getJSON(get_coordinates_url(), function (data) {
-
-            self.vue.locations = data.locations;
-
-        })
-    };
+    // self.get_coordinates = function(){
+    //
+    //     $.getJSON(get_coordinates_url(), function (data) {
+    //
+    //         self.vue.locations = data.locations;
+    //
+    //     })
+    // };
 
     self.get_reports = function(){
         $.getJSON(get_reports_url, function (data) {
@@ -44,6 +80,8 @@ var app = function(){
             self.vue.logged_in = data.logged_in;
             self.vue.logged_user = data.logged_user;
 
+             enumerate(self.vue.reports);
+            self.vue.show_map();
         })
     };
 
@@ -70,6 +108,7 @@ var app = function(){
             function (data) {
                 $.web2py.enableElement($("#add_post_submit"));
                 // add the new post (get it from api/add_post) to self.vue.posts
+                enumerate(self.vue.reports);
 
             });
     };
@@ -97,25 +136,25 @@ var app = function(){
             want_updates: null,
             reports: [],
             logged_in: false,
-            logged_user: null
-
+            logged_user: null,
+            markers:[]
 
         },
         methods: {
             add_report_div: self.add_report_div,
             get_categories: self.get_categories,
             get_reports: self.get_reports,
-            add_report: self.add_report
+            add_report: self.add_report,
+            show_map: self.show_map,
+            display_report: self.display_report
 
         }
     });
 
     // initiate that in the beginning. Fetch the stuff from the server
     // happens once in the beginning.
-    self.get_coordinates();
     self.get_categories();
     self.get_reports();
-    self.show_map();
     $("#vue-div").show();
 
 

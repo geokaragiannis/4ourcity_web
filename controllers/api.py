@@ -2,11 +2,16 @@ def index():
     pass
 
 
-def get_coordinates():
-    # python list
-    locations = db(db.banana).select(db.banana.ALL)
+# def get_coordinates():
+#     # python list
+#     rows = db().select(db.reports.ALL)
+#     locations=[]
+#
+#     for i, r in enumerate(rows):
+#         t = dict()
 
-    return response.json(dict(locations=locations))
+
+    #return response.json(dict(locations=locations))
 
 
 def get_categories():
@@ -17,6 +22,8 @@ def get_categories():
 def get_reports():
 
     reports = []
+    # only iterate on accepted reports
+    #rows = db(db.reports.status_id == 2).select()
     rows = db().select(db.reports.ALL)
 
     for i,r in enumerate(rows):

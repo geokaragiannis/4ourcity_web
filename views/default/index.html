@@ -4,7 +4,7 @@
 {{block head}}
 <script src="{{=URL('static', 'js/vue.js')}}"></script>
 <script>
-    var api_url = "{{=URL('api', 'get_coordinates')}}";
+    var get_coordinates_url = "{{=URL('api', 'get_coordinates')}}";
     var categories_url = "{{=URL('api', 'get_categories')}}";
     var get_reports_url = "{{=URL('api', 'get_reports')}}";
     var add_report_url = "{{=URL('api', 'add_report', user_signature=True)}}";
@@ -108,9 +108,6 @@
                 center: {lat:36.996164, lng:-122.05864}
           });
 
-
-
-
           // used for reverse geocoding (to get the municipality from location given by the user)
           var geocoder = new google.maps.Geocoder;
           var infowindow = new google.maps.InfoWindow;
@@ -118,6 +115,7 @@
           // add a marker on every click.
           google.maps.event.addListener(map, 'click', function(event) {
 
+              // if not logged in
               if(!APP.vue.logged_in){
                   window.alert('Log in to make a report');
                   return;
@@ -136,7 +134,11 @@
                 prev_marker.setMap(null);
             }
 
-            var clicked_marker = placeMarker(click_location);
+              var clicked_marker = placeMarker(click_location);
+
+              if (clicked_marker.id === 8){
+                  window.alert(APP.vue.reports[0].description)
+              }
 
               // we're creating a report
               if(APP.vue.is_making_report === false)
@@ -144,6 +146,8 @@
 
               reverse_geocoding(geocoder,map,infowindow,click_location,clicked_marker);
           });
+
+
 
         }
 
