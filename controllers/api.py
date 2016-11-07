@@ -56,19 +56,30 @@ def get_reports():
 @auth.requires_signature()
 def add_report():
 
+    municipality = request.vars.municipality
     category = request.vars.category
     cat_id = None
+    mun_id = None
 
-    rows = db().select(db.categories.ALL)
+    cat_rows = db().select(db.categories.ALL)
+    mun_rows = db().select(db.municipalities.ALL)
 
     logger.info("user id is: %r", auth.user_id)
+    logger.info("municipality in api: %r", municipality)
 
-    for c in rows:
+    for c in cat_rows:
         if category == c.cat_title:
             cat_id=c.id
             break
 
+    for m in mun_rows:
+        if municipality == m.mun_name:
+            mun_id=m.id
+            break
+
+
     logger.info("cat id in api is: %r", cat_id)
+    logger.info("mun_id in api: %r", mun_id )
 
     p_id = db.reports.insert(
         latitude=request.vars.latitude,
@@ -77,6 +88,7 @@ def add_report():
         description=request.vars.description,
         pretty_address=request.vars.pretty_address,
         want_updates=request.vars.want_updates,
+        mun_id=mun_id
         #user_id=auth.user_id #if auth.user else None
     )
 

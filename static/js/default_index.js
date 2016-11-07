@@ -9,6 +9,9 @@ var app = function(){
 
     self.show_map = function() {
 
+         // if(!self.vue.have_searched)
+         //     $("#map").hide();
+
         for (var i = 0; i < self.vue.reports.length; i++) {
             var latLng = new google.maps.LatLng(self.vue.reports[i].lat, self.vue.reports[i].lgn);
 
@@ -29,17 +32,17 @@ var app = function(){
                 id: idx
             });
         google.maps.event.addListener(marker,'click',function(){
-            window.alert(marker.id);
-            //self.vue.display_report(marker.id);
+            //window.alert(marker.id);
+            self.vue.display_selected_report = marker.id;
         });
         return marker;
     }
 
-    // to be implemented
-    self.display_report = function(idx){
+    // if not -1, then marker is clicked, so display the content of this specific marker with id = idx
+    // else either full list of reports, or the report new_form
+    self.set_display_selected_report = function (idx){
 
-        //self.vue.reports[idx]
-
+        self.vue.display_selected_report = idx;
     };
 
 
@@ -60,18 +63,23 @@ var app = function(){
        //   });
        // });
 
-    self.add_report_div = function() {
+    self.toggle_is_making_report = function() {
       self.vue.is_making_report = !self.vue.is_making_report;
+
     };
-    
-    // self.get_coordinates = function(){
-    //
-    //     $.getJSON(get_coordinates_url(), function (data) {
-    //
-    //         self.vue.locations = data.locations;
-    //
-    //     })
-    // };
+
+    self.toggle_have_searched = function() {
+
+        self.vue.have_searched = !self.vue.have_searched;
+        //$("#map").show();
+    };
+
+    // when we click cancel_report, the marker in the map should be removed
+    self.remove_marker = function(){
+        if (prev_marker !=null){
+          prev_marker.setMap(null);
+      }
+    };
 
     self.get_reports = function(){
         $.getJSON(get_reports_url, function (data) {
@@ -103,7 +111,8 @@ var app = function(){
                 category: self.vue.category_result,
                 description: self.vue.form_report_content,
                 pretty_address: self.vue.address,
-                want_updates: self.vue.want_updates
+                want_updates: self.vue.want_updates,
+                municipality: self.vue.municipality
             },
             function (data) {
                 $.web2py.enableElement($("#add_post_submit"));
@@ -133,20 +142,25 @@ var app = function(){
             longitude: null,
             // will be a dict with full_address,number,street, city, county,state,county. Now full address
             address: null,
-            want_updates: null,
+            want_updates: false,
             reports: [],
             logged_in: false,
             logged_user: null,
-            markers:[]
+            markers:[],
+            display_selected_report: -1,
+            have_searched: false,
+            search_address: null
 
         },
         methods: {
-            add_report_div: self.add_report_div,
+            toggle_is_making_report: self.toggle_is_making_report,
             get_categories: self.get_categories,
             get_reports: self.get_reports,
             add_report: self.add_report,
             show_map: self.show_map,
-            display_report: self.display_report
+            remove_marker: self.remove_marker,
+            set_display_selected_report: self.set_display_selected_report,
+            toggle_have_searched: self.toggle_have_searched
 
         }
     });

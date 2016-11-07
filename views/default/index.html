@@ -11,28 +11,39 @@
 </script>
 
 {{end}}
-        <!-- if logged in -->
+
 
 <div id="vue-div">
-    <div class="report_list" v-if="!is_making_report">
+
+    <div id="search_address" v-if="!have_searched">
+      <input id="address" type="textbox" v-model="search_address">
+      <input id="submit" type="button" value="Search" v-on:click="toggle_have_searched()">
+    </div>
+
+    <div class="everything" v-if="have_searched">
+
+    <div class="report_list" v-if="!is_making_report && display_selected_report === -1">
     <ul class="report_list" >
-            <li v-for="r in reports" class="report_list_item">
+            <li v-for="r in reports" class="report_list_item" >
                 <p class="report_list_item_description">descr: ${r.description}</p>
                 <p class="report_list_item_category">cat: ${r.category}</p>
                 <p class="report_list_item_created_on">date: ${r.created_on}</p>
                 <p class="report_list_item_created_on">address: ${r.pretty_address}</p>
                 <p class="report_list_item_created_on">status: ${r.status}</p>
                 <p class="report_list_item_created_on">progress: ${r.progress}</p>
+                <a>
+                <i class="fa fa-arrow-right" aria-hidden="true" id="fa_select" v-on:click="set_display_selected_report(r._idx)" ></i>
+                </a>
 
             </li>
     </ul>
     </div>
 
-    <div class="create_report" v-if="is_making_report">
+    <div class="create_report" v-if="is_making_report && display_selected_report === -1">
         <form action="#" v-on:submit.prevent="add_report" class="form-horizontal" enctype="multipart/form-data" method="post">
                 <div class="form-group" id="no_table_content__row">
                     <div>
-                        <textarea class="form-control string" id="new-report" v-model="form_report_content" placeholder="Type message" type="text" rows="5"> </textarea>
+                        <textarea class="form-control string" id="new-report" v-model="form_report_content" placeholder="Type report" type="text" rows="5"> </textarea>
                         <span class="help-block"></span>
                     </div>
                 </div>
@@ -65,12 +76,33 @@
                     <div>
                         <!-- disable the button post, if 1) the content is null, 2) if the content only contains whitespace
                         For condition 2 code taken from https://goo.gl/dv8NrQ -->
-                        <button class="post-button" id="post-button" type="submit" v-on:click="add_report_div()" v-bind:disabled="form_report_content===null ||  !(/\S/.test(form_report_content))" >Post </button>
+                        <button class="post-button" id="post-button" type="submit" v-on:click="toggle_is_making_report(),remove_marker()" v-bind:disabled="form_report_content===null ||  !(/\S/.test(form_report_content)) ||category_result=== null "  >Post </button>
                     </div>
                 </div>
-
             </form>
+        <button class="cancel-post-button" id="cancel-post-button" v-on:click="toggle_is_making_report(),remove_marker()">Cancel </button>
     </div>
+
+
+    <div class="report_list" v-if="display_selected_report != -1">
+
+
+        <p class="report_list_item_description">descr: ${reports[display_selected_report].description}</p>
+        <p class="report_list_item_category">cat: ${reports[display_selected_report].category}</p>
+        <p class="report_list_item_created_on">date: ${reports[display_selected_report].created_on}</p>
+        <p class="report_list_item_created_on">address: ${reports[display_selected_report].pretty_address}</p>
+        <p class="report_list_item_created_on">status: ${reports[display_selected_report].status}</p>
+        <p class="report_list_item_created_on">progress: ${reports[display_selected_report].progress}</p>
+
+        <button class="cancel_display_single_report" v-on:click="set_display_selected_report(-1)">Cancel </button>
+
+    </div>
+
+
+
+
+</div>
+
 </div>
 
 
@@ -84,6 +116,7 @@
         width:70%;
         height:550px;
         float:right;
+        /*visibility: hidden;*/
        }
 
       html,body{
@@ -97,9 +130,13 @@
     </div>
     <script>
 
+
+
         // used in deleting prvious marker if user clicks again
         var prev_marker;
       function initMap() {
+
+
 
           // make map obj global by not doing: var map = ...
           map = new google.maps.Map(document.getElementById('map'), {
@@ -136,13 +173,12 @@
 
               var clicked_marker = placeMarker(click_location);
 
-              if (clicked_marker.id === 8){
-                  window.alert(APP.vue.reports[0].description)
-              }
-
               // we're creating a report
               if(APP.vue.is_making_report === false)
-                APP.vue.add_report_div();
+                APP.vue.toggle_is_making_report();
+
+              // if we click on the map, then do not dipslay a single report (i.e make arg -1)
+              APP.vue.set_display_selected_report(-1);
 
               reverse_geocoding(geocoder,map,infowindow,click_location,clicked_marker);
           });
