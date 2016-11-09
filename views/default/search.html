@@ -1,0 +1,78 @@
+{{extend 'layout.html'}}
+
+{{block head}}
+<script src="{{=URL('static', 'js/vue.js')}}" xmlns="http://www.w3.org/1999/html"></script>
+{{end}}
+
+<div id="search-vue-div" >
+      <input id="address" type="textbox" v-model="search_query">
+      <input id="submit" type="button" value="GO" v-on:click="search()" v-bind:disabled="search_query === null || !(/\S/.test(search_query))">
+
+<div class="search_results" v-if="have_searched && search_completed" v-for="s in searched_results">
+
+       ${s.county}
+</div>
+
+
+</div>
+
+
+
+  <body>
+    <div id="map"></div>
+<script>
+
+      function initMap() {
+
+          geocoder = new google.maps.Geocoder();
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 8,
+          center: {lat: -34.397, lng: 150.644}
+        });
+
+      }
+
+//      function geocodeAddress(geocoder) {
+//        var address = APP2.vue.search_query;
+//        var temp_list = [{}];
+//        geocoder.geocode({'address': address}, function(results, status) {
+//          if (status === 'OK') {
+//
+//          var n=0;
+//          for (var i=0;i<results.length;i++){
+//            var small_list=[];
+//            for(var j=0; j<results[i].address_components.length; j++){
+//                for(var k=0 ; k < results[i].address_components[j].types.length; k++){
+//                    if(results[i].address_components[j].types[k] === "administrative_area_level_2") {
+//                        //window.alert("municipality name: ", results[i].address_components[j].long_name);
+//                        temp_list[n++] = {'county': results[i].address_components[j].long_name,
+//                                                  'latitude': results[i].geometry.location.lat(),
+//                                                    'longitude': results[i].geometry.location.lng()};
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//
+//
+//              APP2.vue.geocode_results = results;
+//
+//
+//          } else {
+//            alert('Geocode was not successful for the following reason: ' + status);
+//          }
+//        });
+//
+//          return temp_list;
+//      }
+    </script>
+
+
+
+
+
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATlgK06ECpUjfJC5zF9IIkaK1czediuxM&callback=initMap">
+</script>
+<script src="{{=URL('static', 'js/default_search.js')}}"></script>

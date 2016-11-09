@@ -54,6 +54,12 @@ def submit():
 
     return dict(form=form)
 
+def search():
+
+
+
+    return dict()
+
 
 def view():
 
