@@ -25,6 +25,7 @@ var app = function(){
                         self.vue.searched_results[n++] = {'county': results[i].address_components[j].long_name,
                                                   'latitude': results[i].geometry.location.lat(),
                                                     'longitude': results[i].geometry.location.lng()};
+
                         break;
                     }
                 }
@@ -43,6 +44,19 @@ var app = function(){
 
     };
 
+    self.give_to_next_page = function (county,lat,lgn) {
+
+        // vars list (come after the url)
+        var pp = {
+            county: county,
+            lat: lat,
+            lgn: lgn
+        };
+
+        self.vue.url = next_page_url + "?" + $.param(pp);
+    };
+
+
 
 
     self.vue = new Vue({
@@ -55,12 +69,14 @@ var app = function(){
             geocode_results: null,
             searched_results: [],
             have_searched: false,
-            search_completed: false
+            search_completed: false,
+            url: null
 
         },
         methods: {
 
-            search: self.search
+            search: self.search,
+            give_to_next_page: self.give_to_next_page
 
 
         }

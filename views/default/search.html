@@ -2,15 +2,21 @@
 
 {{block head}}
 <script src="{{=URL('static', 'js/vue.js')}}" xmlns="http://www.w3.org/1999/html"></script>
+<script>
+    var next_page_url = "{{=URL('default', 'index')}}";
+</script>
 {{end}}
 
 <div id="search-vue-div" >
       <input id="address" type="textbox" v-model="search_query">
       <input id="submit" type="button" value="GO" v-on:click="search()" v-bind:disabled="search_query === null || !(/\S/.test(search_query))">
 
-<div class="search_results" v-if="have_searched && search_completed" v-for="s in searched_results">
+<div class="search_results" v-if="have_searched && search_completed" v-for="s in searched_results" >
 
-       ${s.county}
+    <!-- use v-bind to configure the href. Use the vue variable url, which is set in vue.js. Doesn't work with regular href -->
+       <a v-bind:href="url" id="lolo" v-on:click="give_to_next_page(s.county,s.latitude,s.longitude)">${s.county}</a>
+
+
 </div>
 
 
@@ -33,39 +39,6 @@
 
       }
 
-//      function geocodeAddress(geocoder) {
-//        var address = APP2.vue.search_query;
-//        var temp_list = [{}];
-//        geocoder.geocode({'address': address}, function(results, status) {
-//          if (status === 'OK') {
-//
-//          var n=0;
-//          for (var i=0;i<results.length;i++){
-//            var small_list=[];
-//            for(var j=0; j<results[i].address_components.length; j++){
-//                for(var k=0 ; k < results[i].address_components[j].types.length; k++){
-//                    if(results[i].address_components[j].types[k] === "administrative_area_level_2") {
-//                        //window.alert("municipality name: ", results[i].address_components[j].long_name);
-//                        temp_list[n++] = {'county': results[i].address_components[j].long_name,
-//                                                  'latitude': results[i].geometry.location.lat(),
-//                                                    'longitude': results[i].geometry.location.lng()};
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-//
-//
-//              APP2.vue.geocode_results = results;
-//
-//
-//          } else {
-//            alert('Geocode was not successful for the following reason: ' + status);
-//          }
-//        });
-//
-//          return temp_list;
-//      }
     </script>
 
 
