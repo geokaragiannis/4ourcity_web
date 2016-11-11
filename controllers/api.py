@@ -143,11 +143,13 @@ def get_reports_admin():
         reports.append(t)
 
     logged_in = auth.user_id is not None
+    is_admin = can_change_permissions(logged_user)
 
     return response.json(dict(
         reports=reports,
         logged_in=logged_in,
-        logged_user=logged_user
+        logged_user=logged_user,
+        is_admin=is_admin
     ))
 
 
