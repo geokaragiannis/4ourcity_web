@@ -21,10 +21,29 @@ def get_categories():
 
 def get_reports():
 
+    mun_name = request.vars.mun_name if request.vars.mun_name is not None else None
+
+    mun_rows = db().select(db.municipalities.ALL)
+
+    mun_id = None
+
+    for m in mun_rows:
+        if mun_name == m.mun_name:
+            mun_id=m.id
+            break
+
+    logger.info("municipality name is: %r", mun_name)
+    logger.info("mun_id is: %r", mun_id)
+
     reports = []
+
     # only iterate on accepted reports
     #rows = db(db.reports.status_id == 2).select()
-    rows = db().select(db.reports.ALL)
+
+    # query over the searched municipality (i.e the mun_name we get from the request.vars).
+    # we get the id of the requested municipality and return the list of reports that belong to it
+    rows = db(db.reports.mun_id == mun_id).select()
+    #rows = db().select(db.reports.ALL)
 
     for i,r in enumerate(rows):
         t = dict(

@@ -46,23 +46,6 @@ var app = function(){
     };
 
 
-
-
-       //  $.getJSON(get_coordinates_url, function(data) {
-       //   $.each(data, function(key, value) {
-       //       for (var i = 0; i < value.length; i++) {
-       //           var latLng = new google.maps.LatLng(value[i].latitude, value[i].longitude);
-       //
-       //           // Creating a marker and putting it on the map
-       //           var marker = new google.maps.Marker({
-       //               position: latLng,
-       //               title: data.title
-       //           });
-       //           marker.setMap(map);
-       //       }
-       //   });
-       // });
-
     self.toggle_is_making_report = function() {
       self.vue.is_making_report = !self.vue.is_making_report;
 
@@ -81,16 +64,22 @@ var app = function(){
       }
     };
 
-    self.get_reports = function(){
-        $.getJSON(get_reports_url, function (data) {
 
+    self.get_reports = function(){
+
+        $.post(get_reports_url, {
+
+            mun_name: self.vue.county_name
+        },
+         function(data){
             self.vue.reports = data.reports;
             self.vue.logged_in = data.logged_in;
             self.vue.logged_user = data.logged_user;
 
-             enumerate(self.vue.reports);
+            enumerate(self.vue.reports);
             self.vue.show_map();
-        })
+        });
+
     };
 
     self.get_categories = function(){
@@ -149,7 +138,8 @@ var app = function(){
             markers:[],
             display_selected_report: -1,
             have_searched: false,
-            search_address: null
+            search_address: null,
+            county_name: null
 
         },
         methods: {
@@ -168,7 +158,7 @@ var app = function(){
     // initiate that in the beginning. Fetch the stuff from the server
     // happens once in the beginning.
     self.get_categories();
-    self.get_reports();
+    //self.get_reports();
     $("#vue-div").show();
 
 
