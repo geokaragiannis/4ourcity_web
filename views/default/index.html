@@ -14,13 +14,7 @@
 
 
 <div id="vue-div">
-
-    <div id="search_address" v-if="!have_searched">
-      <input id="address" type="textbox" v-model="search_address">
-      <input id="submit" type="button" value="Search" v-on:click="toggle_have_searched()">
-    </div>
-
-    <div class="everything" v-if="have_searched">
+    
 
     <div class="report_list" v-if="!is_making_report && display_selected_report === -1">
     <ul class="report_list" >
@@ -98,10 +92,6 @@
 
     </div>
 
-
-
-
-</div>
 
 </div>
 
