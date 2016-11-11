@@ -44,6 +44,17 @@ def search():
 
     return dict()
 
+@auth.requires_login()
+def admin_page():
+    user_email = auth.user.email if auth.user else None
+    if not can_go_to_admin_page(user_email):
+        session.flash=T("not authorized to access admin page")
+        redirect(URL('default','search'))
+
+    is_admin=can_change_permissions(user_email)
+
+    return (dict(is_admin=is_admin))
+
 
 
 def user():

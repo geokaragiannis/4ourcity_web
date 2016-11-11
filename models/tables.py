@@ -83,6 +83,14 @@ db.define_table('messages',
                 Field('created_on', 'datetime'),
                 )
 
+db.define_table('permissions',
+                Field('user_email', 'string'),
+                Field('mun_id', db.municipalities),
+                Field('permission_type', 'string'))
+
+db.permissions.permission_type.requires = IS_IN_SET(['admin','read-write','none'])
+db.permissions.mun_id.requires = IS_IN_DB(db,'municipalities.id', '%(mun_name)s', zero=T('choose one'))
+
 
 #db.banana.insert(latitude=36.996164,longitude=-122.058640,map_popup='im here')
 

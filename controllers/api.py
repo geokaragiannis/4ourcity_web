@@ -114,5 +114,40 @@ def add_report():
     return 'ok'
 
 
+def get_reports_admin():
+    # the current logged in user
+    logged_user = auth.user.email if auth.user else None
+
+    row = db(db.permissions.user_email == logged_user).select().first()
+
+    # this is the mun id of the municipality that the logged user (employee) belongs
+    mun_id = row.mun_id
+
+    #now send reports of mun_id
+    rows = db(db.reports.mun_id == mun_id).select()
+    reports=[]
+    for i,r in enumerate(rows):
+        t = dict(
+            id = r.id,
+            lat = r.latitude,
+            lgn = r.longitude,
+            email = r.user_id.user_email,
+            category = r.cat_id.cat_title,
+            description = r.description,
+            pretty_address = r.pretty_address,
+            created_on = r.created_on,
+            status = r.status_id.status_title,
+            progress = r.progress_id.progress_title,
+            photo = r.photo
+        )
+        reports.append(t)
+
+    logged_in = auth.user_id is not None
+
+    return response.json(dict(
+        reports=reports,
+        logged_in=logged_in,
+        logged_user=logged_user
+    ))
 
 
