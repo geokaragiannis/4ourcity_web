@@ -14,7 +14,7 @@
 <div class="search_results" v-if="have_searched && search_completed" v-for="s in searched_results" >
 
     <!-- use v-bind to configure the href. Use the vue variable url, which is set in vue.js. Doesn't work with regular href -->
-       <a v-bind:href="url" id="lolo" v-on:click="give_to_next_page(s.county,s.latitude,s.longitude)">${s.county}</a>
+       <a v-bind:href="url" id="lolo" v-on:click="give_to_next_page(s.county,s.latitude,s.longitude)" style="cursor:pointer;">${s.county}</a>
 
 
 </div>
