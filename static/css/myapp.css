@@ -40,16 +40,34 @@ div.make_report, div.view_report {
 }
 
 /* line 37, ../sass/_main.scss */
-ul.report_list {
-  background: rgba(56, 142, 164, 0.71);
+.report_list {
+  margin-top: 0;
+  background: #fafafa;
   padding: 20px;
   -moz-border-radius: 14px;
   -webkit-border-radius: 14px;
   border-radius: 14px;
   width: 300px;
+  height: 548px;
+  overflow: hidden;
+  overflow-y: scroll;
 }
 
-/* line 44, ../sass/_main.scss */
-li.report_list_item {
-  border-bottom: 55px;
+/* line 50, ../sass/_main.scss */
+ul.report_list_item {
+  border-bottom: 2px solid #a8a85f;
+  padding-left: 1px;
+  list-style-type: none;
+}
+/* line 54, ../sass/_main.scss */
+ul.report_list_item:hover {
+  background: #a8a85f;
+}
+
+/* line 60, ../sass/_main.scss */
+.expand_report {
+  background: #5d5e62;
+  padding: 3px;
+  border-radius: 5px;
+  margin-left: 191px;
 }

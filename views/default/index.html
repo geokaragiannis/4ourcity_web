@@ -16,21 +16,24 @@
 <div id="vue-div">
 
 
-    <div class="report_list" v-if="!is_making_report && display_selected_report === -1">
-    <ul class="report_list" >
-            <li v-for="r in reports" class="report_list_item" >
-                <p class="report_list_item_description">descr: ${r.description}</p>
-                <p class="report_list_item_category">cat: ${r.category}</p>
-                <p class="report_list_item_created_on">date: ${r.created_on}</p>
-                <p class="report_list_item_created_on">address: ${r.pretty_address}</p>
-                <p class="report_list_item_created_on">status: ${r.status}</p>
-                <p class="report_list_item_created_on">progress: ${r.progress}</p>
-                <a>
-                <i class="fa fa-arrow-right" aria-hidden="true" id="fa_select" v-on:click="set_display_selected_report(r._idx)" ></i>
-                </a>
+    <div class="report_list col-md-3" v-if="!is_making_report && display_selected_report === -1">
 
-            </li>
-    </ul>
+            <ul v-for="r in reports" class="report_list_item" >
+                <li class="report_list_item_description">descr: ${r.description}</li>
+                <li class="report_list_item_category">cat: ${r.category}</li>
+                <li class="report_list_item_created_on">date: ${r.created_on}</li>
+                <li class="report_list_item_created_on">address: ${r.pretty_address}</li>
+                <li class="report_list_item_created_on">status: ${r.status}</li>
+                <li class="report_list_item_created_on">progress: ${r.progress}</li>
+                <li>
+                    <button class="expand_report" v-on:click="set_display_selected_report(r._idx)"> GO
+                        <i class="fa fa-arrow-right" aria-hidden="true" id="fa_select" ></i>
+                    </button>
+                </li>
+                <span class="help-block"></span>
+
+            </ul>
+
     </div>
 
     <div class="create_report" v-if="is_making_report && display_selected_report === -1">
@@ -78,17 +81,19 @@
     </div>
 
 
-    <div class="report_list" v-if="display_selected_report != -1">
+    <div class="report_list col-md-3" v-if="display_selected_report != -1">
 
+        <ul>
+            <p class="report_list_item_description">descr: ${reports[display_selected_report].description}</p>
+            <p class="report_list_item_category">cat: ${reports[display_selected_report].category}</p>
+            <p class="report_list_item_created_on">date: ${reports[display_selected_report].created_on}</p>
+            <p class="report_list_item_created_on">address: ${reports[display_selected_report].pretty_address}</p>
+            <p class="report_list_item_created_on">status: ${reports[display_selected_report].status}</p>
+            <p class="report_list_item_created_on">progress: ${reports[display_selected_report].progress}</p>
 
-        <p class="report_list_item_description">descr: ${reports[display_selected_report].description}</p>
-        <p class="report_list_item_category">cat: ${reports[display_selected_report].category}</p>
-        <p class="report_list_item_created_on">date: ${reports[display_selected_report].created_on}</p>
-        <p class="report_list_item_created_on">address: ${reports[display_selected_report].pretty_address}</p>
-        <p class="report_list_item_created_on">status: ${reports[display_selected_report].status}</p>
-        <p class="report_list_item_created_on">progress: ${reports[display_selected_report].progress}</p>
+            <button class="cancel_display_single_report" v-on:click="set_display_selected_report(-1)">Cancel </button>
 
-        <button class="cancel_display_single_report" v-on:click="set_display_selected_report(-1)">Cancel </button>
+        </ul>
 
     </div>
 
