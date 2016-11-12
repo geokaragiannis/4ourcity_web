@@ -5,6 +5,7 @@
 <script>
     var get_reports_url = "{{=URL('api', 'get_reports_admin')}}";
     var get_progress_status_url = "{{=URL('api', 'get_progress_status')}}";
+    var post_changes_url = "{{=URL('api', 'post_backend_changes', user_signature=True)}}"
 </script>
 {{end}}
 
@@ -30,12 +31,12 @@
                     <td>${r.category}</td>
                     <td>${r.pretty_address}</td>
                     <td>
-                        <select class="generic-widget form-control" style="width: 150px; height: 40px;">
+                        <select class="generic-widget form-control" style="width: 150px; height: 40px;" v-model="r.status"  v-on:change="changed_progress_status(r._idx)">
                             <option v-for="s in status" v-bind:selected="r.status === s.status_title ">${s.status_title}</option>
                         </select>
                     </td>
                     <td>
-                        <select class="generic-widget form-control" style="width: 150px; height: 40px;">
+                        <select class="generic-widget form-control" style="width: 150px; height: 40px;" v-model="r.progress"  v-on:change="changed_progress_status(r._idx)">
                             <option v-for="p in progress" v-bind:selected="r.progress === p.progress_title ">${p.progress_title}</option>
                         </select>
 
@@ -49,6 +50,8 @@
 
 
     </div>
+
+    <button class="submit_button" style="float:right;" v-on:click="submit_changes()">submit</button>
 
 
 
