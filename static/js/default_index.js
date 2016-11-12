@@ -111,6 +111,11 @@ var app = function(){
             });
     };
 
+    self.demo = function () {
+
+        self.vue.display_var = !self.vue.display_var;
+    };
+
 
 
 
@@ -139,7 +144,8 @@ var app = function(){
             display_selected_report: -1,
             have_searched: false,
             search_address: null,
-            county_name: null
+            county_name: null,
+            display_var: false
 
         },
         methods: {
@@ -150,7 +156,8 @@ var app = function(){
             show_map: self.show_map,
             remove_marker: self.remove_marker,
             set_display_selected_report: self.set_display_selected_report,
-            toggle_have_searched: self.toggle_have_searched
+            toggle_have_searched: self.toggle_have_searched,
+            demo: self.demo
 
         }
     });

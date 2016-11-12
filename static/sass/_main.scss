@@ -64,3 +64,41 @@ ul.report_list_item {
   margin-left: 191px;
 }
 
+.active{
+  display: none;
+}
+
+div.report_table{
+
+  table{
+    width: 100%;
+    margin: 1em auto 1em auto;
+
+    thead{
+      display: table-header-group;
+      vertical-align: middle;
+      border: inherit;
+      background: #c4c4c4;
+
+      tr{
+        display: table-row;
+        vertical-align: inherit;
+        border-color: inherit;
+      }
+    }
+
+    tbody{
+      font-size: 14px;
+      line-height: 3.00;
+      color: #3e3f3a;
+
+      tr{
+        border-top: 2px solid #ddd;
+        border-bottom: 2px solid #ddd;
+        text-align: left;
+      }
+    }
+  }
+}
+
+

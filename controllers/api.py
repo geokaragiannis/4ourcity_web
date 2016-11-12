@@ -152,4 +152,7 @@ def get_reports_admin():
         is_admin=is_admin
     ))
 
-
+def get_progress_status():
+    progress = db(db.progress).select(db.progress.ALL)
+    status = db(db.status).select(db.status.ALL)
+    return response.json(dict(progress=progress, status=status))

@@ -1,3 +1,62 @@
 {{extend 'layout.html'}}
 
-        <p>{{=is_admin}}</p>
+{{block head}}
+<script src="{{=URL('static', 'js/vue.js')}}" xmlns="http://www.w3.org/1999/html"></script>
+<script>
+    var get_reports_url = "{{=URL('api', 'get_reports_admin')}}";
+    var get_progress_status_url = "{{=URL('api', 'get_progress_status')}}";
+</script>
+{{end}}
+
+
+<div id="admin-vue-div">
+
+    <div class="report_table">
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Category</th>
+                    <th>Address</th>
+                    <th>Status</th>
+                    <th>Progress</th>
+                    <th>Created On</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="r in reports">
+                    <td></td>
+                    <td>${r.category}</td>
+                    <td>${r.pretty_address}</td>
+                    <td>
+                        <select class="generic-widget form-control" style="width: 150px; height: 40px;">
+                            <option v-for="s in status" v-bind:selected="r.status === s.status_title ">${s.status_title}</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="generic-widget form-control" style="width: 150px; height: 40px;">
+                            <option v-for="p in progress" v-bind:selected="r.progress === p.progress_title ">${p.progress_title}</option>
+                        </select>
+
+                    </td>
+                    <td>${r.created_on}</td>
+                    <td><i class="fa fa-arrow-right"></i></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+
+
+    </div>
+
+
+
+
+</div>
+
+
+
+
+
+<script src="{{=URL('static', 'js/default_admin_page.js')}}"></script>
