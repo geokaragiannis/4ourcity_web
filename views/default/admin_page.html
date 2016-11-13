@@ -1,18 +1,61 @@
 {{extend 'layout.html'}}
-
 {{block head}}
 <script src="{{=URL('static', 'js/vue.js')}}" xmlns="http://www.w3.org/1999/html"></script>
 <script>
     var get_reports_url = "{{=URL('api', 'get_reports_admin')}}";
     var get_progress_status_url = "{{=URL('api', 'get_progress_status')}}";
-    var post_changes_url = "{{=URL('api', 'post_backend_changes', user_signature=True)}}"
+    var post_changes_url = "{{=URL('api', 'post_backend_changes', user_signature=True)}}";
+    var get_permissions_url = "{{=URL('api', 'get_permissions')}}";
+    var post_permission_changes_url = "{{=URL('api', 'post_permission_changes', user_signature=True)}}";
 </script>
 {{end}}
 
 
 <div id="admin-vue-div">
 
-    <div class="report_table">
+    <!-- admin stuff -->
+    <div v-if="is_admin">
+
+        <button v-on:click="toggle_display_admin(), get_permissions()" v-if="!display_admin">Alter permissions</button>
+        <button v-on:click="toggle_display_admin()" v-if="display_admin">Cancel</button>
+
+        <div v-if="display_admin">
+
+            <div class="report_table permissions_table" v-if="view_report == -1">
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>Permission Type</th>
+                            <th>Delete</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="p in permissions">
+                            <td></td>
+                            <td>${p.user_email}</td>
+                            <td>${p.user_name}</td>
+                            <td>
+                                <select class="generic-widget form-control" style="width: 150px; height: 40px;" v-model="p.permission_type"  v-on:change="changed_permission_type(p._idx)">
+                                    <option v-for="t in permission_types">${t.permission_name}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <i class="fa fa-trash-o"></i>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <button class="submit_button" style="float:right;" v-on:click="submit_permission_changes()">submit</button>
+        </div>
+    </div>
+
+    <div class="report_table" v-if="view_report == -1">
         <table>
             <thead>
                 <tr>
@@ -42,24 +85,89 @@
 
                     </td>
                     <td>${r.created_on}</td>
-                    <td><i class="fa fa-arrow-right"></i></td>
+                    <td><i class="fa fa-arrow-right" v-on:click="show_view_report(r._idx)"></i></td>
                     <td></td>
                 </tr>
+
                 </tbody>
             </table>
 
+        <button class="submit_button" style="float:right;" v-on:click="submit_changes()">submit</button>
 
     </div>
 
-    <button class="submit_button" style="float:right;" v-on:click="submit_changes()">submit</button>
+    <div class="detailed_view_report report_list col-md-3" v-if="view_report !=-1" style="float:left;">
 
+        <ul class="report_list_item" >
+                <li class="report_list_item_description">description: ${reports[view_report].description}</li>
+                <li class="report_list_item_category">category: ${reports[view_report].category}</li>
+                <li class="report_list_item_created_on">date: ${reports[view_report].created_on}</li>
+                <li class="report_list_item_created_on">address: ${reports[view_report].pretty_address}</li>
+                <li class="report_list_item_created_on">
+
+                    <select class="generic-widget form-control" style="width: 150px; height: 40px;" v-model="reports[view_report].status"  v-on:change="changed_progress_status(reports[view_report]._idx)">
+                            <option v-for="s in status">${s.status_title}</option>
+                    </select>
+
+                </li>
+                <li class="report_list_item_created_on">
+
+                    <select class="generic-widget form-control" style="width: 150px; height: 40px;" v-model="reports[view_report].progress"  v-on:change="changed_progress_status(reports[view_report]._idx)">
+                            <option v-for="p in progress">${p.progress_title}</option>
+                    </select>
+
+                </li>
+
+        </ul>
+
+        <button class="cancel_view_report" v-on:click="reset_view_report()">Cancel</button>
+        <button class="submit_button" v-on:click="submit_changes()">submit</button>
+    </div>
+
+    <div id="map2" v-bind:class="{active: view_report == -1}"></div>
 
 
 
 </div>
 
 
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Simple Map</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map2 {
+        width:60%;
+        height:452px;
+        float:right;
 
+      }
+        html,body{
+        width:100%;
 
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      var map;
+      function initMap() {
 
-<script src="{{=URL('static', 'js/default_admin_page.js')}}"></script>
+        map = new google.maps.Map(document.getElementById('map2'), {
+          center: {lat: -34.397, lng: 150.644},
+          zoom: 16
+        });
+
+      }
+
+    </script>
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATlgK06ECpUjfJC5zF9IIkaK1czediuxM&callback=initMap">
+  </script>
+  <script src="{{=URL('static', 'js/default_admin_page.js')}}"></script>
+  </body>
+</html>

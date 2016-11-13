@@ -77,31 +77,31 @@ ul.report_list_item:hover {
   display: none;
 }
 
-/* line 73, ../sass/_main.scss */
+/* line 74, ../sass/_main.scss */
 div.report_table table {
   width: 100%;
   margin: 1em auto 1em auto;
 }
-/* line 77, ../sass/_main.scss */
+/* line 78, ../sass/_main.scss */
 div.report_table table thead {
   display: table-header-group;
   vertical-align: middle;
   border: inherit;
   background: #c4c4c4;
 }
-/* line 83, ../sass/_main.scss */
+/* line 84, ../sass/_main.scss */
 div.report_table table thead tr {
   display: table-row;
   vertical-align: inherit;
   border-color: inherit;
 }
-/* line 90, ../sass/_main.scss */
+/* line 91, ../sass/_main.scss */
 div.report_table table tbody {
   font-size: 14px;
   line-height: 3.00;
   color: #3e3f3a;
 }
-/* line 95, ../sass/_main.scss */
+/* line 96, ../sass/_main.scss */
 div.report_table table tbody tr {
   border-top: 2px solid #ddd;
   border-bottom: 2px solid #ddd;

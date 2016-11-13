@@ -29,6 +29,17 @@ var app = function(){
 
     };
 
+    self.get_permissions = function () {
+
+        $.getJSON(get_permissions_url, function(data){
+            self.vue.permissions = data.permissions;
+            self.vue.permission_types = data.permission_types;
+            enumerate(self.vue.permissions);
+            add_changed_field(self.vue.permissions);
+        })
+
+    };
+
     self.get_progress_status = function () {
         $.getJSON(get_progress_status_url, function(data){
             self.vue.progress = data.progress;
@@ -40,6 +51,10 @@ var app = function(){
     self.changed_progress_status = function (idx) {
 
         self.vue.reports[idx].changed = true;
+    };
+
+    self.changed_permission_type = function (idx) {
+        self.vue.permissions[idx].changed = true;
     };
 
     self.submit_changes = function () {
@@ -73,6 +88,74 @@ var app = function(){
         });
     };
 
+    self.submit_permission_changes = function() {
+        var c = [];
+        for(var i=0;i<self.vue.permissions.length;i++){
+            if(self.vue.permissions[i].changed === true){
+                c.unshift({
+                    id: self.vue.permissions[i].id,
+                    permission_type: self.vue.permissions[i].permission_type
+                });
+
+            }
+        }
+
+        console.log(c);
+
+        $.post(post_permission_changes_url,{
+
+            permission_changes: JSON.stringify(c)
+        },
+        function (data) {
+
+            if(data == 'ok'){
+                $.web2py.flash("updates were sucessful");
+            } else{
+                $.web2py.flash("something went wrong. Try again");
+            }
+
+        });
+    };
+
+    self.show_view_report = function (idx) {
+
+        self.vue.view_report = idx;
+
+        var location = new google.maps.LatLng(self.vue.reports[idx].lat,self.vue.reports[idx].lgn);
+
+        // only way it works
+        $("#map2").hide();
+        $("#map2").show();
+        google.maps.event.trigger(map,'resize');
+        map.setZoom(map.getZoom());
+
+        var marker = new google.maps.Marker({
+                position: location,
+                id: idx
+            });
+
+        self.vue.prev_marker = marker;
+
+        // se the center of the map to the location of the clicked report
+        map.setCenter(location);
+        // draw the marker
+        marker.setMap(map);
+    };
+
+    self.reset_view_report = function(){
+
+        self.vue.view_report = -1;
+        $("#map2").hide();
+
+        // when you go back, set the marker to null (remove it)
+        self.vue.prev_marker.setMap(null)
+    };
+
+    self.toggle_display_admin = function () {
+
+        self.vue.display_admin = !self.vue.display_admin;
+    };
+
 
     self.vue = new Vue({
 
@@ -80,23 +163,30 @@ var app = function(){
         delimiters: ['${', '}'],
         unsafeDelimiters: ['!{', '}'],
         data: {
-
             reports: [],
             logged_user: null,
             is_admin: false,
             logged_in: false,
             progress: [],
             status:[],
-            aaa: true,
-            selected_status: null
+            permissions:[],
+            permission_types:[],
+            selected_status: null,
+            view_report: -1,
+            prev_marker: null,
+            display_admin: false
         },
         methods: {
             get_reports: self.get_reports,
             get_progress_status: self.get_progress_status,
+            get_permissions: self.get_permissions,
             changed_progress_status: self.changed_progress_status,
-            submit_changes: self.submit_changes
-
-
+            submit_changes: self.submit_changes,
+            show_view_report: self.show_view_report,
+            reset_view_report: self.reset_view_report,
+            toggle_display_admin: self.toggle_display_admin,
+            changed_permission_type: self.changed_permission_type,
+            submit_permission_changes: self.submit_permission_changes
         }
     });
 

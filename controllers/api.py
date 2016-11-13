@@ -177,3 +177,48 @@ def post_backend_changes():
         report.update_record(status_id=status_id,progress_id=progress_id)
 
     return 'ok'
+
+def get_permissions():
+
+    user_email = auth.user.email if auth.user else None
+
+    row = db(db.permissions.user_email == user_email).select().first()
+    mun_id = row.mun_id
+
+    # permission people of mun_id
+    permission_rows = db(db.permissions.mun_id == mun_id).select()
+    permissions = []
+    for i,r in enumerate(permission_rows):
+        t = dict(
+            id = r.id,
+            user_email = r.user_email,
+            user_name = r.user_name,
+            permission_type = r.permission_type.permission_name,
+        )
+        permissions.append(t)
+
+    #permission types
+    permission_types = db(db.permission_types).select(db.permission_types.ALL)
+
+    return response.json(dict(permissions=permissions, permission_types=permission_types))
+
+def post_permission_changes():
+    permission_changes = json.loads(request.vars.permission_changes)
+
+    # status_dict is a dictionary that holds the values of the status titles and the
+    # corresponding ids as keys
+    permission_types_rows = db().select(db.permission_types.ALL)
+    permission_type_dict = dict()
+    for t in permission_types_rows:
+        permission_type_dict[t.permission_name] = t.id
+
+
+    for p in permission_changes:
+        # record in db before update
+        permission = db(db.permissions.id == p['id']).select().first()
+        # permission_type (id --> int) that corresponds to the permission_type (string) sent by client. Needed to
+        # update the db.
+        permission_type = permission_type_dict[p['permission_type']]
+        permission.update_record(permission_type=permission_type)
+
+    return 'ok'
