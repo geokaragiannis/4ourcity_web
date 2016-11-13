@@ -205,7 +205,7 @@ def get_permissions():
 def post_permission_changes():
     permission_changes = json.loads(request.vars.permission_changes)
 
-    # status_dict is a dictionary that holds the values of the status titles and the
+    # permission_type_dict is a dictionary that holds the values of the status titles and the
     # corresponding ids as keys
     permission_types_rows = db().select(db.permission_types.ALL)
     permission_type_dict = dict()
@@ -221,4 +221,43 @@ def post_permission_changes():
         permission_type = permission_type_dict[p['permission_type']]
         permission.update_record(permission_type=permission_type)
 
+    return 'ok'
+
+
+def post_new_permission():
+
+    # get the email of logged in user
+    logged_email = auth.user.email if auth.user else None
+
+    row = db(db.permissions.user_email == logged_email).select().first()
+    # mun_id of the logged in user is the mun id of the new user we want to add
+    mun_id = row.mun_id
+
+
+    # posted data from client
+    user_name = request.vars.user_name
+    user_email = request.vars.user_email
+    permission_type = request.vars.permission_type
+
+    permission_types_rows = db().select(db.permission_types.ALL)
+    permission_type_dict = dict()
+    for t in permission_types_rows:
+        permission_type_dict[t.permission_name] = t.id
+
+    p_id = db.permissions.insert(
+        user_name = user_name,
+        user_email = user_email,
+        mun_id = mun_id,
+        permission_type=permission_type_dict[permission_type]
+    )
+
+    return response.json(dict(id=p_id))
+
+
+def delete_permission():
+
+    id = request.vars.id
+
+    db(db.permissions.id == id).delete()
+    
     return 'ok'

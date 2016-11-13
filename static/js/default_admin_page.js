@@ -156,6 +156,57 @@ var app = function(){
         self.vue.display_admin = !self.vue.display_admin;
     };
 
+    self.toggle_adding_new = function () {
+
+        self.vue.adding_new = !self.vue.adding_new;
+    };
+
+    self.add_permission = function () {
+
+        $.post(post_new_permission_url, {
+
+            user_name : self.vue.permission_name,
+            user_email: self.vue.permission_email,
+            permission_type: self.vue.new_permission_type
+
+        },
+        function (data) {
+            c = {
+                id: data.id,
+                user_name: self.vue.permission_name,
+                user_email: self.vue.permission_email,
+                permission_type: self.vue.new_permission_type
+            };
+            self.vue.permissions.unshift(c);
+            enumerate(self.vue.permissions);
+            add_changed_field(self.vue.permissions);
+            $.web2py.flash("updates were sucessful");
+            $.web2py.enableElement($("#submit_new_permission"));
+            // change views
+            self.vue.adding_new = false;
+
+        })
+    };
+
+    self.delete_permission = function (idx) {
+
+        var id = self.vue.permissions[idx].id;
+        $.post(delete_permission_url, {
+            id: id
+        },
+        function (data) {
+
+             if(data == 'ok'){
+                self.vue.permissions.splice(idx,1);
+                enumerate(self.vue.permissions);
+
+
+            } else{
+                $.web2py.flash("deletion unsuccessful. Try again");
+            }
+        })
+    };
+
 
     self.vue = new Vue({
 
@@ -174,7 +225,11 @@ var app = function(){
             selected_status: null,
             view_report: -1,
             prev_marker: null,
-            display_admin: false
+            display_admin: false,
+            adding_new: false,
+            permission_name: null,
+            permission_email: null,
+            new_permission_type: null
         },
         methods: {
             get_reports: self.get_reports,
@@ -186,7 +241,10 @@ var app = function(){
             reset_view_report: self.reset_view_report,
             toggle_display_admin: self.toggle_display_admin,
             changed_permission_type: self.changed_permission_type,
-            submit_permission_changes: self.submit_permission_changes
+            submit_permission_changes: self.submit_permission_changes,
+            toggle_adding_new : self.toggle_adding_new,
+            add_permission: self.add_permission,
+            delete_permission: self.delete_permission
         }
     });
 

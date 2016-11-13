@@ -7,6 +7,8 @@
     var post_changes_url = "{{=URL('api', 'post_backend_changes', user_signature=True)}}";
     var get_permissions_url = "{{=URL('api', 'get_permissions')}}";
     var post_permission_changes_url = "{{=URL('api', 'post_permission_changes', user_signature=True)}}";
+    var post_new_permission_url = "{{=URL('api', 'post_new_permission', user_signature=True)}}";
+    var delete_permission_url = "{{=URL('api', 'delete_permission', user_signature=True)}}";
 </script>
 {{end}}
 
@@ -16,12 +18,15 @@
     <!-- admin stuff -->
     <div v-if="is_admin">
 
-        <button v-on:click="toggle_display_admin(), get_permissions()" v-if="!display_admin">Alter permissions</button>
-        <button v-on:click="toggle_display_admin()" v-if="display_admin">Cancel</button>
+        <button v-on:click="toggle_display_admin(), get_permissions()" v-if="!display_admin && view_report == -1">Alter permissions</button>
+        <button v-on:click="toggle_display_admin()" v-if="display_admin && !adding_new" style="margin-bottom: 30px; float: left;">Cancel</button>
 
         <div v-if="display_admin">
 
-            <div class="report_table permissions_table" v-if="view_report == -1">
+            <button v-if="!adding_new" v-on:click="toggle_adding_new()" style="float: right;">Add new</button>
+            <button v-if="adding_new" v-on:click="toggle_adding_new()" style="float: right;">Cancel</button>
+
+            <div class="report_table permissions_table" v-if="view_report == -1 && !adding_new">
                 <table>
                     <thead>
                         <tr>
@@ -44,18 +49,55 @@
                                 </select>
                             </td>
                             <td>
-                                <i class="fa fa-trash-o"></i>
+                                <i class="fa fa-trash-o" v-on:click="delete_permission(p._idx)"></i>
                             </td>
                             <td></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <button class="submit_button" style="float:right;" v-on:click="submit_permission_changes()">submit</button>
+            <button class="submit_button" style="float:right;" v-if="!adding_new" v-on:click="submit_permission_changes()">submit</button>
+        </div>
+
+        <div v-if="adding_new" class="add_new_permisison">
+
+    <form action="#" v-on:submit.prevent="add_permission()" style="margin-top: 100px;" class="form-horizontal col-md-7 col-md-offset-4" enctype="multipart/form-data" method="post">
+	<div class="form-group">
+		<div class="col-sm-5">
+			<input class="form-control string"placeholder="Name" type="text" v-model="permission_name" >
+			<span class="help-block">
+			</span>
+		</div>
+	</div>
+    <div class="form-group" >
+		<div class="col-sm-5">
+			<input class="form-control string" placeholder="Email" type="text" v-model="permission_email">
+			<span class="help-block">
+			</span>
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-5">
+			<select class="generic-widget form-control" v-model="new_permission_type">
+                <option>choose permisison type</option>
+				<option v-for="t in permission_types">${t.permission_name}</option>
+
+			</select>
+            <span class="help-block">
+			</span>
+	    </div>
+    </div>
+
+    <button class="submit_new_permission">submit</button>
+</form>
+
+
+
+
         </div>
     </div>
 
-    <div class="report_table" v-if="view_report == -1">
+    <div class="report_table" v-if="view_report == -1 && !display_admin">
         <table>
             <thead>
                 <tr>
