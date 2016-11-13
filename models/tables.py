@@ -83,18 +83,22 @@ db.define_table('messages',
                 Field('created_on', 'datetime'),
                 )
 
+db.define_table('permission_types',
+                Field('permission_name', 'string'))
+
 db.define_table('permissions',
                 Field('user_email', 'string'),
+                Field('user_name', 'string'),
                 Field('mun_id', db.municipalities),
-                Field('permission_type', 'string'))
+                Field('permission_type', db.permission_types))
 
-db.permissions.permission_type.requires = IS_IN_SET(['admin','read-write','none'])
+db.permissions.permission_type.requires = IS_IN_DB(db,'permission_types.id', '%(permission_name)s', zero=T('choose one'))
 db.permissions.mun_id.requires = IS_IN_DB(db,'municipalities.id', '%(mun_name)s', zero=T('choose one'))
 
 
 #db.banana.insert(latitude=36.996164,longitude=-122.058640,map_popup='im here')
 
 
-#b.banana.truncate()
+#db.permissions.truncate()
 # after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)

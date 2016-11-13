@@ -97,6 +97,10 @@
 
     </div>
 
+    <div id="map" v-bind:class="{active: display_var}">
+    </div>
+
+    <button class="haha" v-on:click="demo" >press me</button>
 
 </div>
 
@@ -121,8 +125,7 @@
     </style>
   </head>
   <body>
-    <div id="map">
-    </div>
+
     <script>
 
 
@@ -130,7 +133,6 @@
         // used in deleting prvious marker if user clicks again
         var prev_marker;
       function initMap() {
-
 
           // get the lat,lgn the url and convert it to a float (from string), then initialize
           // map with clat,clgn as the center.

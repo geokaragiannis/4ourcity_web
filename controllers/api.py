@@ -1,17 +1,8 @@
+import json
+
+
 def index():
     pass
-
-
-# def get_coordinates():
-#     # python list
-#     rows = db().select(db.reports.ALL)
-#     locations=[]
-#
-#     for i, r in enumerate(rows):
-#         t = dict()
-
-
-    #return response.json(dict(locations=locations))
 
 
 def get_categories():
@@ -42,7 +33,8 @@ def get_reports():
 
     # query over the searched municipality (i.e the mun_name we get from the request.vars).
     # we get the id of the requested municipality and return the list of reports that belong to it
-    rows = db(db.reports.mun_id == mun_id).select()
+    # change the status_id == 2 (do not hard code it)
+    rows = db(db.reports.mun_id == mun_id and db.reports.status_id == 2).select()
     #rows = db().select(db.reports.ALL)
 
     for i,r in enumerate(rows):
@@ -143,11 +135,90 @@ def get_reports_admin():
         reports.append(t)
 
     logged_in = auth.user_id is not None
+    is_admin = can_change_permissions(logged_user)
 
     return response.json(dict(
         reports=reports,
         logged_in=logged_in,
-        logged_user=logged_user
+        logged_user=logged_user,
+        is_admin=is_admin
     ))
 
+# returns the progress, status tables
+def get_progress_status():
+    progress = db(db.progress).select(db.progress.ALL)
+    status = db(db.status).select(db.status.ALL)
+    return response.json(dict(progress=progress, status=status))
 
+
+def post_backend_changes():
+    backend_changes = json.loads(request.vars.backend_changes)
+
+    # status_dict is a dictionary that holds the values of the status titles and the
+    # corresponding ids as keys
+    status_rows=db().select(db.status.ALL)
+    status_dict = dict()
+    for s in status_rows:
+        status_dict[s.status_title] = s.id
+
+    # progress_dict is a dictionary that holds the values of the progress titles and the
+    # corresponding ids as keys
+    progress_rows = db().select(db.progress.ALL)
+    progress_dict = dict()
+    for p in progress_rows:
+        progress_dict[p.progress_title] = p.id
+
+    for b in backend_changes:
+        report = db(db.reports.id == b['id']).select().first()
+        # status, progress ids that correspond to the title sent by client. Needed to
+        # update the db
+        status_id = status_dict[b['status']]
+        progress_id = progress_dict[b['progress']]
+        report.update_record(status_id=status_id,progress_id=progress_id)
+
+    return 'ok'
+
+def get_permissions():
+
+    user_email = auth.user.email if auth.user else None
+
+    row = db(db.permissions.user_email == user_email).select().first()
+    mun_id = row.mun_id
+
+    # permission people of mun_id
+    permission_rows = db(db.permissions.mun_id == mun_id).select()
+    permissions = []
+    for i,r in enumerate(permission_rows):
+        t = dict(
+            id = r.id,
+            user_email = r.user_email,
+            user_name = r.user_name,
+            permission_type = r.permission_type.permission_name,
+        )
+        permissions.append(t)
+
+    #permission types
+    permission_types = db(db.permission_types).select(db.permission_types.ALL)
+
+    return response.json(dict(permissions=permissions, permission_types=permission_types))
+
+def post_permission_changes():
+    permission_changes = json.loads(request.vars.permission_changes)
+
+    # status_dict is a dictionary that holds the values of the status titles and the
+    # corresponding ids as keys
+    permission_types_rows = db().select(db.permission_types.ALL)
+    permission_type_dict = dict()
+    for t in permission_types_rows:
+        permission_type_dict[t.permission_name] = t.id
+
+
+    for p in permission_changes:
+        # record in db before update
+        permission = db(db.permissions.id == p['id']).select().first()
+        # permission_type (id --> int) that corresponds to the permission_type (string) sent by client. Needed to
+        # update the db.
+        permission_type = permission_type_dict[p['permission_type']]
+        permission.update_record(permission_type=permission_type)
+
+    return 'ok'
