@@ -34,7 +34,8 @@ def get_reports():
     # query over the searched municipality (i.e the mun_name we get from the request.vars).
     # we get the id of the requested municipality and return the list of reports that belong to it
     # change the status_id == 2 (do not hard code it)
-    rows = db(db.reports.mun_id == mun_id, db.reports.status_id == 2).select()
+    query = ((db.reports.mun_id == mun_id) & (db.reports.status_id == 2))
+    rows = db(query).select()
     #rows = db().select(db.reports.ALL)
 
     for i,r in enumerate(rows):
