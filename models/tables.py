@@ -73,16 +73,6 @@ db.reports.square_key.readable = db.reports.square_key.writable = False
 db.reports.lat_long.readable = db.reports.lat_long.writable = False
 
 
-
-
-db.define_table('messages',
-                Field('report_id', db.reports),
-                Field('employee_id', db.auth_user),
-                Field('title', 'string'),
-                Field('msg_content', 'text' , requires=IS_NOT_EMPTY()),
-                Field('created_on', 'datetime'),
-                )
-
 db.define_table('permission_types',
                 Field('permission_name', 'string'))
 
@@ -94,6 +84,14 @@ db.define_table('permissions',
 
 db.permissions.permission_type.requires = IS_IN_DB(db,'permission_types.id', '%(permission_name)s', zero=T('choose one'))
 db.permissions.mun_id.requires = IS_IN_DB(db,'municipalities.id', '%(mun_name)s', zero=T('choose one'))
+
+db.define_table('messages',
+                Field('report_id', db.reports),
+                Field('mun_id', db.municipalities),
+                Field('author', db.permissions),
+                Field('message_content', 'text' , requires=IS_NOT_EMPTY()),
+                Field('created_on', 'datetime', default=datetime.datetime.utcnow()))
+
 
 
 #db.banana.insert(latitude=36.996164,longitude=-122.058640,map_popup='im here')

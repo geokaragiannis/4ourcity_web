@@ -207,6 +207,21 @@ var app = function(){
         })
     };
 
+    self.toggle_is_adding_message = function () {
+
+        self.vue.is_adding_message = !self.vue.is_adding_message;
+    };
+
+    self.post_message = function (id) {
+
+        $.post(post_message_url, {
+            message_content: self.vue.message_content,
+            id: id
+        }, function (data) {
+
+        })
+    };
+
 
     self.vue = new Vue({
 
@@ -229,7 +244,10 @@ var app = function(){
             adding_new: false,
             permission_name: null,
             permission_email: null,
-            new_permission_type: null
+            new_permission_type: null,
+            is_adding_message: false,
+            message_content: null,
+            messages: []
         },
         methods: {
             get_reports: self.get_reports,
@@ -244,7 +262,9 @@ var app = function(){
             submit_permission_changes: self.submit_permission_changes,
             toggle_adding_new : self.toggle_adding_new,
             add_permission: self.add_permission,
-            delete_permission: self.delete_permission
+            delete_permission: self.delete_permission,
+            toggle_is_adding_message: self.toggle_is_adding_message,
+            post_message: self.post_message
         }
     });
 

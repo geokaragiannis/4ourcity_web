@@ -245,6 +245,12 @@ def post_new_permission():
     for t in permission_types_rows:
         permission_type_dict[t.permission_name] = t.id
 
+    # here we just query on the permission_types table to find the row with permission_name = permission_type
+    #(gotten from client) and then return the id, so that we insert it to the table permissions
+    x = db(db.permission_types.permission_name == permission_type).select(db.permission_types.id).first()
+    logger.info("perm type x is: %r", x.id)
+    logger.info("permission type is: %r" ,permission_type_dict[permission_type])
+
     p_id = db.permissions.insert(
         user_name = user_name,
         user_email = user_email,
@@ -260,4 +266,69 @@ def delete_permission():
     id = request.vars.id
 
     db(db.permissions.id == id).delete()
+    return 'ok'
+
+def get_messages():
+    # get the report_id start_idx, end_idx from client
+    report_id = int(request.vars.report_id) if request.vars.report_id is not None else -1
+    start_idx = int(request.vars.start_idx) if request.vars.start_idx is not None else 0
+    end_idx = int(request.vars.end_idx) if request.vars.end_idx is not None else 0
+
+    messages = []
+    has_more = False
+    rows = db(db.messages.report_id == report_id).select(db.messages.ALL, limitby=(start_idx, end_idx + 1), orderby=~db.posts.created_on)
+    for i, r in enumerate(rows):
+        if i < end_idx - start_idx:
+            t = dict(
+                id=r.id,
+                message_author=r.author,
+                message_content=r.message_content,
+                created_on=r.created_on,
+            )
+            messages.append(t)
+        else:
+            has_more = True
+
+    return response.json(dict(
+        messages=messages,
+        has_more=has_more
+    ))
+
+def post_message():
+    report_id = request.vars.id
+    message_content = request.vars.message_content
+
+    user_email = auth.user.email if auth.user else None
+    # return it so we can display it
+    user_name_row = db(db.auth_user.email == user_email).select(db.auth_user.first_name)
+    #user_name = user_name_row.first_name
+    logger.info('user_name: %r', user_name_row)
+
+    # permission_rows = db().select(db.permissions.ALL)
+    # permission_dict = dict()
+    # for p in permission_rows:
+    #     permission_dict[p.user_email] = p.id
+    #
+    # # integer id, which is a fk to permissions (author which points to permissions table)
+    # author = permission_dict[user_email]
+    # logger.info("author id is: %r", author)
+
+    permission_row = db(db.permissions.user_email == user_email).select(db.permissions.ALL).first()
+
+    # get the id from the row above
+    author_id = permission_row.id
+    logger.info("author_id is: %r", author_id)
+
+    # get the mun_id from the row above
+    mun_id = permission_row.mun_id
+    logger.info("mun_id is: %r", mun_id)
+
+    m_id = db.messages.insert(
+        author=author_id,
+        report_id=report_id,
+        mun_id=mun_id,
+        message_content=message_content,
+
+    )
+
     return 'ok'
