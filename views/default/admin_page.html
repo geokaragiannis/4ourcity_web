@@ -10,6 +10,7 @@
     var post_new_permission_url = "{{=URL('api', 'post_new_permission', user_signature=True)}}";
     var delete_permission_url = "{{=URL('api', 'delete_permission', user_signature=True)}}";
     var post_message_url = "{{=URL('api', 'post_message', user_signature=True)}}";
+    var messages_url = "{{=URL('api', 'get_messages')}}";
 </script>
 {{end}}
 
@@ -128,7 +129,7 @@
 
                     </td>
                     <td>${r.created_on}</td>
-                    <td><i class="fa fa-arrow-right" v-on:click="show_view_report(r._idx)"></i></td>
+                    <td><i class="fa fa-arrow-right" v-on:click="show_view_report(r._idx), get_messages(r.id)"></i></td>
                     <td></td>
                 </tr>
 
@@ -190,8 +191,8 @@
         </div>
 
         <div class="message-list" v-for="m in messages">
-            <p class="message_content"></p>
-            <p class="message_author"></p>
+            <p class="message_content">${m.message_content}</p>
+            <p class="message_author">${m.message_author}</p>
         </div>
     </div>
 

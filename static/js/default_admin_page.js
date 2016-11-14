@@ -218,7 +218,25 @@ var app = function(){
             message_content: self.vue.message_content,
             id: id
         }, function (data) {
+            self.vue.messages.unshift(data.message);
+        })
+    };
 
+    // returns url
+    function get_messages_url(start_idx, end_idx,id) {
+        var pp = {
+            start_idx: start_idx,
+            end_idx: end_idx,
+            report_id: id
+        };
+        return messages_url + "?" + $.param(pp);
+    }
+
+    self.get_messages = function (id) {
+
+        $.getJSON(get_messages_url(0,4,id), function(data){
+            self.vue.messages = data.messages;
+            self.vue.has_more = data.has_more;
         })
     };
 
@@ -247,7 +265,8 @@ var app = function(){
             new_permission_type: null,
             is_adding_message: false,
             message_content: null,
-            messages: []
+            messages: [],
+            has_more: false
         },
         methods: {
             get_reports: self.get_reports,
@@ -264,7 +283,8 @@ var app = function(){
             add_permission: self.add_permission,
             delete_permission: self.delete_permission,
             toggle_is_adding_message: self.toggle_is_adding_message,
-            post_message: self.post_message
+            post_message: self.post_message,
+            get_messages: self.get_messages
         }
     });
 

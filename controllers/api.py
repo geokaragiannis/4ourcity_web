@@ -276,12 +276,14 @@ def get_messages():
 
     messages = []
     has_more = False
-    rows = db(db.messages.report_id == report_id).select(db.messages.ALL, limitby=(start_idx, end_idx + 1), orderby=~db.posts.created_on)
+    rows = db(db.messages.report_id == report_id).select(db.messages.ALL, limitby=(start_idx, end_idx + 1), orderby=~db.messages.created_on)
     for i, r in enumerate(rows):
         if i < end_idx - start_idx:
+            permission_row = db(db.permissions.id == r.author).select(db.permissions.ALL).first()
+            author = permission_row.user_name
             t = dict(
                 id=r.id,
-                message_author=r.author,
+                message_author=author,
                 message_content=r.message_content,
                 created_on=r.created_on,
             )
@@ -331,4 +333,14 @@ def post_message():
 
     )
 
-    return 'ok'
+    m = db.messages(m_id)
+
+    author = permission_row.user_name
+    message = dict(
+        id=m_id,
+        message_author=author,
+        message_content=m.message_content,
+        created_on=m.created_on,
+    )
+
+    return response.json(dict(message=message))
