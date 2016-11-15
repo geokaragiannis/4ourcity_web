@@ -23,7 +23,7 @@ var app = function(){
             var latLng = new google.maps.LatLng(self.vue.reports[i].lat, self.vue.reports[i].lgn);
 
             //Creating a marker and putting it on the map
-            marker=createMarker(latLng,self.vue.reports[i]._idx);
+            marker=createMarker(latLng,self.vue.reports[i]._idx,self.vue.reports[i].progress);
             //self.vue.markers.unshift(marker);
 
             marker.setMap(map);
@@ -32,15 +32,24 @@ var app = function(){
 
     // helper function that returns a marker of position: location and id: id
     // taken from: https://goo.gl/PmNGud
-    function createMarker(location, idx) {
+    function createMarker(location, idx,progress) {
+
+        if(progress === "finished"){
+            var icon = {
+                    url: "http://maps.google.com/mapfiles/ms/icons/green-dot.png", // url
+                    scaledSize: new google.maps.Size(40, 40) // scaled size
+                };
+        }
 
         var marker = new google.maps.Marker({
                 position: location,
-                id: idx
+                id: idx,
+                icon: icon
             });
         google.maps.event.addListener(marker,'click',function(){
             //window.alert(marker.id);
             self.vue.display_selected_report = marker.id;
+            self.vue.get_messages(self.vue.reports[self.vue.display_selected_report].id)
         });
         return marker;
     }
