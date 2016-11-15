@@ -7,9 +7,17 @@
 </script>
 {{end}}
 
+<body class="search_body"></body>
+
 <div id="search-vue-div" >
-      <input id="address" type="textbox" v-model="search_query">
-      <input id="submit" type="button" value="GO" v-on:click="search()" v-bind:disabled="search_query === null || !(/\S/.test(search_query))">
+
+
+    <div id="gradient"></div>
+    <form class="searchbox">
+        <input type="search" placeholder="Search" v-model="search_query"/>
+        <button type="button" value="search"  v-on:click="search()" v-bind:disabled="search_query === null || !(/\S/.test(search_query))">&nbsp;</button>
+    </form>
+
 
 <div class="search_results" v-if="have_searched && search_completed" v-for="s in searched_results" >
 
