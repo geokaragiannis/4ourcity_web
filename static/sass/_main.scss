@@ -102,4 +102,34 @@ div.report_table{
   }
 }
 
+div.all_messages{
+  margin-top: 15px;
+  border-top: $clrPostBorder solid 3px;
+}
+
+div.message_div{
+  border-color: $clrPostBorder;
+  border-style: solid;
+  border-width: 2px;
+  background: $clrPostBackground;
+  margin: 20px 0px 20px 10px;
+  padding: 20px;
+  @include border-radius(16px);
+
+  &:hover{
+    // when we hover make the div grow
+    // taken from https://css-tricks.com/snippets/css/scale-on-hover-with-webkit-transition/
+    transition: all .2s ease-in-out;
+    transform: scale(1.05);
+  }
+
+  p.message_author,p.created_date{
+    // make author,date be on the same line
+    display: inline-block;
+    //change size and font color
+    font-size: 12px;
+    color: $detailsFont;
+  }
+}
+
 

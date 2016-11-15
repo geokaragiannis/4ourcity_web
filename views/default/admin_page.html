@@ -190,10 +190,17 @@
             </form>
         </div>
 
-        <div class="message-list" v-for="m in messages">
-            <p class="message_content">${m.message_content}</p>
-            <p class="message_author">${m.message_author}</p>
+
+        <div class="all_messages">
+            <div class="message-list" v-for="m in messages">
+                <div class="message_div text-left">
+                    <p class="message_content">${m.message_content}</p>
+                    <p class="message_author">${m.message_author}</p>
+                    <p class="created_date">${m.created_on}</p>
+                </div>
+            </div>
         </div>
+
     </div>
 
     <div id="map2" v-bind:class="{active: view_report == -1}"></div>

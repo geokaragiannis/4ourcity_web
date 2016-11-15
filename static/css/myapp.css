@@ -107,3 +107,33 @@ div.report_table table tbody tr {
   border-bottom: 2px solid #ddd;
   text-align: left;
 }
+
+/* line 105, ../sass/_main.scss */
+div.all_messages {
+  margin-top: 15px;
+  border-top: #3593cc solid 3px;
+}
+
+/* line 110, ../sass/_main.scss */
+div.message_div {
+  border-color: #3593cc;
+  border-style: solid;
+  border-width: 2px;
+  background: #eeeeee;
+  margin: 20px 0px 20px 10px;
+  padding: 20px;
+  -moz-border-radius: 16px;
+  -webkit-border-radius: 16px;
+  border-radius: 16px;
+}
+/* line 119, ../sass/_main.scss */
+div.message_div:hover {
+  transition: all .2s ease-in-out;
+  transform: scale(1.05);
+}
+/* line 126, ../sass/_main.scss */
+div.message_div p.message_author, div.message_div p.created_date {
+  display: inline-block;
+  font-size: 12px;
+  color: #235d91;
+}

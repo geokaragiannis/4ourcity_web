@@ -14,14 +14,18 @@ def get_reports():
 
     mun_name = request.vars.mun_name if request.vars.mun_name is not None else None
 
-    mun_rows = db().select(db.municipalities.ALL)
+    m_row = db(db.municipalities.mun_name == mun_name).select(db.municipalities.id).first()
 
-    mun_id = None
+    logger.info("m_row %r", m_row)
 
-    for m in mun_rows:
-        if mun_name == m.mun_name:
-            mun_id=m.id
-            break
+    # if none, then municipality is not in the table
+    if m_row is None:
+        return 'nok'
+
+    # mun_id of municipality specified
+    mun_id = m_row.id
+
+
 
     logger.info("municipality name is: %r", mun_name)
     logger.info("mun_id is: %r", mun_id)
@@ -70,28 +74,20 @@ def add_report():
 
     municipality = request.vars.municipality
     category = request.vars.category
-    cat_id = None
-    mun_id = None
-
-    cat_rows = db().select(db.categories.ALL)
-    mun_rows = db().select(db.municipalities.ALL)
 
     logger.info("user id is: %r", auth.user_id)
     logger.info("municipality in api: %r", municipality)
 
-    for c in cat_rows:
-        if category == c.cat_title:
-            cat_id=c.id
-            break
+    cat_row = db(db.categories.cat_title == category).select(db.categories.id).first()
+    cat_id = cat_row.id
 
-    for m in mun_rows:
-        if municipality == m.mun_name:
-            mun_id=m.id
-            break
+    mun_row = db(db.municipalities.mun_name == municipality).select(db.municipalities.id).first()
+    # mun_id of municipality specified
+    mun_id = mun_row.id
 
 
-    logger.info("cat id in api is: %r", cat_id)
-    logger.info("mun_id in api: %r", mun_id )
+    logger.info("2 cat id in api is: %r", cat_id)
+    logger.info("2 mun_id in api: %r", mun_id)
 
     p_id = db.reports.insert(
         latitude=request.vars.latitude,
@@ -155,26 +151,20 @@ def get_progress_status():
 def post_backend_changes():
     backend_changes = json.loads(request.vars.backend_changes)
 
-    # status_dict is a dictionary that holds the values of the status titles and the
-    # corresponding ids as keys
-    status_rows=db().select(db.status.ALL)
-    status_dict = dict()
-    for s in status_rows:
-        status_dict[s.status_title] = s.id
-
-    # progress_dict is a dictionary that holds the values of the progress titles and the
-    # corresponding ids as keys
-    progress_rows = db().select(db.progress.ALL)
-    progress_dict = dict()
-    for p in progress_rows:
-        progress_dict[p.progress_title] = p.id
-
     for b in backend_changes:
         report = db(db.reports.id == b['id']).select().first()
         # status, progress ids that correspond to the title sent by client. Needed to
         # update the db
-        status_id = status_dict[b['status']]
-        progress_id = progress_dict[b['progress']]
+
+        status_row = db(db.status.status_title ==b['status']).select(db.status.id).first()
+        status_id = status_row.id
+
+        progress_row = db(db.progress.progress_title == b['progress']).select(db.progress.id).first()
+        progress_id = progress_row.id
+
+        logger.info("status id: %r", status_id)
+        logger.info("rpogress id: %r", progress_id)
+
         report.update_record(status_id=status_id,progress_id=progress_id)
 
     return 'ok'
@@ -206,21 +196,16 @@ def get_permissions():
 def post_permission_changes():
     permission_changes = json.loads(request.vars.permission_changes)
 
-    # permission_type_dict is a dictionary that holds the values of the status titles and the
-    # corresponding ids as keys
-    permission_types_rows = db().select(db.permission_types.ALL)
-    permission_type_dict = dict()
-    for t in permission_types_rows:
-        permission_type_dict[t.permission_name] = t.id
-
-
     for p in permission_changes:
         # record in db before update
         permission = db(db.permissions.id == p['id']).select().first()
-        # permission_type (id --> int) that corresponds to the permission_type (string) sent by client. Needed to
-        # update the db.
-        permission_type = permission_type_dict[p['permission_type']]
-        permission.update_record(permission_type=permission_type)
+
+        permission_row = db(db.permission_types.permission_name == p['permission_type']).select(db.permission_types.id).first()
+        permission_type_id = permission_row.id
+
+
+        logger.info("2 perm_id: %r", permission_type_id)
+        permission.update_record(permission_type=permission_type_id)
 
     return 'ok'
 
@@ -240,22 +225,19 @@ def post_new_permission():
     user_email = request.vars.user_email
     permission_type = request.vars.permission_type
 
-    permission_types_rows = db().select(db.permission_types.ALL)
-    permission_type_dict = dict()
-    for t in permission_types_rows:
-        permission_type_dict[t.permission_name] = t.id
+
 
     # here we just query on the permission_types table to find the row with permission_name = permission_type
     #(gotten from client) and then return the id, so that we insert it to the table permissions
-    x = db(db.permission_types.permission_name == permission_type).select(db.permission_types.id).first()
-    logger.info("perm type x is: %r", x.id)
-    logger.info("permission type is: %r" ,permission_type_dict[permission_type])
+    permission_type_row = db(db.permission_types.permission_name == permission_type).select(db.permission_types.id).first()
+    permission_type_id = permission_type_row.id
+    logger.info("perm type x is: %r", permission_type_id)
 
     p_id = db.permissions.insert(
         user_name = user_name,
         user_email = user_email,
         mun_id = mun_id,
-        permission_type=permission_type_dict[permission_type]
+        permission_type=permission_type_id
     )
 
     return response.json(dict(id=p_id))

@@ -72,12 +72,19 @@ var app = function(){
             mun_name: self.vue.county_name
         },
          function(data){
-            self.vue.reports = data.reports;
-            self.vue.logged_in = data.logged_in;
-            self.vue.logged_user = data.logged_user;
 
-            enumerate(self.vue.reports);
-            self.vue.show_map();
+             if(data == "nok"){
+                 $.web2py.flash("municipality not registered. Please see registered municipalities and " +
+                     "refine your search");
+             } else{
+                 self.vue.reports = data.reports;
+                self.vue.logged_in = data.logged_in;
+                self.vue.logged_user = data.logged_user;
+
+                enumerate(self.vue.reports);
+                self.vue.show_map();
+             }
+
         });
 
     };
