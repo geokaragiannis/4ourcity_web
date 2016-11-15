@@ -201,6 +201,10 @@
             </div>
         </div>
 
+        <div v-if="has_more" class="show_more" >
+                <button class="btn btn-default" v-on:click="get_more(reports[view_report].id)" id="load-more">Load more</button>
+        </div>
+
     </div>
 
     <div id="map2" v-bind:class="{active: view_report == -1}"></div>

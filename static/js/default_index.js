@@ -6,6 +6,13 @@ var app = function(){
         return v.map(function(e) {e._idx = k++;});
     };
 
+    // Extends an array
+    self.extend = function(a, b) {
+        for (var i = 0; i < b.length; i++) {
+            a.push(b[i]);
+        }
+    };
+
 
     self.show_map = function() {
 
@@ -118,9 +125,34 @@ var app = function(){
             });
     };
 
-    self.demo = function () {
+    // returns url
+    function get_messages_url(start_idx, end_idx,id) {
+        var pp = {
+            start_idx: start_idx,
+            end_idx: end_idx,
+            report_id: id
+        };
+        return messages_url + "?" + $.param(pp);
+    }
 
-        self.vue.display_var = !self.vue.display_var;
+    self.get_messages = function (id) {
+
+        $.getJSON(get_messages_url(0,4,id), function(data){
+            self.vue.messages = data.messages;
+            self.vue.has_more = data.has_more;
+        })
+    };
+
+    self.get_more = function(id){
+        var num_messages = self.vue.messages.length;
+        $.getJSON(get_messages_url(num_messages, num_messages+4,id), function(data){
+
+            // get the new value of has_more
+            self.vue.has_more = data.has_more;
+            // append new posts to slef.vue.posts (existing list of posts)
+            self.extend(self.vue.messages,data.messages);
+        });
+
     };
 
 
@@ -152,7 +184,8 @@ var app = function(){
             have_searched: false,
             search_address: null,
             county_name: null,
-            display_var: false
+            messages: [],
+            has_more: false
 
         },
         methods: {
@@ -164,7 +197,8 @@ var app = function(){
             remove_marker: self.remove_marker,
             set_display_selected_report: self.set_display_selected_report,
             toggle_have_searched: self.toggle_have_searched,
-            demo: self.demo
+            get_messages: self.get_messages,
+            get_more: self.get_more
 
         }
     });

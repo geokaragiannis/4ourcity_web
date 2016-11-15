@@ -8,6 +8,7 @@
     var categories_url = "{{=URL('api', 'get_categories')}}";
     var get_reports_url = "{{=URL('api', 'get_reports')}}";
     var add_report_url = "{{=URL('api', 'add_report', user_signature=True)}}";
+    var messages_url = "{{=URL('api', 'get_messages')}}";
 </script>
 
 {{end}}
@@ -26,7 +27,7 @@
                 <li class="report_list_item_created_on">status: ${r.status}</li>
                 <li class="report_list_item_created_on">progress: ${r.progress}</li>
                 <li>
-                    <button class="expand_report" v-on:click="set_display_selected_report(r._idx)"> GO
+                    <button class="expand_report" v-on:click="set_display_selected_report(r._idx), get_messages(r.id)"> GO
                         <i class="fa fa-arrow-right" aria-hidden="true" id="fa_select" ></i>
                     </button>
                 </li>
@@ -95,12 +96,24 @@
 
         </ul>
 
+        <div class="all_messages">
+            <div class="message-list" v-for="m in messages">
+                <div class="message_div text-left">
+                    <p class="message_content">${m.message_content}</p>
+                    <p class="message_author">${m.message_author}</p>
+                    <p class="created_date">${m.created_on}</p>
+                </div>
+            </div>
+        </div>
+
+        <div v-if="has_more" class="show_more" >
+                <button class="btn btn-default" v-on:click="get_more(reports[display_selected_report].id)" id="load-more">Load more</button>
+        </div>
+
     </div>
 
-    <div id="map" v-bind:class="{active: display_var}">
+    <div id="map">
     </div>
-
-    <button class="haha" v-on:click="demo" >press me</button>
 
 </div>
 

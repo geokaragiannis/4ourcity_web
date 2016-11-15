@@ -10,6 +10,13 @@ var app = function(){
         return v.map(function(e) {e._idx = k++;});
     };
 
+    // Extends an array
+    self.extend = function(a, b) {
+        for (var i = 0; i < b.length; i++) {
+            a.push(b[i]);
+        }
+    };
+
     // add a changed flag, that indicates whether status or progress have been changed.
     // Default value is false
     var add_changed_field = function(y){
@@ -240,6 +247,18 @@ var app = function(){
         })
     };
 
+    self.get_more = function(id){
+        var num_messages = self.vue.messages.length;
+        $.getJSON(get_messages_url(num_messages, num_messages+4,id), function(data){
+
+            // get the new value of has_more
+            self.vue.has_more = data.has_more;
+            // append new posts to slef.vue.posts (existing list of posts)
+            self.extend(self.vue.messages,data.messages);
+        });
+
+    };
+
 
     self.vue = new Vue({
 
@@ -284,7 +303,8 @@ var app = function(){
             delete_permission: self.delete_permission,
             toggle_is_adding_message: self.toggle_is_adding_message,
             post_message: self.post_message,
-            get_messages: self.get_messages
+            get_messages: self.get_messages,
+            get_more: self.get_more
         }
     });
 
