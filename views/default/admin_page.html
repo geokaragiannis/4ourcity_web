@@ -102,13 +102,12 @@
     <div class="report_table" v-if="view_report == -1 && !display_admin">
 
 
-            <fieldset>
-
-                <div class="category_div">
-                    <legend class="category_query">Category: </legend>
+            <fieldset class="col-md-4">
+                <legend class="category_query container">Category: </legend>
+                <div class="category_div container">
                     <div class="category_query" v-for="c in categories">
-                        <label> ${c.cat_title}</label>
-                        <input v-on:change="push_query(query_category,c.id)"  type="checkbox" name="checkbox-1" id="checkbox-1">
+                        <label class="cat_label"> ${c.cat_title}</label>
+                        <input v-on:change="push_query(query_category,c.id)" class="cat_checkbox"  type="checkbox" name="checkbox-1" id="checkbox-1">
                     </div>
                 </div>
               </fieldset>

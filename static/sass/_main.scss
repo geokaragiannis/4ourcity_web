@@ -232,11 +232,27 @@ input[type="search"]:focus{
 }
 
 .category_query{
-  display: inline;
+    //display: inline;
+    width: 100px;
+    float: left;
+    margin-right:10px;
 
 }
 
 .category_div{
-  float: right;
+    margin-top: 7px;
+    width: 150px;
+    margin-right: 160px;
+    margin-bottom: 30px;
+    overflow: hidden;
+    overflow-y: scroll;
+    height: 80px;
+    border: #f8f5fa 1px solid;
+
+  .cat_label{
+    width: 80px;
+  }
 }
+
+
 
