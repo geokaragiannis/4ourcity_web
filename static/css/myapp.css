@@ -192,3 +192,23 @@ input[type="search"]:focus {
 .search_body {
   background: #eee9e6;
 }
+
+/* line 222, ../sass/_main.scss */
+.status_query {
+  display: inline;
+}
+
+/* line 226, ../sass/_main.scss */
+.progress_query {
+  display: inline;
+}
+
+/* line 234, ../sass/_main.scss */
+.category_query {
+  display: inline;
+}
+
+/* line 239, ../sass/_main.scss */
+.category_div {
+  float: right;
+}

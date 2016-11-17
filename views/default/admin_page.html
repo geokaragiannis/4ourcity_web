@@ -11,6 +11,7 @@
     var delete_permission_url = "{{=URL('api', 'delete_permission', user_signature=True)}}";
     var post_message_url = "{{=URL('api', 'post_message', user_signature=True)}}";
     var messages_url = "{{=URL('api', 'get_messages')}}";
+    var categories_url = "{{=URL('api', 'get_categories')}}";
 </script>
 {{end}}
 
@@ -27,7 +28,7 @@
 
             <button v-if="!adding_new" v-on:click="toggle_adding_new()" style="float: right;">Add new</button>
             <button v-if="adding_new" v-on:click="toggle_adding_new()" style="float: right;">Cancel</button>
-
+            <!-- permissions table view -->
             <div class="report_table permissions_table" v-if="view_report == -1 && !adding_new">
                 <table>
                     <thead>
@@ -99,6 +100,38 @@
     <!-- table view with reports -->
 
     <div class="report_table" v-if="view_report == -1 && !display_admin">
+
+
+            <fieldset>
+
+                <div class="category_div">
+                    <legend class="category_query">Category: </legend>
+                    <div class="category_query" v-for="c in categories">
+                        <label> ${c.cat_title}</label>
+                        <input v-on:change="push_query(query_category,c.id)"  type="checkbox" name="checkbox-1" id="checkbox-1">
+                    </div>
+                </div>
+              </fieldset>
+
+
+            <fieldset class="col-md-4">
+                <legend class="status_query">Status: </legend>
+                <div class="status_query" v-for="s in status">
+                    <label> ${s.status_title}</label>
+                    <input v-on:change="push_query(query_status,s.id)"  type="checkbox" name="checkbox-1" id="checkbox-1">
+                </div>
+              </fieldset>
+
+
+            <fieldset >
+                <legend class="progress_query">Progress: </legend>
+                <div class="progress_query" v-for="p in progress">
+                    <label> ${p.progress_title}</label>
+                    <input v-on:change="push_query(query_progress,p.id)"  type="checkbox" name="checkbox-1" id="checkbox-1">
+                </div>
+              </fieldset>
+
+
         <table>
             <thead>
                 <tr>

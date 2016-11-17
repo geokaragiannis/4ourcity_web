@@ -77,6 +77,11 @@ var app = function(){
         })
     };
 
+    self.get_categories = function(){
+        $.getJSON(categories_url, function(data){
+            self.vue.categories = data.categories;
+        })
+    };
     // change the flag of report with _idx = idx
     self.changed_progress_status = function (idx) {
 
@@ -283,6 +288,21 @@ var app = function(){
 
     };
 
+    self.push_query = function (arr,id) {
+
+        // check if id is already in the array. If yes, delete the id
+        // b/c the user unclicked the checkbox. Else just add the id to
+        // the array
+        for(var i=0;i<arr.length;i++){
+            if(id === arr[i]){
+                arr.splice(i,1);
+                return;
+            }
+        }
+
+        arr.unshift(id);
+    };
+
 
     self.vue = new Vue({
 
@@ -296,6 +316,7 @@ var app = function(){
             logged_in: false,
             progress: [],
             status:[],
+            categories: [],
             permissions:[],
             permission_types:[],
             selected_status: null,
@@ -310,7 +331,10 @@ var app = function(){
             message_content: null,
             messages: [],
             has_more_messages: false,
-            has_more_reports: false
+            has_more_reports: false,
+            query_status: [],
+            query_progress: [],
+            query_category: []
         },
         methods: {
             get_reports: self.get_reports,
@@ -330,7 +354,9 @@ var app = function(){
             post_message: self.post_message,
             get_messages: self.get_messages,
             get_more_messages: self.get_more_messages,
-            get_more_reports: self.get_more_reports
+            get_more_reports: self.get_more_reports,
+            push_query: self.push_query,
+            get_categories: self.get_categories
         }
     });
 
@@ -338,6 +364,7 @@ var app = function(){
     // happens once in the beginning.
     self.vue.get_reports();
     self.vue.get_progress_status();
+    self.vue.get_categories();
 
     $("#admin-vue-div").show();
 
