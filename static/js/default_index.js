@@ -80,10 +80,18 @@ var app = function(){
       }
     };
 
+    function get_reports_url (start_idx,end_idx){
+        var pp = {
+            start_idx: start_idx,
+            end_idx: end_idx
+        };
+        return reports_url + "?" + $.param(pp);
+    }
+
 
     self.get_reports = function(){
 
-        $.post(get_reports_url, {
+        $.post(get_reports_url(0,5), {
 
             mun_name: self.vue.county_name
         },
@@ -94,8 +102,9 @@ var app = function(){
                      "refine your search");
              } else{
                  self.vue.reports = data.reports;
-                self.vue.logged_in = data.logged_in;
-                self.vue.logged_user = data.logged_user;
+                 self.vue.logged_in = data.logged_in;
+                 self.vue.logged_user = data.logged_user;
+                 self.vue.has_more_reports=data.has_more;
 
                 enumerate(self.vue.reports);
                 self.vue.show_map();
@@ -103,6 +112,46 @@ var app = function(){
 
         });
 
+    };
+
+    self.get_more_reports = function () {
+
+        var num_reports = self.vue.reports.length;
+
+        $.post(get_reports_url(num_reports,num_reports + 5), {
+             mun_name: self.vue.county_name
+
+        }, function (data) {
+            if(data == "nok"){
+                 $.web2py.flash("municipality not registered. Please see registered municipalities and " +
+                     "refine your search");
+             } else{
+                // get the new value of has_more_reports
+                self.vue.has_more_reports = data.has_more;
+                // append new posts to slef.vue.posts (existing list of posts)
+                var old_length = self.vue.reports.length;
+                self.extend(self.vue.reports,data.reports);
+                enumerate(self.vue.reports);
+                var new_length = self.vue.reports.length;
+                // display the new markers on the map
+
+                // iterate through the new elements added to reports list
+                // and display them on the map
+                for(var i=old_length; i<new_length; i++){
+
+                    var latLng = new google.maps.LatLng(self.vue.reports[i].lat, self.vue.reports[i].lgn);
+
+                    //Creating a marker and putting it on the map
+                    marker=createMarker(latLng,self.vue.reports[i]._idx,self.vue.reports[i].progress);
+                    //self.vue.markers.unshift(marker);
+
+                    marker.setMap(map);
+
+                }
+
+
+            }
+        });
     };
 
     self.get_categories = function(){
@@ -148,16 +197,16 @@ var app = function(){
 
         $.getJSON(get_messages_url(0,4,id), function(data){
             self.vue.messages = data.messages;
-            self.vue.has_more = data.has_more;
+            self.vue.has_more_messages = data.has_more;
         })
     };
 
-    self.get_more = function(id){
+    self.get_more_messages = function(id){
         var num_messages = self.vue.messages.length;
         $.getJSON(get_messages_url(num_messages, num_messages+4,id), function(data){
 
             // get the new value of has_more
-            self.vue.has_more = data.has_more;
+            self.vue.has_more_messages = data.has_more;
             // append new posts to slef.vue.posts (existing list of posts)
             self.extend(self.vue.messages,data.messages);
         });
@@ -194,7 +243,8 @@ var app = function(){
             search_address: null,
             county_name: null,
             messages: [],
-            has_more: false
+            has_more_messages: false,
+            has_more_reports: false
 
         },
         methods: {
@@ -207,7 +257,8 @@ var app = function(){
             set_display_selected_report: self.set_display_selected_report,
             toggle_have_searched: self.toggle_have_searched,
             get_messages: self.get_messages,
-            get_more: self.get_more
+            get_more_messages: self.get_more_messages,
+            get_more_reports: self.get_more_reports
 
         }
     });

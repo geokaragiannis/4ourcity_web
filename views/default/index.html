@@ -6,7 +6,7 @@
 <script>
     var get_coordinates_url = "{{=URL('api', 'get_coordinates')}}";
     var categories_url = "{{=URL('api', 'get_categories')}}";
-    var get_reports_url = "{{=URL('api', 'get_reports')}}";
+    var reports_url = "{{=URL('api', 'get_reports')}}";
     var add_report_url = "{{=URL('api', 'add_report', user_signature=True)}}";
     var messages_url = "{{=URL('api', 'get_messages')}}";
 </script>
@@ -34,6 +34,8 @@
                 <span class="help-block"></span>
 
             </ul>
+
+            <button class="load_more_reports" v-if="has_more_reports" v-on:click="get_more_reports()">Load more</button>
 
     </div>
 
@@ -106,8 +108,8 @@
             </div>
         </div>
 
-        <div v-if="has_more" class="show_more" >
-                <button class="btn btn-default" v-on:click="get_more(reports[display_selected_report].id)" id="load-more">Load more</button>
+        <div v-if="has_more_messages" class="show_more" >
+                <button class="btn btn-default" v-on:click="get_more_messages(reports[display_selected_report].id)" id="load-more">Load more</button>
         </div>
 
     </div>

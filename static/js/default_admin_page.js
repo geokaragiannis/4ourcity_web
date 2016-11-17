@@ -23,17 +23,40 @@ var app = function(){
       return y.map(function(e) {e.changed = false;});
     };
 
+    function get_reports_url (start_idx,end_idx){
+        var pp = {
+            start_idx: start_idx,
+            end_idx: end_idx
+        };
+        return reports_url + "?" + $.param(pp);
+    }
+
     self.get_reports = function () {
 
-        $.getJSON(get_reports_url, function(data){
+        $.getJSON(get_reports_url(0,5), function(data){
             self.vue.reports = data.reports;
             self.vue.logged_user=data.logged_user;
             self.vue.is_admin=data.is_admin;
             self.vue.logged_in=data.logged_in;
+            self.vue.has_more_reports= data.has_more;
             enumerate(self.vue.reports);
             add_changed_field(self.vue.reports);
         });
 
+    };
+
+    self.get_more_reports = function () {
+
+        var num_reports = self.vue.reports.length;
+        $.getJSON(get_reports_url(num_reports, num_reports+5), function(data){
+
+            // get the new value of has_more_reports
+            self.vue.has_more_reports = data.has_more;
+            // append new posts to slef.vue.posts (existing list of posts)
+            self.extend(self.vue.reports,data.reports);
+            enumerate(self.vue.reports);
+            add_changed_field(self.vue.reports);
+        });
     };
 
     self.get_permissions = function () {
@@ -239,20 +262,21 @@ var app = function(){
         return messages_url + "?" + $.param(pp);
     }
 
+
     self.get_messages = function (id) {
 
         $.getJSON(get_messages_url(0,4,id), function(data){
             self.vue.messages = data.messages;
-            self.vue.has_more = data.has_more;
+            self.vue.has_more_messages = data.has_more;
         })
     };
 
-    self.get_more = function(id){
+    self.get_more_messages = function(id){
         var num_messages = self.vue.messages.length;
         $.getJSON(get_messages_url(num_messages, num_messages+4,id), function(data){
 
-            // get the new value of has_more
-            self.vue.has_more = data.has_more;
+            // get the new value of has_more_messages
+            self.vue.has_more_messages = data.has_more;
             // append new posts to slef.vue.posts (existing list of posts)
             self.extend(self.vue.messages,data.messages);
         });
@@ -285,7 +309,8 @@ var app = function(){
             is_adding_message: false,
             message_content: null,
             messages: [],
-            has_more: false
+            has_more_messages: false,
+            has_more_reports: false
         },
         methods: {
             get_reports: self.get_reports,
@@ -304,7 +329,8 @@ var app = function(){
             toggle_is_adding_message: self.toggle_is_adding_message,
             post_message: self.post_message,
             get_messages: self.get_messages,
-            get_more: self.get_more
+            get_more_messages: self.get_more_messages,
+            get_more_reports: self.get_more_reports
         }
     });
 

@@ -13,6 +13,10 @@ def get_categories():
 def get_reports():
 
     mun_name = request.vars.mun_name if request.vars.mun_name is not None else None
+    start_idx = int(request.vars.start_idx) if request.vars.start_idx is not None else 0
+    end_idx = int(request.vars.end_idx) if request.vars.end_idx is not None else 0
+
+    logger.info("mun_name %r", mun_name)
 
     m_row = db(db.municipalities.mun_name == mun_name).select(db.municipalities.id).first()
 
@@ -31,6 +35,7 @@ def get_reports():
     logger.info("mun_id is: %r", mun_id)
 
     reports = []
+    has_more = False
 
     # only iterate on accepted reports
     #rows = db(db.reports.status_id == 2).select()
@@ -39,24 +44,27 @@ def get_reports():
     # we get the id of the requested municipality and return the list of reports that belong to it
     # change the status_id == 2 (do not hard code it)
     query = ((db.reports.mun_id == mun_id) & (db.reports.status_id == 2))
-    rows = db(query).select()
+    rows = db(query).select(db.reports.ALL, limitby=(start_idx, end_idx + 1), orderby=~db.reports.created_on)
     #rows = db().select(db.reports.ALL)
 
     for i,r in enumerate(rows):
-        t = dict(
-            id = r.id,
-            lat = r.latitude,
-            lgn = r.longitude,
-            email = r.user_id.user_email,
-            category = r.cat_id.cat_title,
-            description = r.description,
-            pretty_address = r.pretty_address,
-            created_on = r.created_on,
-            status = r.status_id.status_title,
-            progress = r.progress_id.progress_title,
-            photo = r.photo
-        )
-        reports.append(t)
+        if i < end_idx - start_idx:
+            t = dict(
+                id = r.id,
+                lat = r.latitude,
+                lgn = r.longitude,
+                email = r.user_id.user_email,
+                category = r.cat_id.cat_title,
+                description = r.description,
+                pretty_address = r.pretty_address,
+                created_on = r.created_on,
+                status = r.status_id.status_title,
+                progress = r.progress_id.progress_title,
+                photo = r.photo
+            )
+            reports.append(t)
+        else:
+            has_more = True
 
     logged_in = auth.user_id is not None
     # the current logged in user
@@ -65,7 +73,8 @@ def get_reports():
     return response.json(dict(
         reports=reports,
         logged_in=logged_in,
-        logged_user=logged_user
+        logged_user=logged_user,
+        has_more=has_more
     ))
 
 
@@ -106,6 +115,8 @@ def add_report():
 def get_reports_admin():
     # the current logged in user
     logged_user = auth.user.email if auth.user else None
+    start_idx = int(request.vars.start_idx) if request.vars.start_idx is not None else 0
+    end_idx = int(request.vars.end_idx) if request.vars.end_idx is not None else 0
 
     row = db(db.permissions.user_email == logged_user).select().first()
 
@@ -113,32 +124,38 @@ def get_reports_admin():
     mun_id = row.mun_id
 
     #now send reports of mun_id
-    rows = db(db.reports.mun_id == mun_id).select()
+    rows = db(db.reports.mun_id == mun_id).select(db.reports.ALL, limitby=(start_idx, end_idx + 1), orderby=~db.reports.created_on)
     reports=[]
+    has_more = False
     for i,r in enumerate(rows):
-        t = dict(
-            id = r.id,
-            lat = r.latitude,
-            lgn = r.longitude,
-            email = r.user_id.user_email,
-            category = r.cat_id.cat_title,
-            description = r.description,
-            pretty_address = r.pretty_address,
-            created_on = r.created_on,
-            status = r.status_id.status_title,
-            progress = r.progress_id.progress_title,
-            photo = r.photo
-        )
-        reports.append(t)
+        if i < end_idx - start_idx:
+            t = dict(
+                id = r.id,
+                lat = r.latitude,
+                lgn = r.longitude,
+                email = r.user_id.user_email,
+                category = r.cat_id.cat_title,
+                description = r.description,
+                pretty_address = r.pretty_address,
+                created_on = r.created_on,
+                status = r.status_id.status_title,
+                progress = r.progress_id.progress_title,
+                photo = r.photo
+            )
+            reports.append(t)
+        else:
+            has_more = True
 
     logged_in = auth.user_id is not None
     is_admin = can_change_permissions(logged_user)
+    logger.info("has more: %r", has_more)
 
     return response.json(dict(
         reports=reports,
         logged_in=logged_in,
         logged_user=logged_user,
-        is_admin=is_admin
+        is_admin=is_admin,
+        has_more=has_more
     ))
 
 # returns the progress, status tables

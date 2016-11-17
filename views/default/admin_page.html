@@ -2,7 +2,7 @@
 {{block head}}
 <script src="{{=URL('static', 'js/vue.js')}}" xmlns="http://www.w3.org/1999/html"></script>
 <script>
-    var get_reports_url = "{{=URL('api', 'get_reports_admin')}}";
+    var reports_url = "{{=URL('api', 'get_reports_admin')}}";
     var get_progress_status_url = "{{=URL('api', 'get_progress_status')}}";
     var post_changes_url = "{{=URL('api', 'post_backend_changes', user_signature=True)}}";
     var get_permissions_url = "{{=URL('api', 'get_permissions')}}";
@@ -93,11 +93,10 @@
     <button class="submit_new_permission">submit</button>
 </form>
 
-
-
-
         </div>
     </div>
+
+    <!-- table view with reports -->
 
     <div class="report_table" v-if="view_report == -1 && !display_admin">
         <table>
@@ -138,7 +137,11 @@
 
         <button class="submit_button" style="float:right;" v-on:click="submit_changes()">submit</button>
 
+        <button class="load_more_reports" v-if="has_more_reports" v-on:click="get_more_reports()">Load more</button>
+
     </div>
+
+    <!-- detailed view -->
 
     <div class="detailed_view_report report_list col-md-3" v-if="view_report !=-1" style="float:left;">
 
@@ -201,8 +204,8 @@
             </div>
         </div>
 
-        <div v-if="has_more" class="show_more" >
-                <button class="btn btn-default" v-on:click="get_more(reports[view_report].id)" id="load-more">Load more</button>
+        <div v-if="has_more_messages" class="show_more" >
+                <button class="btn btn-default" v-on:click="get_more_messages(reports[view_report].id)" id="load-more">Load more</button>
         </div>
 
     </div>

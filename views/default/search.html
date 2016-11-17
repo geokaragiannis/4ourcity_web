@@ -13,19 +13,22 @@
 
 
     <div id="gradient"></div>
-    <form class="searchbox">
-        <input type="search" placeholder="Search" v-model="search_query"/>
-        <button type="button" value="search"  v-on:click="search()" v-bind:disabled="search_query === null || !(/\S/.test(search_query))">&nbsp;</button>
-    </form>
+    <div class="text-center">
+        <form class="searchbox" v-on:submit.prevent="search()">
+            <input type="search" placeholder="Search" v-model="search_query"/>
+            <button type="button" value="search"  v-on:click="search()" v-bind:disabled="search_query === null || !(/\S/.test(search_query))">&nbsp;</button>
+        </form>
+    </div>
 
+    <div class="search_results text-center">
+        <ul v-if="have_searched && search_completed" v-for="s in searched_results" >
+            <li style="list-style-type: none;">
+                <!-- use v-bind to configure the href. Use the vue variable url, which is set in vue.js. Doesn't work with regular href -->
+                <a v-bind:href="url" id="lolo" v-on:click="give_to_next_page(s.county,s.latitude,s.longitude)" style="cursor:pointer;">${s.county}</a>
+            </li>
 
-<div class="search_results" v-if="have_searched && search_completed" v-for="s in searched_results" >
-
-    <!-- use v-bind to configure the href. Use the vue variable url, which is set in vue.js. Doesn't work with regular href -->
-       <a v-bind:href="url" id="lolo" v-on:click="give_to_next_page(s.county,s.latitude,s.longitude)" style="cursor:pointer;">${s.county}</a>
-
-
-</div>
+        </ul>
+    </div>
 
 
 </div>
