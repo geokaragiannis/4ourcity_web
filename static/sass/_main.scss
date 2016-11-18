@@ -16,18 +16,10 @@ div.make_report, div.view_report {
   display:inline;
 }
 
-.report_list{
-
-  margin-top:50px;
-}
-
 .create_report{
   float:left;
 }
 
-.report_list{
-  float:left;
-}
 
 // the textarea to make a new report
 #new-report{
@@ -35,6 +27,8 @@ div.make_report, div.view_report {
 }
 
 .report_list{
+
+  float:left;
   margin-top:0;
   background: rgb(250,250,250);
   padding: 20px;
@@ -49,19 +43,33 @@ div.make_report, div.view_report {
 
 ul.report_list_item {
   border-bottom: 2px solid #a8a85f;
-  padding-left: 1px;
+  border-top: 2px solid #a8a85f;
+  //padding-left: 1px;
   list-style-type: none;
+  @include border-radius(14px);
+  padding: 20px;
   &:hover{
     // when we hover make the div grow
     // taken from https://css-tricks.com/snippets/css/scale-on-hover-with-webkit-transition/
     background: #a8a85f;
   }
+
 }
+
+#report_date{
+  font-size: 12px;
+  font-style: italic;
+}
+//button
 .expand_report{
   background: #5d5e62;
   padding: 3px;
   border-radius: 5px;
-  margin-left: 191px;
+  float: right;
+  width: 30px;
+  margin-top: -34px;
+  margin-right: 10px;
+  //margin-left: 191px;
 }
 
 .active{
@@ -132,15 +140,52 @@ div.message_div{
   }
 }
 
-//#gradient{
-//    width:0;
-//    height:50px;
-//    margin:0 auto;
-//    border-radius:100%;
-//    -webkit-box-shadow: 0 50px 200px 150px rgba(255, 255, 255, 0.93);
-//    -moz-box-shadow: 0 50px 200px 150px rgba(255, 255, 255, 0.93);
-//    box-shadow: 0 50px 200px 150px rgba(255, 255, 255, 0.93);
-//}
+.status_query{
+  display: inline;
+}
+
+.progress_query{
+  display: inline;
+}
+
+.status_query,.progress_query{
+
+}
+
+.category_query{
+    //display: inline;
+    width: 100px;
+    float: left;
+    margin-right:10px;
+
+}
+
+.category_div{
+    margin-top: 7px;
+    width: 150px;
+    margin-right: 160px;
+    margin-bottom: 30px;
+    overflow: hidden;
+    overflow-y: scroll;
+    height: 80px;
+    border: #f8f5fa 1px solid;
+
+  .cat_label{
+    width: 80px;
+  }
+}
+
+
+// map elements in admin and index
+#map,#map2{
+    width:76%;
+    height:550px;
+    float:right;
+    position: absolute;
+    left:310px;
+    @include border-radius(16px);
+}
+
 .searchbox{
     background-color:#fffbf8;
     padding:13px;
@@ -214,45 +259,7 @@ input[type="search"]:focus{
     outline:0;
 }
 
-.search_body{
+.search_body, .index_body{
 
   background: #eee9e6
 }
-
-.status_query{
-  display: inline;
-}
-
-.progress_query{
-  display: inline;
-}
-
-.status_query,.progress_query{
-
-}
-
-.category_query{
-    //display: inline;
-    width: 100px;
-    float: left;
-    margin-right:10px;
-
-}
-
-.category_div{
-    margin-top: 7px;
-    width: 150px;
-    margin-right: 160px;
-    margin-bottom: 30px;
-    overflow: hidden;
-    overflow-y: scroll;
-    height: 80px;
-    border: #f8f5fa 1px solid;
-
-  .cat_label{
-    width: 80px;
-  }
-}
-
-
-

@@ -13,6 +13,7 @@
 
 {{end}}
 
+<body class="search_body"></body>
 
 <div id="vue-div">
 
@@ -20,25 +21,22 @@
     <div class="report_list col-md-3" v-if="!is_making_report && display_selected_report === -1">
 
             <ul v-for="r in reports" class="report_list_item" >
-                <li class="report_list_item_description">descr: ${r.description}</li>
-                <li class="report_list_item_category">cat: ${r.category}</li>
-                <li class="report_list_item_created_on">date: ${r.created_on}</li>
-                <li class="report_list_item_created_on">address: ${r.pretty_address}</li>
-                <li class="report_list_item_created_on">status: ${r.status}</li>
-                <li class="report_list_item_created_on">progress: ${r.progress}</li>
+                <li class="report_list_item_description"><h3 id="description_title"> ${r.description}</h3></li>
+                <li class="report_list_item_created_on"><p id="report_date">date: ${r.created_on} </p></li>
                 <li>
                     <button class="expand_report" v-on:click="set_display_selected_report(r._idx), get_messages(r.id)"> GO
                         <i class="fa fa-arrow-right" aria-hidden="true" id="fa_select" ></i>
                     </button>
                 </li>
-                <span class="help-block"></span>
+
 
             </ul>
-
+            <span class="help-block"></span>
             <button class="load_more_reports" v-if="has_more_reports" v-on:click="get_more_reports()">Load more</button>
 
     </div>
 
+    <!-- create a report -->
     <div class="create_report" v-if="is_making_report && display_selected_report === -1">
         <form action="#" v-on:submit.prevent="add_report" class="form-horizontal" enctype="multipart/form-data" method="post">
                 <div class="form-group" id="no_table_content__row">
@@ -83,7 +81,7 @@
         <button class="cancel-post-button" id="cancel-post-button" v-on:click="toggle_is_making_report(),remove_marker()">Cancel </button>
     </div>
 
-
+    <!-- detailed view of a report -->
     <div class="report_list col-md-3" v-if="display_selected_report != -1">
 
         <ul>
@@ -126,12 +124,7 @@
 <html>
   <head>
     <style>
-      #map {
-        width:70%;
-        height:550px;
-        float:right;
-        /*visibility: hidden;*/
-       }
+
 
       html,body{
         width:100%;
