@@ -59,6 +59,8 @@ var app = function(){
     self.set_display_selected_report = function (idx){
 
         self.vue.display_selected_report = idx;
+
+
     };
 
 

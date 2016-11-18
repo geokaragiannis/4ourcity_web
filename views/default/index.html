@@ -18,7 +18,7 @@
 <div id="vue-div">
 
 
-    <div class="report_list col-md-3" v-if="!is_making_report && display_selected_report === -1">
+    <div id="report_list_div" class="report_list col-md-3" v-if="!is_making_report && display_selected_report === -1">
 
             <ul v-for="r in reports" class="report_list_item" >
                 <li class="report_list_item_description"><h3 id="description_title"> ${r.description}</h3></li>

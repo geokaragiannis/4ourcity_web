@@ -30,7 +30,7 @@ div.make_report, div.view_report {
 
   float:left;
   margin-top:0;
-  background: rgb(250,250,250);
+  background: #f3f3f3;
   padding: 20px;
   @include border-radius(14px);
   width:300px;
@@ -40,6 +40,18 @@ div.make_report, div.view_report {
   overflow-y: scroll;
 }
 
+::-webkit-scrollbar {
+    width: 1em;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
 
 ul.report_list_item {
   border-bottom: 2px solid #a8a85f;
@@ -182,7 +194,7 @@ div.message_div{
     height:550px;
     float:right;
     position: absolute;
-    left:310px;
+    left:316px;
     @include border-radius(16px);
 }
 
@@ -259,7 +271,7 @@ input[type="search"]:focus{
     outline:0;
 }
 
-.search_body, .index_body{
+.search_body, .index_body, .admin_body{
 
   background: #eee9e6
 }
