@@ -132,6 +132,8 @@
                 </div>
               </fieldset>
 
+            <i id="query_button" class="fa fa-search" v-on:click="get_reports()" v-bind:disabled="query_progress.length == 0 && query_status.length == 0 && query_category.length == 0"></i>
+
 
         <table>
             <thead>

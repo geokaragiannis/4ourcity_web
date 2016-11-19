@@ -117,14 +117,57 @@ def get_reports_admin():
     logged_user = auth.user.email if auth.user else None
     start_idx = int(request.vars.start_idx) if request.vars.start_idx is not None else 0
     end_idx = int(request.vars.end_idx) if request.vars.end_idx is not None else 0
+    query_status= json.loads(request.vars.query_status)
+    query_progress= json.loads(request.vars.query_progress)
+    query_category= json.loads(request.vars.query_category)
+
+
+    logger.info("status in api: %r", query_status)
+    logger.info("progress in api: %r", query_progress)
+    logger.info("category in api: %r", query_category)
 
     row = db(db.permissions.user_email == logged_user).select().first()
-
     # this is the mun id of the municipality that the logged user (employee) belongs
     mun_id = row.mun_id
 
+    ultimate_query= (db.reports.mun_id == mun_id)
+    # if query_status is empty, then qs (status query) is None
+    # Otherwise we initialize qs to be the first query in query_status
+    # and then if query_status has more elements, we append to qs
+    if len(query_status) != 0:
+        qs = (db.reports.status_id == query_status[0])
+        for s in range(1,len(query_status)):
+            qs |=(db.reports.status_id == query_status[s])
+        ultimate_query &= qs
+    else:
+        qs = None
+
+    if len(query_progress) != 0:
+        qp = (db.reports.progress_id == query_progress[0])
+        for s in range(1, len(query_progress)):
+            qp |= (db.reports.progress_id == query_progress[s])
+        ultimate_query &= qp
+    else:
+        qp = None
+
+    if len(query_category) != 0:
+        qc = (db.reports.cat_id == query_category[0])
+        for s in range(1, len(query_category)):
+            qc |= (db.reports.cat_id == query_category[s])
+        ultimate_query &= qc
+    else:
+        qc = None
+
+
+
+    logger.info("qs in api: %r", qs)
+    logger.info("qp in api: %r", qp)
+    logger.info("qc in api: %r", qc)
+
+    logger.info("big daddy in api: %r", ultimate_query)
+
     #now send reports of mun_id
-    rows = db(db.reports.mun_id == mun_id).select(db.reports.ALL, limitby=(start_idx, end_idx + 1), orderby=~db.reports.created_on)
+    rows = db(ultimate_query).select(db.reports.ALL, limitby=(start_idx, end_idx + 1), orderby=~db.reports.created_on)
     reports=[]
     has_more = False
     for i,r in enumerate(rows):

@@ -33,7 +33,18 @@ var app = function(){
 
     self.get_reports = function () {
 
-        $.getJSON(get_reports_url(0,5), function(data){
+
+        $.post(reports_url,
+            {
+                query_status:JSON.stringify(self.vue.query_status),
+                query_progress: JSON.stringify(self.vue.query_progress),
+                query_category: JSON.stringify(self.vue.query_category),
+                start_idx:0,
+                end_idx:5
+
+            }
+
+        , function(data){
             self.vue.reports = data.reports;
             self.vue.logged_user=data.logged_user;
             self.vue.is_admin=data.is_admin;
@@ -42,21 +53,27 @@ var app = function(){
             enumerate(self.vue.reports);
             add_changed_field(self.vue.reports);
         });
-
     };
 
     self.get_more_reports = function () {
 
         var num_reports = self.vue.reports.length;
-        $.getJSON(get_reports_url(num_reports, num_reports+5), function(data){
 
-            // get the new value of has_more_reports
-            self.vue.has_more_reports = data.has_more;
-            // append new posts to slef.vue.posts (existing list of posts)
-            self.extend(self.vue.reports,data.reports);
-            enumerate(self.vue.reports);
-            add_changed_field(self.vue.reports);
-        });
+        $.post(reports_url,
+            {
+                query_status:JSON.stringify(self.vue.query_status),
+                query_progress: JSON.stringify(self.vue.query_progress),
+                query_category: JSON.stringify(self.vue.query_category),
+                start_idx:num_reports,
+                end_idx:num_reports+5
+            }, function (data) {
+                // get the new value of has_more_reports
+                self.vue.has_more_reports = data.has_more;
+                // append new posts to slef.vue.posts (existing list of posts)
+                self.extend(self.vue.reports,data.reports);
+                enumerate(self.vue.reports);
+                add_changed_field(self.vue.reports);
+            });
     };
 
     self.get_permissions = function () {
