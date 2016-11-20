@@ -178,6 +178,7 @@
           // make map obj global by not doing: var map = ...
           map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 13,
+                minZoom: 11,
                 center: {lat: clat, lng:clgn}
           });
 
