@@ -9,6 +9,7 @@
     var reports_url = "{{=URL('api', 'get_reports')}}";
     var add_report_url = "{{=URL('api', 'add_report', user_signature=True)}}";
     var messages_url = "{{=URL('api', 'get_messages')}}";
+    var cluster_url="{{=URL('static', 'cluster_images/m')}}";
 </script>
 
 {{end}}
@@ -177,7 +178,7 @@
           APP.vue.county_name = parsed_county_name;
           // make map obj global by not doing: var map = ...
           map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 13,
+                zoom: 12,
                 center: {lat: clat, lng:clgn}
           });
 
@@ -223,7 +224,13 @@
           // get the reports from api.py, since the vue object has been initialized
         APP.vue.get_reports();
 
+        var mcOptions = {minimumClusterSize: 5,imagePath: cluster_url};
+        var markerCluster = new MarkerClusterer(map, APP.vue.markers
+            , mcOptions);
+
+        google.maps.event.addDomListener(window, 'load',initMap);
         }
+
 
             // function to place the marker on the map
             function placeMarker(location) {
@@ -291,6 +298,7 @@
         }
 
     </script>
+    <script src="{{=URL('static', 'js/cluster.js')}}"></script>
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyATlgK06ECpUjfJC5zF9IIkaK1czediuxM&callback=initMap">
     </script>
