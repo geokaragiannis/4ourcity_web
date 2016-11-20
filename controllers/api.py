@@ -142,6 +142,12 @@ def get_reports_admin():
     query_progress= json.loads(request.vars.query_progress)
     query_category= json.loads(request.vars.query_category)
 
+    auth_row = db(db.auth_user.email == logged_user).select().first()
+    #logger.info("reputation of logged user: %r", auth_row)
+    auth_rep = auth_row.reputation
+    rep_row = db(db.reputation.reputation_scale == auth_rep).select().first()
+    logger.info("reputation of logged user: %r", rep_row.reputation_label)
+
 
     logger.info("status in api: %r", query_status)
     logger.info("progress in api: %r", query_progress)
@@ -193,6 +199,10 @@ def get_reports_admin():
     has_more = False
     for i,r in enumerate(rows):
         if i < end_idx - start_idx:
+            user_row = db(db.auth_user.id == r.user_id).select().first()
+            rep_row = db(db.reputation.reputation_scale == user_row.reputation).select().first()
+            rep_label = rep_row.reputation_label
+            logger.info("reputation of %r is: %r", user_row.email, rep_label)
             t = dict(
                 id = r.id,
                 lat = r.latitude,
@@ -204,7 +214,8 @@ def get_reports_admin():
                 created_on = r.created_on,
                 status = r.status_id.status_title,
                 progress = r.progress_id.progress_title,
-                photo = r.photo
+                photo = r.photo,
+                reputation = rep_label
             )
             reports.append(t)
         else:
@@ -237,12 +248,30 @@ def post_backend_changes():
         # status, progress ids that correspond to the title sent by client. Needed to
         # update the db
 
+        # user that made the report
+        auth_row = db(db.auth_user.id == report.user_id).select().first()
+
         status_row = db(db.status.status_title ==b['status']).select(db.status.id).first()
         status_id = status_row.id
 
         progress_row = db(db.progress.progress_title == b['progress']).select(db.progress.id).first()
         progress_id = progress_row.id
 
+        # if report was pending and it was changed to accepted add one to the reputation of the user
+        # if report was pending and it was changed to rejected subtract one from the reputation of the user
+        # In either case 1<=reputation<=10
+
+        if report.status_id == 1 and status_id == 2:
+            if auth_row.reputation <10:
+                new_rep = auth_row.reputation + 1
+                auth_row.update_record(reputation=new_rep)
+
+        if report.status_id == 1 and status_id == 3:
+            if auth_row.reputation>1:
+                new_rep = auth_row.reputation - 1
+                auth_row.update_record(reputation=new_rep)
+
+        logger.info("reputation of %r changed to: %r", auth_row.email, auth_row.reputation)
         logger.info("status id: %r", status_id)
         logger.info("rpogress id: %r", progress_id)
 

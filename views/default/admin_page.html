@@ -143,6 +143,7 @@
                     <th>Address</th>
                     <th>Status</th>
                     <th>Progress</th>
+                    <th>Reputation</th>
                     <th>Created On</th>
                     <th></th>
                 </tr>
@@ -163,6 +164,7 @@
                         </select>
 
                     </td>
+                    <td>${r.reputation}</td>
                     <td>${r.created_on}</td>
                     <td><i class="fa fa-arrow-right" v-on:click="show_view_report(r._idx), get_messages(r.id)"></i></td>
                     <td></td>

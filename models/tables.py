@@ -14,6 +14,8 @@ db.define_table('municipalities',
                 Field('mun_address', 'string')
                 )
 
+# check db.py for reputation table
+
 db.define_table('employees',
                 Field('fname', 'string'),
                 Field('lname', 'string'),
@@ -100,3 +102,5 @@ db.define_table('messages',
 #db.permissions.truncate()
 # after defining tables, uncomment below to enable auditing
 # auth.enable_record_versioning(db)
+
+db.auth_user.reputation.readable = db.auth_user.reputation.writable  = False

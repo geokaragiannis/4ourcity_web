@@ -65,9 +65,21 @@ auth = Auth(db, host_names=myconf.get('host.names'))
 service = Service()
 plugins = PluginManager()
 
+# auth.settings.extra_fields['auth_user']= [
+#   Field('is_employee', 'boolean')
+#   ]
+
+db.define_table('reputation',
+                Field('reputation_label', 'string'),
+                Field('reputation_scale', 'integer'),
+                primarykey=['reputation_scale']
+                )
+
 auth.settings.extra_fields['auth_user']= [
-  Field('is_employee', 'boolean')
+  Field('reputation', 'reference reputation.reputation_scale', default=7)
   ]
+
+
 
 # create all tables needed by auth if not custom tables
 auth.define_tables(username=False, signature=False)
