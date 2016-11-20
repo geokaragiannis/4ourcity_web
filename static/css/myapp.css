@@ -192,6 +192,18 @@ div.message_div p.message_author, div.message_div p.created_date {
 }
 
 /* line 190, ../sass/_main.scss */
+#show_old {
+  margin-top: -20px;
+  margin-left: 11px;
+  width: 123px;
+}
+
+/* line 196, ../sass/_main.scss */
+#show_old_label {
+  margin-right: 10px;
+}
+
+/* line 200, ../sass/_main.scss */
 #query_button {
   font-size: 30px;
   float: right;
@@ -199,9 +211,9 @@ div.message_div p.message_author, div.message_div p.created_date {
   margin-right: 51px;
 }
 
-/* line 199, ../sass/_main.scss */
+/* line 209, ../sass/_main.scss */
 #map, #map2 {
-  width: 76%;
+  width: 75.65%;
   height: 550px;
   float: right;
   position: absolute;
@@ -211,7 +223,16 @@ div.message_div p.message_author, div.message_div p.created_date {
   border-radius: 16px;
 }
 
-/* line 208, ../sass/_main.scss */
+/* line 219, ../sass/_main.scss */
+#floating-panel {
+  position: absolute;
+  width: 172px;
+  right: -1%;
+  height: 90px;
+  font-family: 'Roboto','sans-serif';
+}
+
+/* line 228, ../sass/_main.scss */
 .searchbox {
   background-color: #fffbf8;
   padding: 13px;
@@ -226,7 +247,7 @@ div.message_div p.message_author, div.message_div p.created_date {
   box-shadow: 0 2px 4px 0 rgba(72, 72, 72, 0.83), 0 10px 15px 0 rgba(126, 126, 126, 0.12), 0 -2px 6px 1px rgba(199, 199, 199, 0.55) inset, 0 2px 4px 2px rgba(255, 255, 255, 0.83) inset;
 }
 
-/* line 233, ../sass/_main.scss */
+/* line 253, ../sass/_main.scss */
 input[type="search"] {
   width: 250px;
   height: 30px;
@@ -241,7 +262,7 @@ input[type="search"] {
   box-shadow: 0 -2px 2px 0 rgba(199, 199, 199, 0.55), 0 1px 1px 0 #fff, 0 2px 2px 1px #fafafa, 0 2px 4px 0 #b2b2b2 inset, 0 -1px 1px 0 #f2f2f2 inset, 0 15px 15px 0 rgba(41, 41, 41, 0.09) inset;
 }
 
-/* line 264, ../sass/_main.scss */
+/* line 284, ../sass/_main.scss */
 button[type="button"] {
   width: 35px;
   height: 30px;
@@ -256,12 +277,12 @@ button[type="button"] {
   cursor: pointer;
 }
 
-/* line 277, ../sass/_main.scss */
+/* line 297, ../sass/_main.scss */
 input[type="search"]:focus {
   outline: 0;
 }
 
-/* line 281, ../sass/_main.scss */
+/* line 301, ../sass/_main.scss */
 .search_body, .index_body, .admin_body {
   background: #eee9e6;
 }

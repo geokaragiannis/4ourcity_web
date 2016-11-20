@@ -19,6 +19,9 @@ def index():
     return auth.wiki()
     """
 
+    if len(request.vars) == 0:
+        session.flash=(T("please specify location"))
+        redirect(URL('default', 'search'))
     return dict()
 
 # @auth.requires_login()

@@ -187,6 +187,16 @@ div.message_div{
   }
 }
 
+#show_old{
+  margin-top: -20px;
+  margin-left: 11px;
+  width: 123px;
+}
+
+#show_old_label{
+  margin-right: 10px;
+}
+
 #query_button{
     font-size: 30px;
     float: right;
@@ -197,12 +207,22 @@ div.message_div{
 
 // map elements in admin and index
 #map,#map2{
-    width:76%;
+    width:75.65%;
     height:550px;
     float:right;
     position: absolute;
     left:316px;
     @include border-radius(16px);
+}
+
+// floating panel inside the map in index
+#floating-panel {
+    position: absolute;
+    width: 172px;
+    right: -1%;
+    height: 90px;
+    //border: 1px solid #999;
+    font-family: 'Roboto','sans-serif';
 }
 
 .searchbox{

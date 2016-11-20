@@ -24,7 +24,8 @@ var app = function(){
 
             //Creating a marker and putting it on the map
             marker=createMarker(latLng,self.vue.reports[i]._idx,self.vue.reports[i].progress);
-            //self.vue.markers.unshift(marker);
+
+            self.vue.markers.unshift(marker);
 
             marker.setMap(map);
         }
@@ -48,7 +49,7 @@ var app = function(){
             });
         google.maps.event.addListener(marker,'click',function(){
             //window.alert(marker.id);
-            self.vue.display_selected_report = marker.id;
+            self.vue.set_display_selected_report(marker.id);
             self.vue.get_messages(self.vue.reports[self.vue.display_selected_report].id)
         });
         return marker;
@@ -59,6 +60,21 @@ var app = function(){
     self.set_display_selected_report = function (idx){
 
         self.vue.display_selected_report = idx;
+
+        // if we hit the cancel button, then reset the opacity back to 1.
+        // if we click the GO button to display a specific report, then
+        // make all the other markers have opacity .5
+        if(idx === -1){
+            for(var i=0;i<self.vue.markers.length; i++) {
+                self.vue.markers[i].setOpacity(1);
+            }
+        }else{
+            for(var j=0;j<self.vue.markers.length; j++){
+                if(self.vue.markers[j].id !== idx){
+                    self.vue.markers[j].setOpacity(0.5);
+                }
+            }
+        }
 
 
     };
@@ -82,20 +98,16 @@ var app = function(){
       }
     };
 
-    function get_reports_url (start_idx,end_idx){
-        var pp = {
-            start_idx: start_idx,
-            end_idx: end_idx
-        };
-        return reports_url + "?" + $.param(pp);
-    }
-
-
     self.get_reports = function(){
 
-        $.post(get_reports_url(0,5), {
+        $.post(reports_url, {
 
-            mun_name: self.vue.county_name
+            mun_name: self.vue.county_name,
+            query_category: JSON.stringify(self.vue.query_category),
+            start_idx:0,
+            end_idx:5,
+            show_finished: JSON.stringify(self.vue.show_finished)
+
         },
          function(data){
 
@@ -107,9 +119,8 @@ var app = function(){
                  self.vue.logged_in = data.logged_in;
                  self.vue.logged_user = data.logged_user;
                  self.vue.has_more_reports=data.has_more;
-
-                enumerate(self.vue.reports);
-                self.vue.show_map();
+                 enumerate(self.vue.reports);
+                 self.vue.show_map();
              }
 
         });
@@ -120,8 +131,12 @@ var app = function(){
 
         var num_reports = self.vue.reports.length;
 
-        $.post(get_reports_url(num_reports,num_reports + 5), {
-             mun_name: self.vue.county_name
+        $.post(reports_url, {
+            mun_name: self.vue.county_name,
+            query_category: JSON.stringify(self.vue.query_category),
+            start_idx:num_reports,
+            end_idx:num_reports+5,
+            show_finished: JSON.stringify(self.vue.show_finished)
 
         }, function (data) {
             if(data == "nok"){
@@ -145,7 +160,8 @@ var app = function(){
 
                     //Creating a marker and putting it on the map
                     marker=createMarker(latLng,self.vue.reports[i]._idx,self.vue.reports[i].progress);
-                    //self.vue.markers.unshift(marker);
+                    // update the markers array
+                    self.vue.markers.unshift(marker);
 
                     marker.setMap(map);
 
@@ -216,6 +232,47 @@ var app = function(){
     };
 
 
+    self.push_query = function (arr,id) {
+
+        // check if id is already in the array. If yes, delete the id
+        // b/c the user unclicked the checkbox. Else just add the id to
+        // the array
+        for(var i=0;i<arr.length;i++){
+            if(id === arr[i]){
+                arr.splice(i,1);
+                var deleting_element = true;
+            }
+        }
+
+        if(! deleting_element)
+            arr.unshift(id);
+        // now the array passed is populated. So make the call
+
+        // clear the already existing markers from the map and
+        // call get reports to get the queried results
+        for(var k=0; k< self.vue.markers.length; k++){
+            self.vue.markers[k].setMap(null);
+        }
+
+        self.vue.get_reports();
+
+
+    };
+
+
+    self.toggle_show_finished = function () {
+
+        self.vue.show_finished = !self.vue.show_finished;
+
+        // clear the already existing markers from the map and
+        // call get reports to get the queried results
+        for(var k=0; k< self.vue.markers.length; k++){
+            self.vue.markers[k].setMap(null);
+        }
+
+        self.vue.get_reports();
+    };
+
 
 
 
@@ -246,7 +303,9 @@ var app = function(){
             county_name: null,
             messages: [],
             has_more_messages: false,
-            has_more_reports: false
+            has_more_reports: false,
+            query_category: [],
+            show_finished: false
 
         },
         methods: {
@@ -260,7 +319,9 @@ var app = function(){
             toggle_have_searched: self.toggle_have_searched,
             get_messages: self.get_messages,
             get_more_messages: self.get_more_messages,
-            get_more_reports: self.get_more_reports
+            get_more_reports: self.get_more_reports,
+            push_query: self.push_query,
+            toggle_show_finished: self.toggle_show_finished
 
         }
     });

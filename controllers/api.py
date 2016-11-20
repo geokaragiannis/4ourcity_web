@@ -15,8 +15,12 @@ def get_reports():
     mun_name = request.vars.mun_name if request.vars.mun_name is not None else None
     start_idx = int(request.vars.start_idx) if request.vars.start_idx is not None else 0
     end_idx = int(request.vars.end_idx) if request.vars.end_idx is not None else 0
+    query_category = json.loads(request.vars.query_category)
+    show_finished = json.loads(request.vars.show_finished)
 
     logger.info("mun_name %r", mun_name)
+    logger.info("category in api get_reports: %r", query_category)
+    logger.info("show_finished: %r", show_finished)
 
     m_row = db(db.municipalities.mun_name == mun_name).select(db.municipalities.id).first()
 
@@ -29,6 +33,25 @@ def get_reports():
     # mun_id of municipality specified
     mun_id = m_row.id
 
+    # default query:
+    # 1) same mun_id
+    # 2) status is accepted (id=2)
+    # 3) progress is either "seen" or "in progress" (id= 2 or 3)
+    #
+    # if show_finished is true then also show the progress -->finished (id=4)
+
+    if not show_finished:
+        ultimate_query = ((db.reports.mun_id == mun_id) & (db.reports.status_id == 2) & ((db.reports.progress_id == 2) | (db.reports.progress_id == 3)))
+    else:
+        ultimate_query = ((db.reports.mun_id == mun_id) & (db.reports.status_id == 2) & ((db.reports.progress_id == 2) | (db.reports.progress_id == 3) | (db.reports.progress_id == 4)))
+
+    if len(query_category) != 0:
+        qc = (db.reports.cat_id == query_category[0])
+        for s in range(1, len(query_category)):
+            qc |= (db.reports.cat_id == query_category[s])
+        ultimate_query &= qc
+    else:
+        qc = None
 
 
     logger.info("municipality name is: %r", mun_name)
@@ -37,14 +60,12 @@ def get_reports():
     reports = []
     has_more = False
 
-    # only iterate on accepted reports
-    #rows = db(db.reports.status_id == 2).select()
+    logger.info("big daddy in get_reports in api: %r", ultimate_query)
 
     # query over the searched municipality (i.e the mun_name we get from the request.vars).
     # we get the id of the requested municipality and return the list of reports that belong to it
     # change the status_id == 2 (do not hard code it)
-    query = ((db.reports.mun_id == mun_id) & (db.reports.status_id == 2))
-    rows = db(query).select(db.reports.ALL, limitby=(start_idx, end_idx + 1), orderby=~db.reports.created_on)
+    rows = db(ultimate_query).select(db.reports.ALL, limitby=(start_idx, end_idx + 1), orderby=~db.reports.created_on)
     #rows = db().select(db.reports.ALL)
 
     for i,r in enumerate(rows):

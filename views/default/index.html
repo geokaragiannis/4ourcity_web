@@ -112,8 +112,28 @@
 
     </div>
 
-    <div id="map">
+    <div id="map"></div>
+
+
+    <div id="floating-panel">
+      <fieldset class="col-md-4">
+                <div class="category_div container">
+                    <div class="category_query" v-for="c in categories">
+                        <label class="cat_label"> ${c.cat_title}</label>
+                        <input v-on:change="push_query(query_category,c.id)" class="cat_checkbox"  type="checkbox" name="checkbox-1" id="checkbox-1">
+                    </div>
+                </div>
+      </fieldset>
+
+        <div class="category_query" id="show_old">
+            <label id="show_old_label"> Show finished</label>
+            <input v-on:change="toggle_show_finished()" class="cat_checkbox"  type="checkbox" name="checkbox-1" id="checkbox-2">
+        </div>
     </div>
+
+
+
+
 
 </div>
 
@@ -124,15 +144,13 @@
 <html>
   <head>
     <style>
-
-
       html,body{
         width:100%;
 
       }
     </style>
   </head>
-  <body>
+  <body class="qqq">
 
     <script>
 
