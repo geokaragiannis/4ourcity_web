@@ -27,10 +27,10 @@ var app = function(){
 
             self.vue.markers.unshift(marker);
 
+            // marker.setMap is taken care of in the cluster object in index.html
             //marker.setMap(map);
 
         }
-
     };
 
     // helper function that returns a marker of position: location and id: id
@@ -170,9 +170,7 @@ var app = function(){
                     self.vue.markers.unshift(marker);
 
                     marker.setMap(map);
-
                 }
-
 
             }
         });

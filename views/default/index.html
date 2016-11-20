@@ -222,13 +222,28 @@
 
           // once the google maps api functions have returned, it's safe now to
           // get the reports from api.py, since the vue object has been initialized
-        APP.vue.get_reports();
+          APP.vue.get_reports();
 
-        var mcOptions = {minimumClusterSize: 5,imagePath: cluster_url};
-        var markerCluster = new MarkerClusterer(map, APP.vue.markers
+          // when the map is loaded for the first time, call make Clusters,
+          // to initialize the cluster object
+          google.maps.event.addDomListener(window, 'load',makeClusters);
+          // when the zoom level changes, then call makeClusters, to
+          // reinitialize the cluster object, so that it sees the possibly
+          // changed markers array (markers array would be different if the
+          // user has pressed load more). So now the cluster object sees all the
+          // markers
+          map.addListener('zoom_changed', makeClusters);
+
+
+        }
+
+        // initializes the cluster object 
+        function makeClusters(){
+
+            var mcOptions = {minimumClusterSize: 5,imagePath: cluster_url};
+            var markerCluster = new MarkerClusterer(map, APP.vue.markers
             , mcOptions);
 
-        google.maps.event.addDomListener(window, 'load',initMap);
         }
 
 
