@@ -202,6 +202,9 @@ var app = function(){
                 $.web2py.enableElement($("#add_post_submit"));
                 // add the new post (get it from api/add_post) to self.vue.posts
                 enumerate(self.vue.reports);
+                self.vue.form_report_content = null;
+                self.vue.category_result = null;
+                self.vue.want_updates = false;
 
             });
     };
