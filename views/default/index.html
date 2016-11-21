@@ -179,7 +179,55 @@
           map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 13,
                 minZoom: 11,
-                center: {lat: clat, lng:clgn}
+                center: {lat: clat, lng:clgn},
+                styles: [ {
+                    "elementType": "labels.text",
+                    "stylers": [
+                      {
+                        "color": "#000000"
+                      },
+                      {
+                        "visibility": "simplified"
+                      },
+                      {
+                        "weight": 6.5
+                      }
+                    ]
+                  },
+                  {
+                    "featureType": "administrative",
+                    "elementType": "labels.text",
+                    "stylers": [
+                      {
+                        "color": "#0028be"
+                      },
+                      {
+                        "weight": 8
+                      }
+                    ]
+                  },
+                  {
+                    "featureType": "water",
+                    "elementType": "geometry.fill",
+                    "stylers": [
+                      {
+                        "color": "#629dc3"
+                      },
+                      {
+                        "saturation": 45
+                      }
+                    ]
+                  },
+                  {
+                    "featureType": "water",
+                    "elementType": "geometry.stroke",
+                    "stylers": [
+                      {
+                        "color": "#879ec3"
+                      }
+                    ]
+                  }
+                ]
           });
 
           // used for reverse geocoding (to get the municipality from location given by the user)

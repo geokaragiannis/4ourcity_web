@@ -61,6 +61,11 @@ var app = function(){
 
         self.vue.display_selected_report = idx;
 
+        for(var k=0;k<self.vue.markers.length; k++) {
+            self.vue.markers[k].setOpacity(1);
+        }
+
+
         // if we hit the cancel button, then reset the opacity back to 1.
         // if we click the GO button to display a specific report, then
         // make all the other markers have opacity .5
