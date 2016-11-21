@@ -1,8 +1,32 @@
 import json
+import smtplib
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEText import MIMEText
 
 
 def index():
     pass
+
+def send_email(toaddr, subject, body):
+    fromaddr = '4ourciti@gmail.com'
+    toaddr = toaddr
+    msg = MIMEMultipart()
+    msg['From'] = fromaddr
+    msg['To'] = toaddr
+    msg['Subject'] = subject
+
+    body = body
+    msg.attach(MIMEText(body, 'plain'))
+
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(fromaddr, "4ourcity13")
+        text = msg.as_string()
+        server.sendmail(fromaddr, toaddr, text)
+        server.quit()
+    except smtplib.SMTPException:
+        logger.info( "Error: unable to send email")
 
 
 def get_categories():
@@ -125,10 +149,17 @@ def add_report():
         cat_id=cat_id,
         description=request.vars.description,
         pretty_address=request.vars.pretty_address,
-        want_updates=request.vars.want_updates,
+        want_updates=json.loads(request.vars.want_updates),
         mun_id=mun_id
         #user_id=auth.user_id #if auth.user else None
     )
+
+    logged_user = auth.user.email if auth.user else None
+
+    logger.info('want updates : %r', json.loads(request.vars.want_updates))
+
+    if json.loads(request.vars.want_updates):
+        send_email(logged_user,"thank you",'thx')
 
     return 'ok'
 

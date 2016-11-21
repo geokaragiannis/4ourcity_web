@@ -195,7 +195,7 @@ var app = function(){
                 category: self.vue.category_result,
                 description: self.vue.form_report_content,
                 pretty_address: self.vue.address,
-                want_updates: self.vue.want_updates,
+                want_updates: JSON.stringify(self.vue.want_updates),
                 municipality: self.vue.municipality
             },
             function (data) {
