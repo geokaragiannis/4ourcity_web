@@ -282,10 +282,10 @@ def post_backend_changes():
         # user that made the report
         auth_row = db(db.auth_user.id == report.user_id).select().first()
 
-        status_row = db(db.status.status_title ==b['status']).select(db.status.id).first()
+        status_row = db(db.status.status_title ==b['status']).select().first()
         status_id = status_row.id
 
-        progress_row = db(db.progress.progress_title == b['progress']).select(db.progress.id).first()
+        progress_row = db(db.progress.progress_title == b['progress']).select().first()
         progress_id = progress_row.id
 
         # if report was pending and it was changed to accepted add one to the reputation of the user
@@ -308,6 +308,16 @@ def post_backend_changes():
 
         report.update_record(status_id=status_id,progress_id=progress_id)
 
+        logger.info('status: %r', status_row.status_title)
+        logger.info('progress: %r', progress_row.progress_title)
+
+        # send an email to the user
+        toaddress = auth_row.email
+        subject = '4ourcity Report Update'
+        body = 'Your report has been updated! The current status of your report is' \
+               ': ' + status_row.status_title + '  and the progress is now: ' + progress_row.progress_title
+
+        send_email(toaddress,subject,body)
     return 'ok'
 
 def get_permissions():
@@ -465,5 +475,16 @@ def post_message():
         message_content=m.message_content,
         created_on=m.created_on,
     )
+
+    report_row = db(db.reports.id == report_id).select().first()
+    user_id = report_row.user_id
+    auth_row = db(db.auth_user.id == user_id).select().first()
+    email = auth_row.email
+
+    subject= '4ourcity message added to your report'
+    body='It looks like there is a new message to one of your reports on ' +  report_row.pretty_address  + \
+         ' by ' + permission_row.user_name + ' saying ' + m.message_content
+
+    send_email(email,subject,body)
 
     return response.json(dict(message=message))
