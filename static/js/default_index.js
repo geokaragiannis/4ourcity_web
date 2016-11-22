@@ -334,6 +334,10 @@ var app = function(){
         }
     });
 
+    if ($(window).width() < 500) {
+        $("#map").addClass(".col-xs-12");
+    }
+
     // initiate that in the beginning. Fetch the stuff from the server
     // happens once in the beginning.
     self.get_categories();

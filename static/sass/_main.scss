@@ -2,6 +2,22 @@
   color: $clrHilight;
 }
 
+[class*="col-"] {
+    float: left;
+}
+.col-1 {width: 8.33%;}
+.col-2 {width: 16.66%;}
+.col-3 {width: 25%;}
+.col-4 {width: 33.33%;}
+.col-5 {width: 41.66%;}
+.col-6 {width: 50%;}
+.col-7 {width: 58.33%;}
+.col-8 {width: 66.66%;}
+.col-9 {width: 75%;}
+.col-10 {width: 83.33%;}
+.col-11 {width: 91.66%;}
+.col-12 {width: 100%;}
+
 table{
     border: 1px solid black;
   border-collapse: collapse;
@@ -17,13 +33,53 @@ div.make_report, div.view_report {
 }
 
 .create_report{
-  float:left;
+  //float:left;
 }
 
 
 // the textarea to make a new report
 #new-report{
-  width:350px;
+  //width:350px;
+}
+
+.cancel_new_report{
+    text-align: center;
+    vertical-align: middle;
+    padding-top: 20px;
+    cursor: pointer;
+    font-size: 2.2vw;
+}
+
+@media only screen and (max-width: 768px) {
+    /* For mobile phones: */
+    [class*="col-"] {
+        width: 100%;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    /* For tablets: */
+    .col-m-1 {width: 8.33%;}
+    .col-m-2 {width: 16.66%;}
+    .col-m-3 {width: 25%;}
+    .col-m-4 {width: 33.33%;}
+    .col-m-5 {width: 41.66%;}
+    .col-m-6 {width: 50%;}
+    .col-m-7 {width: 58.33%;}
+    .col-m-8 {width: 66.66%;}
+    .col-m-9 {width: 75%;}
+    .col-m-10 {width: 83.33%;}
+    .col-m-11 {width: 91.66%;}
+    .col-m-12 {width: 100%;}
+}
+
+@media screen and (max-width: 500px){
+  //.report_list{
+  //  display: none;
+  //}
+  #map{
+   width: 100%;
+  }
 }
 
 .report_list{
@@ -68,6 +124,21 @@ ul.report_list_item {
 
 }
 
+div.create_report{
+  padding:0;
+}
+
+// when we create a report
+ul.create_report{
+    list-style-type: none;
+    overflow: hidden;
+    overflow-y: scroll;
+    @include border-radius(14px);
+    padding:10px;
+    height: 100vh;
+    background: #f3f3f3;
+}
+
 #report_date{
   font-size: 12px;
   font-style: italic;
@@ -77,10 +148,10 @@ ul.report_list_item {
   background: #5d5e62;
   padding: 3px;
   border-radius: 5px;
-  float: right;
+  //float: right;
   width: 30px;
-  margin-top: -34px;
-  margin-right: 10px;
+  //margin-top: -34px;
+  //margin-right: 10px;
   //margin-left: 191px;
 }
 
