@@ -11,130 +11,163 @@
     var messages_url = "{{=URL('api', 'get_messages')}}";
 </script>
 
+<script src="{{=URL('static', 'js/dropzone.js')}}"></script>
+
+
+<script>
+function produce_upload_url (files) {
+    return APP.upload_url;
+}
+
+$(function() {
+  Dropzone.options.fileUploader = {
+    maxFilesize: 10, // MB
+    url: produce_upload_url,
+    addRemoveLinks: true,
+    parallelUploads: 1,
+    acceptedFiles: 'audio/*',
+    createImageThumbnails: false,
+    init: function() {
+      this.on("complete", function(file) {
+          this.removeFile(file);
+          APP.vue.uploaded_track();
+      });
+    }
+  }
+});
+</script>
+
 {{end}}
 
 <body class="search_body"></body>
 
 <div id="vue-div">
 
+    <div class="main_content container col-md-12" style="padding: 0;">
 
-    <div id="report_list_div" class="report_list col-md-3" v-if="!is_making_report && display_selected_report === -1">
+        <div id="report_list_div" class="report_list col-md-3" v-if="!is_making_report && display_selected_report === -1">
 
-            <ul v-for="r in reports" class="report_list_item" >
-                <li class="report_list_item_description"><h3 id="description_title"> ${r.description}</h3></li>
-                <li class="report_list_item_created_on"><p id="report_date">date: ${r.created_on} </p></li>
-                <li>
-                    <button class="expand_report" v-on:click="set_display_selected_report(r._idx), get_messages(r.id)"> GO
-                        <i class="fa fa-arrow-right" aria-hidden="true" id="fa_select" ></i>
-                    </button>
-                </li>
+                <ul v-for="r in reports" class="report_list_item" >
+                    <li class="report_list_item_description"><h3 id="description_title"> ${r.description}</h3></li>
+                    <li class="report_list_item_created_on"><p id="report_date">date: ${r.created_on} </p></li>
+                    <li>
+                        <button class="expand_report" v-on:click="set_display_selected_report(r._idx), get_messages(r.id)"> GO
+                            <i class="fa fa-arrow-right" aria-hidden="true" id="fa_select" ></i>
+                        </button>
+                    </li>
 
 
-            </ul>
-            <span class="help-block"></span>
-            <button class="load_more_reports" v-if="has_more_reports" v-on:click="get_more_reports()">Load more</button>
+                </ul>
+                <span class="help-block"></span>
+                <button class="load_more_reports" v-if="has_more_reports" v-on:click="get_more_reports()">Load more</button>
 
-    </div>
+        </div>
 
-    <!-- create a report -->
-    <div class="create_report" v-if="is_making_report && display_selected_report === -1">
-        <form action="#" v-on:submit.prevent="add_report" class="form-horizontal" enctype="multipart/form-data" method="post">
-                <div class="form-group" id="no_table_content__row">
-                    <div>
-                        <textarea class="form-control string" id="new-report" v-model="form_report_content" placeholder="Type report" type="text" rows="5"> </textarea>
-                        <span class="help-block"></span>
-                    </div>
-                </div>
-
-                <div class="form-group" id="reports_cat_id__row">
-                    <label class="control-label col-sm-3" for="reports_cat_id" id="reports_cat_id__label">Categories</label>
-                    <div class="col-sm-9">
-                        <select class="generic-widget form-control" id="reports_cat_id" name="cat_id" v-model="category_result">
-                            <option v-for="c in categories">${c.cat_title}</option>
-                        </select>
-                        <span class="help-block"></span>
-                    </div>
-                </div>
-
-                <div class="form-group" id="reports_want_updates__row">
-                    <div class="col-sm-offset-3 col-sm-9">
-                        <div class="checkbox">
-                            <label class="" id="reports_want_updates__label">
-                                <input v-model="want_updates" class="boolean" id="reports_want_updates" name="want_updates" type="checkbox" value="on"> Want Updates
-                            </label>
-                            <span class="help-block">
-
-                            </span>
+        <!-- create a report -->
+        <div class="create_report" v-if="is_making_report && display_selected_report === -1">
+            <form action="#" v-on:submit.prevent="add_report" class="form-horizontal" enctype="multipart/form-data" method="post">
+                    <div class="form-group" id="no_table_content__row">
+                        <div>
+                            <textarea class="form-control string" id="new-report" v-model="form_report_content" placeholder="Type report" type="text" rows="5"> </textarea>
+                            <span class="help-block"></span>
                         </div>
                     </div>
-                </div>
+
+                    <div class="form-group" id="reports_cat_id__row">
+                        <label class="control-label col-sm-3" for="reports_cat_id" id="reports_cat_id__label">Categories</label>
+                        <div class="col-sm-9">
+                            <select class="generic-widget form-control" id="reports_cat_id" name="cat_id" v-model="category_result">
+                                <option v-for="c in categories">${c.cat_title}</option>
+                            </select>
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="reports_want_updates__row">
+                        <div class="col-sm-offset-3 col-sm-9">
+                            <div class="checkbox">
+                                <label class="" id="reports_want_updates__label">
+                                    <input v-model="want_updates" class="boolean" id="reports_want_updates" name="want_updates" type="checkbox" value="on"> Want Updates
+                                </label>
+                                <span class="help-block">
+
+                                </span>
+                            </div>
+                        </div>
+                    </div>
 
 
-                <div class="form-group" id="post-button">
-                    <div>
-                        <!-- disable the button post, if 1) the content is null, 2) if the content only contains whitespace
-                        For condition 2 code taken from https://goo.gl/dv8NrQ -->
-                        <button class="post-button" id="post-button" type="submit" v-on:click="toggle_is_making_report(),remove_marker()" v-bind:disabled="form_report_content===null ||  !(/\S/.test(form_report_content)) ||category_result=== null "  >Post </button>
+                    <div class="form-group" id="post-button">
+                        <div>
+                            <!-- disable the button post, if 1) the content is null, 2) if the content only contains whitespace
+                            For condition 2 code taken from https://goo.gl/dv8NrQ -->
+                            <button class="post-button" id="post-button" type="submit" v-on:click="toggle_is_making_report(),remove_marker()" v-bind:disabled="form_report_content===null ||  !(/\S/.test(form_report_content)) ||category_result=== null "  >Post </button>
+                        </div>
+                    </div>
+                </form>
+            <button class="cancel-post-button" id="cancel-post-button" v-on:click="toggle_is_making_report(),remove_marker()">Cancel </button>
+        </div>
+
+        <!-- detailed view of a report -->
+        <div class="report_list col-md-3" v-if="display_selected_report != -1">
+
+            <ul>
+                <p class="report_list_item_description">descr: ${reports[display_selected_report].description}</p>
+                <p class="report_list_item_category">cat: ${reports[display_selected_report].category}</p>
+                <p class="report_list_item_created_on">date: ${reports[display_selected_report].created_on}</p>
+                <p class="report_list_item_created_on">address: ${reports[display_selected_report].pretty_address}</p>
+                <p class="report_list_item_created_on">status: ${reports[display_selected_report].status}</p>
+                <p class="report_list_item_created_on">progress: ${reports[display_selected_report].progress}</p>
+
+                <button class="cancel_display_single_report" v-on:click="set_display_selected_report(-1)">Cancel </button>
+
+            </ul>
+
+            <div class="all_messages">
+                <div class="message-list" v-for="m in messages">
+                    <div class="message_div text-left">
+                        <p class="message_content">${m.message_content}</p>
+                        <p class="message_author">${m.message_author}</p>
+                        <p class="created_date">${m.created_on}</p>
                     </div>
                 </div>
-            </form>
-        <button class="cancel-post-button" id="cancel-post-button" v-on:click="toggle_is_making_report(),remove_marker()">Cancel </button>
-    </div>
+            </div>
 
-    <!-- detailed view of a report -->
-    <div class="report_list col-md-3" v-if="display_selected_report != -1">
+            <div v-if="has_more_messages" class="show_more" >
+                    <button class="btn btn-default" v-on:click="get_more_messages(reports[display_selected_report].id)" id="load-more">Load more</button>
+            </div>
 
-        <ul>
-            <p class="report_list_item_description">descr: ${reports[display_selected_report].description}</p>
-            <p class="report_list_item_category">cat: ${reports[display_selected_report].category}</p>
-            <p class="report_list_item_created_on">date: ${reports[display_selected_report].created_on}</p>
-            <p class="report_list_item_created_on">address: ${reports[display_selected_report].pretty_address}</p>
-            <p class="report_list_item_created_on">status: ${reports[display_selected_report].status}</p>
-            <p class="report_list_item_created_on">progress: ${reports[display_selected_report].progress}</p>
+        </div>
 
-            <button class="cancel_display_single_report" v-on:click="set_display_selected_report(-1)">Cancel </button>
+        <div id="map" class="col-md-9 col-md-offset-3"></div>
 
-        </ul>
 
-        <div class="all_messages">
-            <div class="message-list" v-for="m in messages">
-                <div class="message_div text-left">
-                    <p class="message_content">${m.message_content}</p>
-                    <p class="message_author">${m.message_author}</p>
-                    <p class="created_date">${m.created_on}</p>
-                </div>
+        <div id="floating-panel">
+          <fieldset class="col-md-4">
+                    <div class="category_div container">
+                        <div class="category_query" v-for="c in categories">
+                            <label class="cat_label"> ${c.cat_title}</label>
+                            <input v-on:change="push_query(query_category,c.id)" class="cat_checkbox"  type="checkbox" name="checkbox-1" id="checkbox-1">
+                        </div>
+                    </div>
+          </fieldset>
+
+            <div class="category_query" id="show_old">
+                <label id="show_old_label"> Show finished</label>
+                <input v-on:change="toggle_show_finished()" class="cat_checkbox"  type="checkbox" name="checkbox-1" id="checkbox-2">
             </div>
         </div>
 
-        <div v-if="has_more_messages" class="show_more" >
-                <button class="btn btn-default" v-on:click="get_more_messages(reports[display_selected_report].id)" id="load-more">Load more</button>
-        </div>
-
     </div>
 
-    <div id="map"></div>
+</div>
 
-
-    <div id="floating-panel">
-      <fieldset class="col-md-4">
-                <div class="category_div container">
-                    <div class="category_query" v-for="c in categories">
-                        <label class="cat_label"> ${c.cat_title}</label>
-                        <input v-on:change="push_query(query_category,c.id)" class="cat_checkbox"  type="checkbox" name="checkbox-1" id="checkbox-1">
-                    </div>
-                </div>
-      </fieldset>
-
-        <div class="category_query" id="show_old">
-            <label id="show_old_label"> Show finished</label>
-            <input v-on:change="toggle_show_finished()" class="cat_checkbox"  type="checkbox" name="checkbox-1" id="checkbox-2">
+        <div id="uploader_div" class="container col-md-6">
+    <form action="" class="dropzone dz-clickable" id="file-uploader">
+        <div class="dz-message">
+          Drop.
         </div>
-    </div>
-
-
-
-
-
+    </form>
 </div>
 
 
