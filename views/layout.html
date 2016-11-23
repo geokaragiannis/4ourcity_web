@@ -38,7 +38,8 @@
     {{block head}}{{end}}
     {{
     # using sidebars need to know what sidebar you want to use
-    mc0 = 'col-md-12'
+    # add no padding to the middle column
+    mc0 = 'col-xs-12 nopadding'
     mc1 = 'col-md-9'
     mc2 = 'col-md-6'
     left_sidebar_enabled = globals().get('left_sidebar_enabled', False)
@@ -77,7 +78,7 @@
     {{end}}
     <!-- Main ========================================= -->
     <!-- Begin page content -->
-    <div class="container-fluid main-container">
+    <div class="container-fluid main-container nopadding">
       {{if left_sidebar_enabled:}}
         <div class="col-md-3 left-sidebar">
             {{block left_sidebar}}

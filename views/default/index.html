@@ -39,15 +39,15 @@ $(function() {
 
 {{end}}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<body class="search_body"></body>
+<body class="index_body"></body>
 
 <div id="vue-div">
 
-    <div class="main_content container col-md-12 col-xs-12 col-sm-12" style="padding: 0;">
-        <div class="row" style="padding: 0; margin: 0;">
+    <div class="main_content container col-md-12 col-xs-12 col-sm-12" style="padding: 0; ">
+        <div class="row row_content" style="padding: 0; margin: 0;">
 
-            <div id="report_list_div" class="report_list col-md-4 col-xs-5 col-sm-5" v-if="!is_making_report && display_selected_report === -1">
-
+            <div id="report_list_div" class=" col-md-4 col-xs-0 col-sm-5" v-if="!is_making_report && display_selected_report === -1">
+                <div class="full-height report_list">
                     <ul v-for="r in reports" class="report_list_item fluid-container" >
                         <li class="report_list_item_description"><h3 id="description_title"> ${r.description}</h3></li>
                         <li class="report_list_item_created_on row">
@@ -64,13 +64,14 @@ $(function() {
 
                         </li>
                     </ul>
+                </div>
                     <span class="help-block"></span>
                     <button class="load_more_reports" v-if="has_more_reports" v-on:click="get_more_reports()">Load more</button>
 
             </div>
 
             <!-- create a report -->
-            <div class="create_report col-md-4 col-xs-4 col-sm-4 container" v-if="is_making_report && display_selected_report === -1">
+            <div class="create_report col-md-4 col-xs-4 col-sm-5 container" v-if="is_making_report && display_selected_report === -1">
                 <ul class="create_report fluid-container">
                     <li>
                         <div class="container-fluid" style="display: inline-block">
@@ -133,19 +134,18 @@ $(function() {
             </div>
 
             <!-- detailed view of a report -->
-            <div class="report_list col-md-3" v-if="display_selected_report != -1">
+            <div class="report_list col-md-4 col-xs-4 col-sm-5" v-if="display_selected_report != -1">
 
                 <ul>
-                    <p class="report_list_item_description">descr: ${reports[display_selected_report].description}</p>
-                    <p class="report_list_item_category">cat: ${reports[display_selected_report].category}</p>
-                    <p class="report_list_item_created_on">date: ${reports[display_selected_report].created_on}</p>
-                    <p class="report_list_item_created_on">address: ${reports[display_selected_report].pretty_address}</p>
-                    <p class="report_list_item_created_on">status: ${reports[display_selected_report].status}</p>
-                    <p class="report_list_item_created_on">progress: ${reports[display_selected_report].progress}</p>
-
-                    <button class="cancel_display_single_report" v-on:click="set_display_selected_report(-1)">Cancel </button>
+                    <li class="report_list_item_description">descr: ${reports[display_selected_report].description}</li>
+                    <li class="report_list_item_category">cat: ${reports[display_selected_report].category}</li>
+                    <li class="report_list_item_created_on">date: ${reports[display_selected_report].created_on}</li>
+                    <li class="report_list_item_created_on">address: ${reports[display_selected_report].pretty_address}</li>
+                    <li class="report_list_item_created_on">status: ${reports[display_selected_report].status}</li>
+                    <li class="report_list_item_created_on">progress: ${reports[display_selected_report].progress}</li>
 
                 </ul>
+                <button class="cancel_display_single_report" v-on:click="set_display_selected_report(-1)">Cancel </button>
 
                 <div class="all_messages">
                     <div class="message-list" v-for="m in messages">
@@ -163,7 +163,7 @@ $(function() {
 
             </div>
 
-            <div id="map" class="col-md-8 col-xs-7 col-md-offset-4 col-xs-offset-5 col-sm-7 col-sm-offset-5"></div>
+            <div id="map" class="col-md-8 col-xs-12 col-md-offset-4 col-xs-offset-0 col-sm-7 col-sm-offset-5"></div>
 
 
             <div id="floating-panel">
