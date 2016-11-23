@@ -21,6 +21,7 @@
 [class*="col-"] {
     float: left;
 }
+// for computers
 .col-1 {width: 8.33%;}
 .col-2 {width: 16.66%;}
 .col-3 {width: 25%;}
@@ -73,8 +74,15 @@ div.make_report, div.view_report {
 //    }
 //}
 
+@media only screen and (min-width: 700px) {
+    #map {
+      height: 92vh !important;
+    }
+
+}
+
 @media only screen and (max-width: 700px) {
-    /* For tablets: */
+    /* For phones: */
     .col-m-1 {width: 8.33%;}
     .col-m-2 {width: 16.66%;}
     .col-m-3 {width: 25%;}
@@ -88,11 +96,15 @@ div.make_report, div.view_report {
     .col-m-11 {width: 91.66%;}
     .col-m-12 {width: 100%;}
 
+    .index_body{
+      //overflow:scroll !important;
+    }
+
     .report_list{
       height: 20vh;
     }
     #map{
-      height: 20vh;
+      display: none;
     }
 }
 
@@ -108,6 +120,7 @@ div.make_report, div.view_report {
 
 .main_content{
   //position: fixed;
+  //overflow-x:hidden;
 }
 
 .report_container{
@@ -123,6 +136,18 @@ div.make_report, div.view_report {
   @include border-radius(14px);
   //width:300px;
   height: 92vh;
+  margin-top:0%;
+  // make it scrollable
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+.report_list_detailed{
+  background: #f3f3f3;
+  padding: 20px;
+  @include border-radius(14px);
+  //width:300px;
+  //height: 92vh;
   margin-top:0%;
   // make it scrollable
   overflow: hidden;
@@ -424,5 +449,11 @@ input[type="search"]:focus{
 }
 
 .index_body{
-  //overflow: hidden;
+  overflow: hidden;
+}
+
+.mobile_map{
+  display: block !important;
+  height: 50vh !important;
+
 }

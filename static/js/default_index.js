@@ -61,6 +61,13 @@ var app = function(){
 
         self.vue.display_selected_report = idx;
 
+
+
+        if ($(window).width() < 700) {
+            $("#map").addClass("mobile_map");
+            google.maps.event.trigger(map,'resize');
+        }
+
         for(var k=0;k<self.vue.markers.length; k++) {
             self.vue.markers[k].setOpacity(1);
         }
@@ -80,6 +87,9 @@ var app = function(){
                 }
             }
         }
+
+        var latlgn = new google.maps.LatLng(self.vue.reports[self.vue.display_selected_report].lat, self.vue.reports[self.vue.display_selected_report].lgn);
+        map.setCenter(latlgn);
 
 
     };
@@ -333,10 +343,6 @@ var app = function(){
 
         }
     });
-
-    if ($(window).width() < 500) {
-        $("#map").addClass(".col-xs-12");
-    }
 
     // initiate that in the beginning. Fetch the stuff from the server
     // happens once in the beginning.
