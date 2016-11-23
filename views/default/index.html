@@ -45,128 +45,130 @@ $(function() {
 
     <div class="main_content container col-md-12 col-xs-12 col-sm-12" style="padding: 0; ">
         <div class="row row_content" style="padding: 0; margin: 0;">
-            <div class=" report_container col-md-4 col-xs-0 col-sm-5">
+            <div class="row">
+                <div class=" report_container col-4 col-m-12 ">
 
-                <div id="report_list_div" v-if="!is_making_report && display_selected_report === -1">
-                <div class="report_list">
-                    <ul v-for="r in reports" class="report_list_item fluid-container" >
-                        <li class="report_list_item_description"><h3 id="description_title"> ${r.description}</h3></li>
-                        <li class="report_list_item_created_on row">
-                            <div class="row" style="padding: 0; margin:0;">
-                                <div class="col-xs-9">
-                                    <p id="report_date" style="padding: 0; margin:0;">date: ${r.created_on}</p>
-                                </div>
-                                <div class="col-xs-3">
-                                    <button class="expand_report " v-on:click="set_display_selected_report(r._idx), get_messages(r.id)"> GO
-                                        <i class="fa fa-arrow-right" aria-hidden="true" id="fa_select" ></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                        </li>
-                    </ul>
-                    <button class="load_more_reports" v-if="has_more_reports" v-on:click="get_more_reports()">Load more</button>
-                </div>
-                    <span class="help-block"></span>
-
-
-            </div>
-
-                <!-- create a report -->
-                <div class="create_report" v-if="is_making_report && display_selected_report === -1">
-                <ul class="create_report fluid-container">
-                    <li>
-                        <div class="container-fluid" style="display: inline-block">
-
-                                <div class="col-md-2">
-                                    <i class="fa fa-arrow-left text-center cancel_new_report" style="font-size: 2vw;" v-on:click="toggle_is_making_report(),remove_marker()"></i>
-                                </div>
-                                <div class="col-md-10 other">
-                                    <h2 class="text-center">Make a Report</h2>
+                    <div id="report_list_div" v-if="!is_making_report && display_selected_report === -1">
+                    <div class="report_list">
+                        <ul v-for="r in reports" class="report_list_item fluid-container" >
+                            <li class="report_list_item_description"><h3 id="description_title"> ${r.description}</h3></li>
+                            <li class="report_list_item_created_on row">
+                                <div class="row" style="padding: 0; margin:0;">
+                                    <div class="col-xs-9">
+                                        <p id="report_date" style="padding: 0; margin:0;">date: ${r.created_on}</p>
+                                    </div>
+                                    <div class="col-xs-3">
+                                        <button class="expand_report " v-on:click="set_display_selected_report(r._idx), get_messages(r.id)"> GO
+                                            <i class="fa fa-arrow-right" aria-hidden="true" id="fa_select" ></i>
+                                        </button>
+                                    </div>
                                 </div>
 
-                        </div>
+                            </li>
+                        </ul>
+                        <button class="load_more_reports" v-if="has_more_reports" v-on:click="get_more_reports()">Load more</button>
+                    </div>
                         <span class="help-block"></span>
-                    </li>
-                    <li>
-                        <div>
-                            <div>
-                                <select class="generic-widget form-control" id="reports_cat_id" name="cat_id" v-model="category_result">
-                                    <option v-for="c in categories">${c.cat_title}</option>
-                                </select>
-                                <span class="help-block"></span>
+
+
+                </div>
+
+                    <!-- create a report -->
+                    <div class="create_report" v-if="is_making_report && display_selected_report === -1">
+                    <ul class="create_report fluid-container">
+                        <li>
+                            <div class="container-fluid" style="display: inline-block">
+
+                                    <div class="col-md-2">
+                                        <i class="fa fa-arrow-left text-center cancel_new_report" style="font-size: 2vw;" v-on:click="toggle_is_making_report(),remove_marker()"></i>
+                                    </div>
+                                    <div class="col-md-10 other">
+                                        <h2 class="text-center">Make a Report</h2>
+                                    </div>
+
                             </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="container-fluid">
-                        <form action="#" v-on:submit.prevent="add_report" class="form-horizontal" enctype="multipart/form-data" method="post">
-                            <div class="form-group" id="no_table_content__row">
+                            <span class="help-block"></span>
+                        </li>
+                        <li>
+                            <div>
                                 <div>
-                                    <textarea class="form-control string" id="new-report" v-model="form_report_content" placeholder="Type report" type="text" rows="5"> </textarea>
+                                    <select class="generic-widget form-control" id="reports_cat_id" name="cat_id" v-model="category_result">
+                                        <option v-for="c in categories">${c.cat_title}</option>
+                                    </select>
                                     <span class="help-block"></span>
                                 </div>
                             </div>
-
-
-                            <div class="form-group" id="reports_want_updates__row">
-                                <div>
-                                    <div class="checkbox">
-                                        <label class="" id="reports_want_updates__label" style="text-decoration: underline">
-                                            <input v-model="want_updates" class="boolean" id="reports_want_updates" name="want_updates" type="checkbox" value="on">
-                                            Click the ckeckbox if you wish to receive updates about the progress of your report from ${municipality}
-                                        </label>
+                        </li>
+                        <li>
+                            <div class="container-fluid">
+                            <form action="#" v-on:submit.prevent="add_report" class="form-horizontal" enctype="multipart/form-data" method="post">
+                                <div class="form-group" id="no_table_content__row">
+                                    <div>
+                                        <textarea class="form-control string" id="new-report" v-model="form_report_content" placeholder="Type report" type="text" rows="5"> </textarea>
                                         <span class="help-block"></span>
                                     </div>
                                 </div>
-                            </div>
 
 
-                            <div class="form-group" id="post-button">
-                                <div>
-                                    <!-- disable the button post, if 1) the content is null, 2) if the content only contains whitespace
-                                    For condition 2 code taken from https://goo.gl/dv8NrQ -->
-                                    <button class="post-button" id="post-button" type="submit" v-on:click="toggle_is_making_report(),remove_marker()" v-bind:disabled="form_report_content===null ||  !(/\S/.test(form_report_content)) ||category_result=== null "  >Post </button>
+                                <div class="form-group" id="reports_want_updates__row">
+                                    <div>
+                                        <div class="checkbox">
+                                            <label class="" id="reports_want_updates__label" style="text-decoration: underline">
+                                                <input v-model="want_updates" class="boolean" id="reports_want_updates" name="want_updates" type="checkbox" value="on">
+                                                Click the ckeckbox if you wish to receive updates about the progress of your report from ${municipality}
+                                            </label>
+                                            <span class="help-block"></span>
+                                        </div>
+                                    </div>
                                 </div>
+
+
+                                <div class="form-group" id="post-button">
+                                    <div>
+                                        <!-- disable the button post, if 1) the content is null, 2) if the content only contains whitespace
+                                        For condition 2 code taken from https://goo.gl/dv8NrQ -->
+                                        <button class="post-button" id="post-button" type="submit" v-on:click="toggle_is_making_report(),remove_marker()" v-bind:disabled="form_report_content===null ||  !(/\S/.test(form_report_content)) ||category_result=== null "  >Post </button>
+                                    </div>
+                                </div>
+                            </form>
+                                </div>
+                        </li>
+                    </ul>
+                </div>
+
+                    <!-- detailed view of a report -->
+                    <div class="report_list" v-if="display_selected_report != -1">
+
+                    <ul>
+                        <li class="report_list_item_description">descr: ${reports[display_selected_report].description}</li>
+                        <li class="report_list_item_category">cat: ${reports[display_selected_report].category}</li>
+                        <li class="report_list_item_created_on">date: ${reports[display_selected_report].created_on}</li>
+                        <li class="report_list_item_created_on">address: ${reports[display_selected_report].pretty_address}</li>
+                        <li class="report_list_item_created_on">status: ${reports[display_selected_report].status}</li>
+                        <li class="report_list_item_created_on">progress: ${reports[display_selected_report].progress}</li>
+
+                    </ul>
+                    <button class="cancel_display_single_report" v-on:click="set_display_selected_report(-1)">Cancel </button>
+
+                    <div class="all_messages">
+                        <div class="message-list" v-for="m in messages">
+                            <div class="message_div text-left">
+                                <p class="message_content">${m.message_content}</p>
+                                <p class="message_author">${m.message_author}</p>
+                                <p class="created_date">${m.created_on}</p>
                             </div>
-                        </form>
-                            </div>
-                    </li>
-                </ul>
-            </div>
-
-                <!-- detailed view of a report -->
-                <div class="report_list" v-if="display_selected_report != -1">
-
-                <ul>
-                    <li class="report_list_item_description">descr: ${reports[display_selected_report].description}</li>
-                    <li class="report_list_item_category">cat: ${reports[display_selected_report].category}</li>
-                    <li class="report_list_item_created_on">date: ${reports[display_selected_report].created_on}</li>
-                    <li class="report_list_item_created_on">address: ${reports[display_selected_report].pretty_address}</li>
-                    <li class="report_list_item_created_on">status: ${reports[display_selected_report].status}</li>
-                    <li class="report_list_item_created_on">progress: ${reports[display_selected_report].progress}</li>
-
-                </ul>
-                <button class="cancel_display_single_report" v-on:click="set_display_selected_report(-1)">Cancel </button>
-
-                <div class="all_messages">
-                    <div class="message-list" v-for="m in messages">
-                        <div class="message_div text-left">
-                            <p class="message_content">${m.message_content}</p>
-                            <p class="message_author">${m.message_author}</p>
-                            <p class="created_date">${m.created_on}</p>
                         </div>
                     </div>
+
+                    <div v-if="has_more_messages" class="show_more" >
+                            <button class="btn btn-default" v-on:click="get_more_messages(reports[display_selected_report].id)" id="load-more">Load more</button>
+                    </div>
+
+                </div>
                 </div>
 
-                <div v-if="has_more_messages" class="show_more" >
-                        <button class="btn btn-default" v-on:click="get_more_messages(reports[display_selected_report].id)" id="load-more">Load more</button>
-                </div>
 
-            </div>
-            </div>
-
-            <div id="map" class="col-md-8 col-xs-12 col-md-offset-4 col-xs-offset-0 col-sm-7 col-sm-offset-5"></div>
+            <div id="map" class=" col-8 col-m-12"></div>
 
 
             <div id="floating-panel">
@@ -186,6 +188,7 @@ $(function() {
             </div>
 
         </div>
+            </div>
 
     </div>
 
