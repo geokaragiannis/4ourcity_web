@@ -45,9 +45,10 @@ $(function() {
 
     <div class="main_content container col-md-12 col-xs-12 col-sm-12" style="padding: 0; ">
         <div class="row row_content" style="padding: 0; margin: 0;">
+            <div class=" report_container col-md-4 col-xs-0 col-sm-5">
 
-            <div id="report_list_div" class=" col-md-4 col-xs-0 col-sm-5" v-if="!is_making_report && display_selected_report === -1">
-                <div class="full-height report_list">
+                <div id="report_list_div" v-if="!is_making_report && display_selected_report === -1">
+                <div class="report_list">
                     <ul v-for="r in reports" class="report_list_item fluid-container" >
                         <li class="report_list_item_description"><h3 id="description_title"> ${r.description}</h3></li>
                         <li class="report_list_item_created_on row">
@@ -64,14 +65,15 @@ $(function() {
 
                         </li>
                     </ul>
+                    <button class="load_more_reports" v-if="has_more_reports" v-on:click="get_more_reports()">Load more</button>
                 </div>
                     <span class="help-block"></span>
-                    <button class="load_more_reports" v-if="has_more_reports" v-on:click="get_more_reports()">Load more</button>
+
 
             </div>
 
-            <!-- create a report -->
-            <div class="create_report col-md-4 col-xs-4 col-sm-5 container" v-if="is_making_report && display_selected_report === -1">
+                <!-- create a report -->
+                <div class="create_report" v-if="is_making_report && display_selected_report === -1">
                 <ul class="create_report fluid-container">
                     <li>
                         <div class="container-fluid" style="display: inline-block">
@@ -133,8 +135,8 @@ $(function() {
                 </ul>
             </div>
 
-            <!-- detailed view of a report -->
-            <div class="report_list col-md-4 col-xs-4 col-sm-5" v-if="display_selected_report != -1">
+                <!-- detailed view of a report -->
+                <div class="report_list" v-if="display_selected_report != -1">
 
                 <ul>
                     <li class="report_list_item_description">descr: ${reports[display_selected_report].description}</li>
@@ -161,6 +163,7 @@ $(function() {
                         <button class="btn btn-default" v-on:click="get_more_messages(reports[display_selected_report].id)" id="load-more">Load more</button>
                 </div>
 
+            </div>
             </div>
 
             <div id="map" class="col-md-8 col-xs-12 col-md-offset-4 col-xs-offset-0 col-sm-7 col-sm-offset-5"></div>
