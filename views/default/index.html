@@ -171,7 +171,7 @@ $(function() {
             <div id="map" class=" col-8 col-m-12"></div>
 
 
-            <div id="floating-panel">
+            <div id="floating-panel" v-if="!is_making_report && display_selected_report === -1">
               <fieldset class="col-md-4">
                         <div class="category_div container">
                             <div class="category_query" v-for="c in categories">
