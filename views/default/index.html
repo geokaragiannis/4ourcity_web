@@ -53,19 +53,15 @@ $(function() {
                 <div class=" report_container col-4 col-m-12 ">
 
                     <div id="report_list_div" v-if="!is_making_report && display_selected_report === -1">
-                    <div class="report_list">
-                        <ul v-for="r in reports" class="report_list_item fluid-container" >
+                    <div class="report_list" >
+                        <ul v-for="r in reports" class="report_list_item fluid-container" v-on:click="set_display_selected_report(r._idx), get_messages(r.id)" style="cursor:pointer;">
                             <li class="report_list_item_description"><h3 id="description_title"> ${r.description}</h3></li>
                             <li class="report_list_item_created_on row">
                                 <div class="row" style="padding: 0; margin:0;">
                                     <div class="col-xs-9">
                                         <p id="report_date" style="padding: 0; margin:0;">date: ${r.created_on}</p>
                                     </div>
-                                    <div class="col-xs-3">
-                                        <button class="expand_report " v-on:click="set_display_selected_report(r._idx), get_messages(r.id)"> GO
-                                            <i class="fa fa-arrow-right" aria-hidden="true" id="fa_select" ></i>
-                                        </button>
-                                    </div>
+
                                 </div>
 
                             </li>
