@@ -62,10 +62,18 @@ var app = function(){
         self.vue.display_selected_report = idx;
 
 
-
+        // if the window is small:
+        // if the index is not -1 (ie we want to show a report), then give the class mobile_map
+        // else (ie we hit the cancel) do not display the div
         if ($(window).width() < 700) {
-            $("#map").addClass("mobile_map");
-            google.maps.event.trigger(map,'resize');
+            if(idx !== -1) {
+                $("#map-plus-panel").removeClass("no-display");
+                $("#map-plus-panel").addClass("mobile_map");
+                //$("#floating_panel").addClass("mobile_panel");
+                google.maps.event.trigger(map, 'resize');
+            } else{
+                $("#map-plus-panel").addClass("no-display");
+            }
         }
 
         for(var k=0;k<self.vue.markers.length; k++) {
@@ -88,9 +96,11 @@ var app = function(){
             }
         }
 
-        var latlgn = new google.maps.LatLng(self.vue.reports[self.vue.display_selected_report].lat, self.vue.reports[self.vue.display_selected_report].lgn);
-        map.setCenter(latlgn);
-
+        // when we hit the cancel (i.e display_selected_report = -1), do not center the map
+        if(self.vue.display_selected_report !== -1) {
+            var latlgn = new google.maps.LatLng(self.vue.reports[self.vue.display_selected_report].lat, self.vue.reports[self.vue.display_selected_report].lgn);
+            map.setCenter(latlgn);
+        }
 
     };
 

@@ -103,18 +103,16 @@ div.make_report, div.view_report {
     .report_list{
       height: 20vh;
     }
-    #map{
-      display: none;
+    #map-plus-panel{
+      display: none ;
     }
 }
 
-@media screen and (max-width: 768px){
-  //.report_list{
-  //  display: none;
-  //}
-
-  #map{
-   height: 50%;
+// when the screen is big
+@media only screen and (min-width: 700px) {
+  // display the map-plus-panel div
+  #map-plus-panel{
+    display: block !important;
   }
 }
 
@@ -344,9 +342,9 @@ div.message_div{
 }
 
 #map{
-    height: 92vh;
+    height: 100%;
     margin-top:0%;
-    //position: absolute;
+    position: absolute;
     //@include border-radius(16px);
     padding: 0;
 }
@@ -450,10 +448,23 @@ input[type="search"]:focus{
 
 .index_body{
   overflow: hidden;
+
 }
 
+// special class, for mobile. Only when detailed view is on
 .mobile_map{
   display: block !important;
-  height: 50vh !important;
+  height: 61.5% !important;
+}
+// special class, for mobile
+.no-display{
+  display:none !important;
+}
 
+html,body{
+  height: 100%;
+}
+
+.full-height{
+  height:100%;
 }

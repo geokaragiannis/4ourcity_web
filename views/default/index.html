@@ -39,13 +39,17 @@ $(function() {
 
 {{end}}
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<body class="index_body"></body>
+<body class="index_body" >
 
-<div id="vue-div">
 
-    <div class="main_content container col-md-12 col-xs-12 col-sm-12" style="padding: 0; ">
-        <div class="row row_content" style="padding: 0; margin: 0;">
-            <div class="row">
+
+</body>
+
+<div id="vue-div" class="full-height">
+
+    <div class="main_content container col-md-12 col-xs-12 col-sm-12 full-height" style="padding: 0; ">
+        <div class="row row_content full-height" style="padding: 0; margin: 0;">
+            <div class="row full-height">
                 <div class=" report_container col-4 col-m-12 ">
 
                     <div id="report_list_div" v-if="!is_making_report && display_selected_report === -1">
@@ -167,12 +171,13 @@ $(function() {
                     </div>
                 </div>
 
+            <!-- map is now inside another div that contains both the floating panel and the map
+             This is done in order to optimize the code when the display is small-->
+            <div id="map-plus-panel" class="col-8 col-m-12" style="position: relative">
+                <div id="map" class="col-12"></div>
 
-            <div id="map" class=" col-8 col-m-12"></div>
-
-
-            <div id="floating-panel">
-              <fieldset class="col-md-4">
+                <div id="floating-panel" >
+              <fieldset >
                         <div class="category_div container">
                             <div class="category_query" v-for="c in categories">
                                 <label class="cat_label"> ${c.cat_title}</label>
@@ -186,6 +191,11 @@ $(function() {
                     <input v-on:change="toggle_show_finished()" class="cat_checkbox"  type="checkbox" name="checkbox-1" id="checkbox-2">
                 </div>
             </div>
+
+            </div>
+
+
+
 
         </div>
             </div>
@@ -208,12 +218,6 @@ $(function() {
 <!DOCTYPE html>
 <html>
   <head>
-    <style>
-      html,body{
-        width:100%;
-
-      }
-    </style>
   </head>
   <body class="qqq">
 
