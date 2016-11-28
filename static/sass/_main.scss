@@ -116,11 +116,6 @@ div.make_report, div.view_report {
   }
 }
 
-.main_content{
-  //position: fixed;
-  //overflow-x:hidden;
-}
-
 .report_container{
   padding:0;
 }
@@ -145,7 +140,7 @@ div.make_report, div.view_report {
   padding: 20px;
   @include border-radius(14px);
   //width:300px;
-  //height: 92vh;
+  height: 92vh;
   margin-top:0%;
   // make it scrollable
   overflow: hidden;
@@ -180,6 +175,15 @@ ul.report_list_item {
 
 }
 
+ul.report_list_item_detailed {
+
+  //padding-left: 1px;
+  list-style-type: none;
+  @include border-radius(14px);
+  padding: 20px;
+
+}
+
 div.create_report{
   padding:0;
 }
@@ -198,17 +202,6 @@ ul.create_report{
 #report_date{
   font-size: 12px;
   font-style: italic;
-}
-//button
-.expand_report{
-  background: #5d5e62;
-  padding: 3px;
-  border-radius: 5px;
-  //float: right;
-  width: 30px;
-  //margin-top: -34px;
-  //margin-right: 10px;
-  //margin-left: 191px;
 }
 
 .active{
@@ -467,4 +460,37 @@ html,body{
 
 .full-height{
   height:100%;
+}
+
+// load more button in index styling.
+// taken from goo.gl/LPdqx2content_copyCopy
+
+.load_more_reports {
+  $color: #eee;
+
+  font: bold 20px Arial,sans-serif;
+  font-color: rgba(50, 93, 136, 0.89);
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  padding: 0.4em 2em 0.5em;
+  @include border-radius(0.30em);
+  border: 1px solid;
+  border-color: darken($color, 20%) darken($color, 30%) darken($color, 40%);
+  background-color: rgba(168, 168, 95, 0.63);
+  @include box-shadow(0 0.1em 0.5em rgba(black,0.10), 0 0.1em 0.2em rgba(black,0.3), 0 -0.1em 0.07em rgba(black,0.3) inset, 0 0.1em 0.07em rgba(white,0.2) inset);
+  @include transition(all 100ms);
+
+  &:hover {
+    @include box-shadow(0 0.1em 0.5em rgba(black,0.4), 0 0.1em 0.2em rgba(black,0.4), 0 -0.1em 0.07em rgba(black,0.3) inset, 0 0.1em 0.07em rgba(white,0.2) inset);
+  }
+
+  &:active {
+    padding: 0.4em 2em 0.4em;
+    margin-top: 0.1em;
+    border-color: darken($color, 30%) darken($color, 20%) $color;
+    @include background-image(linear-gradient(darken($color, 5%), $color));
+    @include box-shadow(0 0.1em 0.2em rgba(black,0.1) inset, 0 0.1em 0.1em rgba(black,0.2) inset, 0.05em 0 0.07em rgba(black,0.2) inset, -0.05em 0 0.07em rgba(black,0.2) inset);
+    @include transition(all 10ms);
+  }
 }

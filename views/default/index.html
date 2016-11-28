@@ -139,30 +139,32 @@ $(function() {
                     <!-- detailed view of a report -->
                     <div class="report_list_detailed" v-if="display_selected_report != -1">
 
-                        <ul>
+                        <ul class="report_list_item_detailed">
                             <li class="report_list_item_description">descr: ${reports[display_selected_report].description}</li>
                             <li class="report_list_item_category">cat: ${reports[display_selected_report].category}</li>
                             <li class="report_list_item_created_on">date: ${reports[display_selected_report].created_on}</li>
                             <li class="report_list_item_created_on">address: ${reports[display_selected_report].pretty_address}</li>
                             <li class="report_list_item_created_on">status: ${reports[display_selected_report].status}</li>
                             <li class="report_list_item_created_on">progress: ${reports[display_selected_report].progress}</li>
+                            <li>
+                                <div class="all_messages">
+                                    <div class="message-list" v-for="m in messages">
+                                        <div class="message_div text-left">
+                                            <p class="message_content">${m.message_content}</p>
+                                            <p class="message_author">${m.message_author}</p>
+                                            <p class="created_date">${m.created_on}</p>
+                                        </div>
+                                    </div>
+                                </div>
 
+                                <div v-if="has_more_messages" class="show_more" >
+                                    <button class="btn btn-default" v-on:click="get_more_messages(reports[display_selected_report].id)" id="load-more">Load more</button>
+                                </div>
+                            </li>
                         </ul>
                         <button class="cancel_display_single_report" v-on:click="set_display_selected_report(-1)">Cancel </button>
 
-                        <div class="all_messages">
-                            <div class="message-list" v-for="m in messages">
-                                <div class="message_div text-left">
-                                    <p class="message_content">${m.message_content}</p>
-                                    <p class="message_author">${m.message_author}</p>
-                                    <p class="created_date">${m.created_on}</p>
-                                </div>
-                            </div>
-                        </div>
 
-                        <div v-if="has_more_messages" class="show_more" >
-                                <button class="btn btn-default" v-on:click="get_more_messages(reports[display_selected_report].id)" id="load-more">Load more</button>
-                        </div>
 
                     </div>
                 </div>
