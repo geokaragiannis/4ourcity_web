@@ -94,6 +94,14 @@ var app = function(){
                     self.vue.markers[j].setOpacity(0.5);
                 }
             }
+            var latlgn = new google.maps.LatLng(self.vue.reports[self.vue.display_selected_report].lat, self.vue.reports[self.vue.display_selected_report].lgn);
+            map.setCenter(latlgn);
+        }
+
+        //if user is making a report, then set the center to the new marker location
+        if(self.vue.is_making_report){
+            var latlgn = new google.maps.LatLng(self.vue.latitude, self.vue.longitude);
+            map.setCenter(latlgn);
         }
 
         // when we hit the cancel (i.e display_selected_report = -1), do not center the map
@@ -101,6 +109,7 @@ var app = function(){
             var latlgn = new google.maps.LatLng(self.vue.reports[self.vue.display_selected_report].lat, self.vue.reports[self.vue.display_selected_report].lgn);
             map.setCenter(latlgn);
         }
+
 
     };
 
