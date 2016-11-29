@@ -93,6 +93,12 @@ def get_reports():
     #rows = db().select(db.reports.ALL)
 
     for i,r in enumerate(rows):
+        image_row=db(db.images.report_id == r.id).select().first()
+        image_blob = 'haha'
+        # if image_row is not None:
+        #     image_blob = image_row.data_blob
+        #     logger.info('length: %r', len(image_blob))
+        logger.info('image blob of id: %r is: %r', r.id,image_blob)
         if i < end_idx - start_idx:
             t = dict(
                 id = r.id,
@@ -105,7 +111,8 @@ def get_reports():
                 created_on = r.created_on,
                 status = r.status_id.status_title,
                 progress = r.progress_id.progress_title,
-                photo = r.photo
+                image_blob=image_blob
+
             )
             reports.append(t)
         else:
@@ -161,7 +168,21 @@ def add_report():
     if json.loads(request.vars.want_updates):
         send_email(logged_user,"thank you",'thx')
 
-    return 'ok'
+    return response.json(dict(report_id=p_id))
+
+
+def add_image():
+
+    report_id = request.vars.report_id
+
+    db.images.insert(
+        report_id=report_id,
+        original_filename=request.vars.file.filename,
+        data_blob= request.vars.file.file.read(),
+        mime_type=request.vars.file.type
+    )
+
+
 
 
 def get_reports_admin():
@@ -175,7 +196,9 @@ def get_reports_admin():
 
     auth_row = db(db.auth_user.email == logged_user).select().first()
     #logger.info("reputation of logged user: %r", auth_row)
+    logger.info('aa')
     auth_rep = auth_row.reputation
+    logger.info('rep %r', auth_rep)
     rep_row = db(db.reputation.reputation_scale == auth_rep).select().first()
     logger.info("reputation of logged user: %r", rep_row.reputation_label)
 
@@ -245,7 +268,6 @@ def get_reports_admin():
                 created_on = r.created_on,
                 status = r.status_id.status_title,
                 progress = r.progress_id.progress_title,
-                photo = r.photo,
                 reputation = rep_label
             )
             reports.append(t)
@@ -274,28 +296,41 @@ def get_progress_status():
 def post_backend_changes():
     backend_changes = json.loads(request.vars.backend_changes)
 
+    logger.info('backend changes: %r', backend_changes)
+
     for b in backend_changes:
         report = db(db.reports.id == b['id']).select().first()
         # status, progress ids that correspond to the title sent by client. Needed to
         # update the db
 
+        logger.info('304')
         # user that made the report
         auth_row = db(db.auth_user.id == report.user_id).select().first()
+        logger.info('307')
 
         status_row = db(db.status.status_title ==b['status']).select().first()
         status_id = status_row.id
 
+        logger.info('312')
+
         progress_row = db(db.progress.progress_title == b['progress']).select().first()
         progress_id = progress_row.id
+
+        logger.info('317')
 
         # if report was pending and it was changed to accepted add one to the reputation of the user
         # if report was pending and it was changed to rejected subtract one from the reputation of the user
         # In either case 1<=reputation<=10
 
+        logger.info('old status id %r. New is: %r', report.status_id, status_id)
         if report.status_id == 1 and status_id == 2:
+            logger.info('rep: %r', auth_row.reputation)
             if auth_row.reputation <10:
                 new_rep = auth_row.reputation + 1
+                logger.info('new rep: %r', new_rep)
                 auth_row.update_record(reputation=new_rep)
+
+        logger.info('328')
 
         if report.status_id == 1 and status_id == 3:
             if auth_row.reputation>1:

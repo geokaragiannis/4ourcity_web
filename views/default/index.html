@@ -9,6 +9,8 @@
     var reports_url = "{{=URL('api', 'get_reports')}}";
     var add_report_url = "{{=URL('api', 'add_report', user_signature=True)}}";
     var messages_url = "{{=URL('api', 'get_messages')}}";
+    var upload_url = "{{=URL('api', 'add_image')}}";
+    var get_image_url = "{{=URL('api', 'get_image')}}";
 </script>
 
 <script src="{{=URL('static', 'js/dropzone.js')}}"></script>
@@ -20,20 +22,29 @@ function produce_upload_url (files) {
 }
 
 $(function() {
-  Dropzone.options.fileUploader = {
-    maxFilesize: 10, // MB
-    url: produce_upload_url,
-    addRemoveLinks: true,
-    parallelUploads: 1,
-    acceptedFiles: 'audio/*',
-    createImageThumbnails: false,
-    init: function() {
-      this.on("complete", function(file) {
-          this.removeFile(file);
-          APP.vue.uploaded_track();
-      });
-    }
-  }
+
+    Dropzone.autoDiscover = false;
+
+     myDropzone = new Dropzone("#uploader_div", {
+        maxFilesize: 10, // MB
+        url: produce_upload_url,
+        addRemoveLinks: true,
+        parallelUploads: 1,
+        acceptedFiles: 'image/*',
+        createImageThumbnails: false,
+        autoProcessQueue: false
+
+    });
+//  Dropzone.options.fileUploader = {
+//    maxFilesize: 10, // MB
+//    url: produce_upload_url,
+//    addRemoveLinks: true,
+//    parallelUploads: 1,
+//    acceptedFiles: 'image/*',
+//    createImageThumbnails: false,
+//    autoProcessQueue: false,
+//    autoDiscover: false
+//  }
 });
 </script>
 

@@ -57,7 +57,7 @@ db.define_table('reports',
                 Field('created_on', 'datetime', default=datetime.datetime.utcnow()),
                 Field('status_id', db.status, default=1),
                 Field('progress_id', db.progress, default=1),
-                Field('photo','upload'),
+                Field('has_image','boolean'),
                 Field('want_updates', 'boolean'),
                 )
 
@@ -73,6 +73,14 @@ db.reports.latitude.readable = db.reports.latitude.writable = False
 db.reports.longitude.readable = db.reports.longitude.writable = False
 db.reports.square_key.readable = db.reports.square_key.writable = False
 db.reports.lat_long.readable = db.reports.lat_long.writable = False
+
+
+db.define_table('images',
+                Field('report_id', db.reports),
+                Field('original_filename'),
+                Field('data_blob', 'blob'),
+                Field('mime_type')
+                )
 
 
 db.define_table('permission_types',

@@ -252,6 +252,12 @@ var app = function(){
                 self.vue.category_result = null;
                 self.vue.want_updates = false;
 
+
+                // do the image url
+                self.upload_url = upload_url + '?' + $.param({report_id: data.report_id});
+                myDropzone.processQueue();
+
+
             });
     };
 
