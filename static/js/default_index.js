@@ -61,6 +61,16 @@ var app = function(){
 
         self.vue.display_selected_report = idx;
 
+        // if we display a selected report hide the dropzone div
+        if(self.vue.display_selected_report !==-1){
+            $("#uploader_div").hide();
+        }
+
+        if(self.vue.display_selected_report === -1 && self.vue.is_making_report){
+            $("#uploader_div").show();
+
+        }
+
 
         // if the window is small:
         // if the index is not -1 (ie we want to show a report), then give the class mobile_map
@@ -115,7 +125,14 @@ var app = function(){
 
 
     self.toggle_is_making_report = function() {
-      self.vue.is_making_report = !self.vue.is_making_report;
+
+        if(!self.vue.is_making_report){
+            $("#uploader_div").show();
+        } else{
+            $("#uploader_div").hide();
+        }
+
+        self.vue.is_making_report = !self.vue.is_making_report;
 
     };
 
@@ -342,7 +359,8 @@ var app = function(){
             has_more_messages: false,
             has_more_reports: false,
             query_category: [],
-            show_finished: false
+            show_finished: false,
+            input_picture: null
 
         },
         methods: {
