@@ -76,6 +76,11 @@ $(function() {
                                 </div>
 
                             </li>
+                            <li>
+                                <div class="">
+                                    <img v-bind:src="r.image_url" style="height: 7em;">
+                                </div>
+                            </li>
                         </ul>
                         <button class="load_more_reports" v-if="has_more_reports" v-on:click="get_more_reports()">Load more</button>
                     </div>
@@ -158,6 +163,11 @@ $(function() {
                             <li class="report_list_item_created_on">address: ${reports[display_selected_report].pretty_address}</li>
                             <li class="report_list_item_created_on">status: ${reports[display_selected_report].status}</li>
                             <li class="report_list_item_created_on">progress: ${reports[display_selected_report].progress}</li>
+                            <li>
+                                <div class="">
+                                    <img v-bind:src="reports[display_selected_report].image_url" style="height: 15em;">
+                                </div>
+                            </li>
                             <li>
                                 <div class="all_messages">
                                     <div class="message-list" v-for="m in messages">

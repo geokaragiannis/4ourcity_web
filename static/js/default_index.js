@@ -172,6 +172,8 @@ var app = function(){
                  self.vue.has_more_reports=data.has_more;
                  enumerate(self.vue.reports);
                  self.vue.show_map();
+                 // generate the image url for each report
+                 self.vue.generate_image_url();
              }
 
         });
@@ -200,6 +202,9 @@ var app = function(){
                 var old_length = self.vue.reports.length;
                 self.extend(self.vue.reports,data.reports);
                 enumerate(self.vue.reports);
+                // generate the image url for each report
+                 self.vue.generate_image_url();
+
                 var new_length = self.vue.reports.length;
                 // display the new markers on the map
 
@@ -256,6 +261,10 @@ var app = function(){
                 // do the image url
                 self.upload_url = upload_url + '?' + $.param({report_id: data.report_id});
                 myDropzone.processQueue();
+                // myDropzone.on("complete", function (file) {
+                //     Dropzone.forElement("#uploader_div").removeAllFiles(true);
+                // });
+
 
 
             });
@@ -333,6 +342,21 @@ var app = function(){
         self.vue.get_reports();
     };
 
+    self.generate_image_url = function () {
+
+        for(var i=0;i<self.vue.reports.length; i++){
+
+            self.vue.reports[i].image_url= get_image_url + '?' + $.param({report_id:self.vue.reports[i].id});
+
+            // if (self.vue.reports[i].image_url )
+        }
+
+
+
+
+
+    };
+
 
 
 
@@ -366,7 +390,7 @@ var app = function(){
             has_more_reports: false,
             query_category: [],
             show_finished: false,
-            input_picture: null
+            image_url: null
 
         },
         methods: {
@@ -382,7 +406,8 @@ var app = function(){
             get_more_messages: self.get_more_messages,
             get_more_reports: self.get_more_reports,
             push_query: self.push_query,
-            toggle_show_finished: self.toggle_show_finished
+            toggle_show_finished: self.toggle_show_finished,
+            generate_image_url: self.generate_image_url
 
         }
     });

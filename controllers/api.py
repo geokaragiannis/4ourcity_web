@@ -2,6 +2,7 @@ import json
 import smtplib
 from email.MIMEMultipart import MIMEMultipart
 from email.MIMEText import MIMEText
+import tempfile
 
 
 def index():
@@ -93,12 +94,6 @@ def get_reports():
     #rows = db().select(db.reports.ALL)
 
     for i,r in enumerate(rows):
-        image_row=db(db.images.report_id == r.id).select().first()
-        image_blob = 'haha'
-        # if image_row is not None:
-        #     image_blob = image_row.data_blob
-        #     logger.info('length: %r', len(image_blob))
-        logger.info('image blob of id: %r is: %r', r.id,image_blob)
         if i < end_idx - start_idx:
             t = dict(
                 id = r.id,
@@ -111,7 +106,7 @@ def get_reports():
                 created_on = r.created_on,
                 status = r.status_id.status_title,
                 progress = r.progress_id.progress_title,
-                image_blob=image_blob
+                image_url=''
 
             )
             reports.append(t)
@@ -166,7 +161,8 @@ def add_report():
     logger.info('want updates : %r', json.loads(request.vars.want_updates))
 
     if json.loads(request.vars.want_updates):
-        send_email(logged_user,"thank you",'thx')
+        send_email(logged_user,"Your report has been added!",
+                   'Thank you for submitting a report to ' + municipality + '. You will receive emails about the progress of your report')
 
     return response.json(dict(report_id=p_id))
 
@@ -182,6 +178,24 @@ def add_image():
         mime_type=request.vars.file.type
     )
 
+
+def get_image():
+
+    report_id = int(request.vars.report_id)
+
+    t = db(db.images.report_id == report_id).select().first()
+    if t is None:
+        redirect(URL('static/images', 'not_found.png'))
+        return 'ko'
+    headers = {}
+    headers['Content-Type'] = t.mime_type
+    # Web2py is setup to stream a file, not a data blob.
+    # So we create a temporary file and we stream it.
+    # f = tempfile.TemporaryFile()
+    f = tempfile.NamedTemporaryFile()
+    f.write(t.data_blob)
+    f.seek(0)  # Rewind.
+    return response.stream(f.name, chunk_size=4096, request=request)
 
 
 
@@ -255,6 +269,7 @@ def get_reports_admin():
         if i < end_idx - start_idx:
             user_row = db(db.auth_user.id == r.user_id).select().first()
             rep_row = db(db.reputation.reputation_scale == user_row.reputation).select().first()
+            logger.info(user_row)
             rep_label = rep_row.reputation_label
             logger.info("reputation of %r is: %r", user_row.email, rep_label)
             t = dict(
