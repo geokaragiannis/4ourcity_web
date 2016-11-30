@@ -195,13 +195,18 @@ ul.create_report{
     overflow-y: scroll;
     @include border-radius(14px);
     padding:10px;
+    padding-left: 25px;
     height: 100vh;
     background: #f3f3f3;
 }
 
-#report_date{
+.report_date{
   font-size: 12px;
   font-style: italic;
+}
+
+.detailed2{
+  font-size: 16px;
 }
 
 .active{
@@ -344,10 +349,15 @@ div.message_div{
 
 #uploader_div{
     height: 10px;
-    width: 190px;
+    width: 290px;
     #file_uploader{
-      height:10px;
+      height:50px;
+      width: 250px;
     }
+}
+
+.dz-preview, .dz-file-preview{
+  display: none;
 }
 
 // floating panel inside the map in index
@@ -493,4 +503,19 @@ html,body{
     @include box-shadow(0 0.1em 0.2em rgba(black,0.1) inset, 0 0.1em 0.1em rgba(black,0.2) inset, 0.05em 0 0.07em rgba(black,0.2) inset, -0.05em 0 0.07em rgba(black,0.2) inset);
     @include transition(all 10ms);
   }
+}
+
+.image_view{
+  @include border-radius(16px);
+}
+
+.vcenter{
+  display: inline-block;
+  vertical-align: middle;
+  float:none;
+}
+
+.admin_body{
+    padding-left: 20px;
+    padding-right: 20px;
 }

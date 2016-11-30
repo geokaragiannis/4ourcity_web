@@ -12,6 +12,7 @@
     var post_message_url = "{{=URL('api', 'post_message', user_signature=True)}}";
     var messages_url = "{{=URL('api', 'get_messages')}}";
     var categories_url = "{{=URL('api', 'get_categories')}}";
+    var get_image_url = "{{=URL('api', 'get_image')}}";
 </script>
 {{end}}
 
@@ -186,15 +187,25 @@
     <div class="detailed_view_report report_list col-md-4 col-xs-0 col-sm-5" v-if="view_report !=-1" style="float:left;">
 
         <ul class="report_list_item" >
-                <li class="report_list_item_description">description: ${reports[view_report].description}</li>
-                <li class="report_list_item_category">category: ${reports[view_report].category}</li>
-                <li class="report_list_item_created_on">date: ${reports[view_report].created_on}</li>
-                <li class="report_list_item_created_on">address: ${reports[view_report].pretty_address}</li>
+                <li><i class="fa fa-arrow-left" style="font-size: 2em;" v-on:click="reset_view_report()"></i></li>
+                <li class="detailed2">description: ${reports[view_report].description}
+                    <span class="help-block"></span>
+                </li>
+                <li class="detailed2">category: ${reports[view_report].category}
+                    <span class="help-block"></span>
+                </li>
+                <li class="detailed2">date: ${reports[view_report].created_on}
+                    <span class="help-block"></span>
+                </li>
+                <li class="detailed2">address: ${reports[view_report].pretty_address}
+                    <span class="help-block"></span>
+                </li>
                 <li class="report_list_item_created_on">
 
                     <select class="generic-widget form-control" style="width: 150px; height: 40px;" v-model="reports[view_report].status"  v-on:change="changed_progress_status(reports[view_report]._idx)">
                             <option v-for="s in status">${s.status_title}</option>
                     </select>
+                    <span class="help-block"></span>
 
                 </li>
                 <li class="report_list_item_created_on">
@@ -203,15 +214,23 @@
                             <option v-for="p in progress">${p.progress_title}</option>
                     </select>
 
+                    <span class="help-block"></span>
+
+                </li>
+
+                <li>
+                    <div class="text-center">
+                        <img v-bind:src="reports[view_report].image_url" style="height: 12em;">
+                    </div>
                 </li>
 
         </ul>
 
-        <button class="cancel_view_report" v-on:click="reset_view_report()">Cancel</button>
-        <button class="submit_button" v-on:click="submit_changes()">submit</button>
 
-        <button class="add_message" v-if="!is_adding_message" v-on:click="toggle_is_adding_message()">Add new message</button>
-        <button class="cancel_add_message" v-if="is_adding_message" v-on:click="toggle_is_adding_message()">Cancel</button>
+        <button class="submit_button" v-on:click="submit_changes()" style="background: #245887;">submit changes</button>
+
+        <button class="add_message" v-if="!is_adding_message" v-on:click="toggle_is_adding_message()" style="background: #561c1c">Add new message</button>
+        <button class="cancel_add_message" v-if="is_adding_message" v-on:click="toggle_is_adding_message()" style="background: #561c1c">Cancel</button>
 
         <div v-if="is_adding_message">
             <form action="#" v-on:submit.prevent="post_message(reports[view_report].id)" class="form-horizontal" enctype="multipart/form-data" method="post">
@@ -226,7 +245,7 @@
                     <div>
                         <!-- disable the button post, if 1) the content is null, 2) if the content only contains whitespace
                         For condition 2 code taken from https://goo.gl/dv8NrQ -->
-                        <button class="post-button" id="post-button" type="submit" v-on:click="toggle_is_adding_message()">Post </button>
+                        <button class="post-button" id="post-button" type="submit" v-on:click="toggle_is_adding_message()" style="background: #561c1c">Post </button>
                     </div>
                 </div>
 

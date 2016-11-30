@@ -103,7 +103,7 @@ def get_reports():
                 category = r.cat_id.cat_title,
                 description = r.description,
                 pretty_address = r.pretty_address,
-                created_on = r.created_on,
+                created_on = r.created_on.strftime("%B %d 20%y"),
                 status = r.status_id.status_title,
                 progress = r.progress_id.progress_title,
                 image_url=''
@@ -280,10 +280,11 @@ def get_reports_admin():
                 category = r.cat_id.cat_title,
                 description = r.description,
                 pretty_address = r.pretty_address,
-                created_on = r.created_on,
+                created_on = r.created_on.strftime("%B %d 20%y"),
                 status = r.status_id.status_title,
                 progress = r.progress_id.progress_title,
-                reputation = rep_label
+                reputation = rep_label,
+                image_url=''
             )
             reports.append(t)
         else:
@@ -361,13 +362,17 @@ def post_backend_changes():
         logger.info('status: %r', status_row.status_title)
         logger.info('progress: %r', progress_row.progress_title)
 
-        # send an email to the user
-        toaddress = auth_row.email
-        subject = '4ourcity Report Update'
-        body = 'Your report has been updated! The current status of your report is' \
-               ': ' + status_row.status_title + '  and the progress is now: ' + progress_row.progress_title
 
-        send_email(toaddress,subject,body)
+
+        if report.want_updates:
+            # send an email to the user
+            toaddress = auth_row.email
+            subject = '4ourcity Report Update'
+            body = 'Your report has been updated! The current status of your report is' \
+                   ': ' + status_row.status_title + '  and the progress is now: ' + progress_row.progress_title
+            send_email(toaddress,subject,body)
+
+
     return 'ok'
 
 def get_permissions():

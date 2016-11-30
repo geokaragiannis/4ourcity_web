@@ -52,6 +52,8 @@ var app = function(){
             self.vue.has_more_reports= data.has_more;
             enumerate(self.vue.reports);
             add_changed_field(self.vue.reports);
+            // generate the image url for each report
+            self.vue.generate_image_url();
         });
     };
 
@@ -73,6 +75,8 @@ var app = function(){
                 self.extend(self.vue.reports,data.reports);
                 enumerate(self.vue.reports);
                 add_changed_field(self.vue.reports);
+                // generate the image url for each report
+                self.vue.generate_image_url();
             });
     };
 
@@ -320,6 +324,16 @@ var app = function(){
         arr.unshift(id);
     };
 
+    self.generate_image_url = function () {
+
+        for (var i = 0; i < self.vue.reports.length; i++) {
+
+            self.vue.reports[i].image_url = get_image_url + '?' + $.param({report_id: self.vue.reports[i].id});
+
+            // if (self.vue.reports[i].image_url )
+        }
+    };
+
 
     self.vue = new Vue({
 
@@ -351,7 +365,8 @@ var app = function(){
             has_more_reports: false,
             query_status: [],
             query_progress: [],
-            query_category: []
+            query_category: [],
+            image_url: null
         },
         methods: {
             get_reports: self.get_reports,
@@ -373,7 +388,8 @@ var app = function(){
             get_more_messages: self.get_more_messages,
             get_more_reports: self.get_more_reports,
             push_query: self.push_query,
-            get_categories: self.get_categories
+            get_categories: self.get_categories,
+            generate_image_url: self.generate_image_url
         }
     });
 

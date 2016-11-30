@@ -261,8 +261,8 @@ var app = function(){
                 // do the image url
                 self.upload_url = upload_url + '?' + $.param({report_id: data.report_id});
                 myDropzone.processQueue();
-                // myDropzone.on("complete", function (file) {
-                //     Dropzone.forElement("#uploader_div").removeAllFiles(true);
+                // myDropzone.on("addedfile", function (file) {
+                //     $("#dz-message").text("OK");
                 // });
 
 
