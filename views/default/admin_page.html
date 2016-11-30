@@ -24,10 +24,10 @@
 
 
     <!-- admin stuff -->
-    <div v-if="is_admin">
+    <div v-if="is_admin"  style="padding-top: 10px; padding-bottom: 10px;">
 
         <button v-on:click="toggle_display_admin(), get_permissions()" v-if="!display_admin && view_report == -1">Alter permissions</button>
-        <button v-on:click="toggle_display_admin()" v-if="display_admin && !adding_new" style="margin-bottom: 30px; float: left;">Cancel</button>
+        <i class="fa fa-arrow-left" v-on:click="toggle_display_admin()" v-if="display_admin && !adding_new" style="margin-bottom: 30px; float: left; font-size: 2em; cursor: pointer;"></i>
 
         <div v-if="display_admin">
 
