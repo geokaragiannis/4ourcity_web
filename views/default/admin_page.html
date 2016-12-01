@@ -30,14 +30,14 @@
     <div v-if="is_admin"  style="padding-top: 10px; padding-bottom: 10px;">
 
         <button id="perm" class="nice_button" v-on:click="toggle_display_admin(), get_permissions()" v-if="!display_admin && view_report == -1"><i class="fa fa-cog" style="padding-right: 5px;"></i> Alter permissions</button>
-        <i class="nice_fa fa fa-arrow-left" v-on:click="toggle_display_admin()" v-if="display_admin && !adding_new" style="margin-bottom: 30px; float: left; font-size: 2em;"></i>
+        <i class="nice_fa fa fa-arrow-left" v-on:click="toggle_display_admin()" v-if="display_admin" style="margin-bottom: 30px; float: left; font-size: 2em;"></i>
 
         <div v-if="display_admin">
 
             <button class="nice_button" v-if="!adding_new" v-on:click="toggle_adding_new()" style="float: right;"><i class="fa fa-plus" style="padding-right: 5px;"></i> Add new</button>
             <button class="nice_button" v-if="adding_new" v-on:click="toggle_adding_new()" style="float: right;"><i class="fa fa-times" style="padding-right: 5px;"></i> Cancel</button>
             <!-- permissions table view -->
-            <div class="report_table permissions_table" v-if="view_report == -1 && !adding_new">
+            <div class="report_table permissions_table" v-if="view_report == -1">
                 <table>
                     <thead>
                         <tr>
@@ -73,35 +73,65 @@
         <div v-if="adding_new" class="add_new_permisison">
 
             <!-- adding a new permission -->
-    <form action="#" v-on:submit.prevent="add_permission()" style="margin-top: 100px;" class="form-horizontal col-md-7 col-md-offset-4" enctype="multipart/form-data" method="post">
-	<div class="form-group">
-		<div class="col-sm-5">
-			<input class="form-control string"placeholder="Name" type="text" v-model="permission_name" >
-			<span class="help-block">
-			</span>
-		</div>
-	</div>
-    <div class="form-group" >
-		<div class="col-sm-5">
-			<input class="form-control string" placeholder="Email" type="text" v-model="permission_email">
-			<span class="help-block">
-			</span>
-		</div>
-	</div>
-	<div class="form-group">
-		<div class="col-sm-5">
-			<select class="generic-widget form-control" v-model="new_permission_type">
-                <option>choose permisison type</option>
-				<option v-for="t in permission_types">${t.permission_name}</option>
 
-			</select>
-            <span class="help-block">
-			</span>
-	    </div>
-    </div>
 
-    <button class="nice_button"><i class="fa fa-paper-plane-o" style="padding-right: 5px;"></i> add permission</button>
-</form>
+
+
+
+            <!-- Modal -->
+            <div id="myModal" class="modal fade in" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: block;">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content col-8" style="margin-left: 16.67%; margin-top:15%;">
+
+                      <div class="modal-header">
+                         <i class="nice_fa fa fa-times" style="float:right" v-on:click="toggle_adding_new()"></i>
+
+                        <h4 class="modal-title text-center" id="myModalLabel">Add new permission</h4>
+                      </div>
+
+                      <div class="modal-body container-fluid">
+
+
+                          <form action="#" v-on:submit.prevent="add_permission()" class="form-horizontal container-fluid" enctype="multipart/form-data" method="post">
+                                <div class="form-group col-6" style="margin-left:25% ">
+                                    <div class="">
+                                        <input class="form-control string"placeholder="Name" type="text" v-model="permission_name" >
+                                        <span class="help-block">
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-6" style="margin-left:25%">
+                                    <div>
+                                        <input class="form-control string" placeholder="Email" type="text" v-model="permission_email">
+                                        <span class="help-block">
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="form-group col-6" style="margin-left:25%">
+                                    <div>
+                                        <select class="generic-widget form-control" v-model="new_permission_type">
+                                            <option v-for="t in permission_types">${t.permission_name}</option>
+
+                                        </select>
+                                        <span class="help-block">
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <button class="col-6 nice_button" style="margin-left:25%"><i class="fa fa-paper-plane-o" style="padding-right: 5px;"></i> add permission</button>
+                          </form>
+
+
+
+                      </div>
+
+                      <div class="modal-footer">
+
+                      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div>
 
         </div>
     </div>
@@ -224,7 +254,7 @@
 
                 <li>
                     <div class="text-center">
-                        <img v-bind:src="reports[view_report].image_url" style="height: 12em;">
+                        <img class="image_view" v-bind:src="reports[view_report].image_url" style="height: 12em;">
                     </div>
                 </li>
 

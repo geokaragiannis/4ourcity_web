@@ -202,6 +202,8 @@ var app = function(){
 
         self.vue.view_report = -1;
         $("#map2").hide();
+        // when we go back, we reset the adding_message boolean
+        self.vue.is_adding_message = false;
 
         // when you go back, set the marker to null (remove it)
         self.vue.prev_marker.setMap(null)
@@ -274,7 +276,10 @@ var app = function(){
             message_content: self.vue.message_content,
             id: id
         }, function (data) {
+            // add message to the list of messages
             self.vue.messages.unshift(data.message);
+            // clear message content
+            self.vue.message_content = '';
         })
     };
 

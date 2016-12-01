@@ -319,20 +319,14 @@ def post_backend_changes():
         # status, progress ids that correspond to the title sent by client. Needed to
         # update the db
 
-        logger.info('304')
         # user that made the report
         auth_row = db(db.auth_user.id == report.user_id).select().first()
-        logger.info('307')
 
         status_row = db(db.status.status_title ==b['status']).select().first()
         status_id = status_row.id
 
-        logger.info('312')
-
         progress_row = db(db.progress.progress_title == b['progress']).select().first()
         progress_id = progress_row.id
-
-        logger.info('317')
 
         # if report was pending and it was changed to accepted add one to the reputation of the user
         # if report was pending and it was changed to rejected subtract one from the reputation of the user
@@ -345,8 +339,6 @@ def post_backend_changes():
                 new_rep = auth_row.reputation + 1
                 logger.info('new rep: %r', new_rep)
                 auth_row.update_record(reputation=new_rep)
-
-        logger.info('328')
 
         if report.status_id == 1 and status_id == 3:
             if auth_row.reputation>1:
@@ -536,10 +528,12 @@ def post_message():
     auth_row = db(db.auth_user.id == user_id).select().first()
     email = auth_row.email
 
-    subject= '4ourcity message added to your report'
-    body='It looks like there is a new message to one of your reports on ' +  report_row.pretty_address  + \
-         ' by ' + permission_row.user_name + ' saying ' + m.message_content
+    # send email only if want_updates is set
+    if report_row.want_updates:
+        subject= '4ourcity message added to your report'
+        body='It looks like there is a new message to one of your reports on ' +  report_row.pretty_address  + \
+             ' by ' + permission_row.user_name + ' saying ' + m.message_content
 
-    send_email(email,subject,body)
+        send_email(email,subject,body)
 
     return response.json(dict(message=message))

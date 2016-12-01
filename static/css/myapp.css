@@ -533,9 +533,9 @@ html, body {
 
 /* line 477, ../sass/_main.scss */
 .image_view {
-  -moz-border-radius: 16px;
-  -webkit-border-radius: 16px;
-  border-radius: 16px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
 }
 
 /* line 481, ../sass/_main.scss */
