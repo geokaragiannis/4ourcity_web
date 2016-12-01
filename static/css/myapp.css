@@ -604,6 +604,27 @@ html, body {
   background: #fafafa !important;
 }
 
+/* line 540, ../sass/_main.scss */
+.pgleft {
+  background-color: #a5a5a5;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 50%;
+  border-right: 2px solid black;
+}
+
+/* line 551, ../sass/_main.scss */
+.pgright {
+  background-color: #d5d5d5;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  right: 0;
+}
+
 /*
  * The MIT License
  * Copyright (c) 2012 Matias Meno <m@tias.me>
