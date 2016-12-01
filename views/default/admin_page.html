@@ -14,7 +14,10 @@
     var categories_url = "{{=URL('api', 'get_categories')}}";
     var get_image_url = "{{=URL('api', 'get_image')}}";
 </script>
+
 {{end}}
+
+
 
 <body class="admin_body"></body>
 
@@ -26,13 +29,13 @@
     <!-- admin stuff -->
     <div v-if="is_admin"  style="padding-top: 10px; padding-bottom: 10px;">
 
-        <button v-on:click="toggle_display_admin(), get_permissions()" v-if="!display_admin && view_report == -1">Alter permissions</button>
-        <i class="fa fa-arrow-left" v-on:click="toggle_display_admin()" v-if="display_admin && !adding_new" style="margin-bottom: 30px; float: left; font-size: 2em; cursor: pointer;"></i>
+        <button id="perm" class="nice_button" v-on:click="toggle_display_admin(), get_permissions()" v-if="!display_admin && view_report == -1"><i class="fa fa-cog" style="padding-right: 5px;"></i> Alter permissions</button>
+        <i class="nice_fa fa fa-arrow-left" v-on:click="toggle_display_admin()" v-if="display_admin && !adding_new" style="margin-bottom: 30px; float: left; font-size: 2em;"></i>
 
         <div v-if="display_admin">
 
-            <button v-if="!adding_new" v-on:click="toggle_adding_new()" style="float: right;">Add new</button>
-            <button v-if="adding_new" v-on:click="toggle_adding_new()" style="float: right;">Cancel</button>
+            <button class="nice_button" v-if="!adding_new" v-on:click="toggle_adding_new()" style="float: right;"><i class="fa fa-plus" style="padding-right: 5px;"></i> Add new</button>
+            <button class="nice_button" v-if="adding_new" v-on:click="toggle_adding_new()" style="float: right;"><i class="fa fa-times" style="padding-right: 5px;"></i> Cancel</button>
             <!-- permissions table view -->
             <div class="report_table permissions_table" v-if="view_report == -1 && !adding_new">
                 <table>
@@ -64,11 +67,12 @@
                     </tbody>
                 </table>
             </div>
-            <button class="submit_button" style="float:right;" v-if="!adding_new" v-on:click="submit_permission_changes()">submit</button>
+            <button class="nice_button" style="float:right;" v-if="!adding_new" v-on:click="submit_permission_changes()"><i class="fa fa-paper-plane-o" style="padding-right: 5px;"></i> submit changes</button>
         </div>
 
         <div v-if="adding_new" class="add_new_permisison">
 
+            <!-- adding a new permission -->
     <form action="#" v-on:submit.prevent="add_permission()" style="margin-top: 100px;" class="form-horizontal col-md-7 col-md-offset-4" enctype="multipart/form-data" method="post">
 	<div class="form-group">
 		<div class="col-sm-5">
@@ -96,7 +100,7 @@
 	    </div>
     </div>
 
-    <button class="submit_new_permission">submit</button>
+    <button class="nice_button"><i class="fa fa-paper-plane-o" style="padding-right: 5px;"></i> add permission</button>
 </form>
 
         </div>
@@ -135,7 +139,7 @@
                 </div>
               </fieldset>
 
-            <i id="query_button" class="fa fa-search" v-on:click="get_reports()" v-bind:disabled="query_progress.length == 0 && query_status.length == 0 && query_category.length == 0"></i>
+            <i id="query_button" class="nice_fa fa fa-search" v-on:click="get_reports()" v-bind:disabled="query_progress.length == 0 && query_status.length == 0 && query_category.length == 0"></i>
 
 
         <table>
@@ -176,9 +180,9 @@
                 </tbody>
             </table>
 
-        <button class="submit_button" style="float:right;" v-on:click="submit_changes()">submit</button>
+        <button class="nice_button" style="float:right;" v-on:click="submit_changes()"><i class="fa fa-paper-plane-o" style="padding-right: 5px;"></i> submit changes</button>
 
-        <button class="load_more_reports" v-if="has_more_reports" v-on:click="get_more_reports()">Load more</button>
+        <button class="nice_button" v-if="has_more_reports" v-on:click="get_more_reports()"><i class="fa fa-plus" style="padding-right: 5px;"></i> Load more</button>
 
     </div>
 
@@ -187,7 +191,7 @@
     <div class="detailed_view_report report_list col-md-4 col-xs-0 col-sm-5" v-if="view_report !=-1" style="float:left;">
 
         <ul class="report_list_item" >
-                <li><i class="fa fa-arrow-left" style="font-size: 2em;" v-on:click="reset_view_report()"></i></li>
+                <li><i class="nice_fa fa fa-arrow-left" style="font-size: 2em;" v-on:click="reset_view_report()"></i></li>
                 <li class="detailed2">description: ${reports[view_report].description}
                     <span class="help-block"></span>
                 </li>
@@ -202,7 +206,7 @@
                 </li>
                 <li class="report_list_item_created_on">
 
-                    <select class="generic-widget form-control" style="width: 150px; height: 40px;" v-model="reports[view_report].status"  v-on:change="changed_progress_status(reports[view_report]._idx)">
+                    <select class="generic-widget form-control nice_form" style="width: 150px; height: 40px;" v-model="reports[view_report].status"  v-on:change="changed_progress_status(reports[view_report]._idx)">
                             <option v-for="s in status">${s.status_title}</option>
                     </select>
                     <span class="help-block"></span>
@@ -210,7 +214,7 @@
                 </li>
                 <li class="report_list_item_created_on">
 
-                    <select class="generic-widget form-control" style="width: 150px; height: 40px;" v-model="reports[view_report].progress"  v-on:change="changed_progress_status(reports[view_report]._idx)">
+                    <select class="generic-widget form-control nice_form" style="width: 150px; height: 40px;" v-model="reports[view_report].progress"  v-on:change="changed_progress_status(reports[view_report]._idx)">
                             <option v-for="p in progress">${p.progress_title}</option>
                     </select>
 
@@ -227,16 +231,17 @@
         </ul>
 
 
-        <button class="submit_button" v-on:click="submit_changes()" style="background: #245887;">submit changes</button>
+        <button class="nice_button" v-on:click="submit_changes()"><i class="fa fa-paper-plane-o" style="padding-right: 5px;"></i> submit changes</button>
 
-        <button class="add_message" v-if="!is_adding_message" v-on:click="toggle_is_adding_message()" style="background: #561c1c">Add new message</button>
-        <button class="cancel_add_message" v-if="is_adding_message" v-on:click="toggle_is_adding_message()" style="background: #561c1c">Cancel</button>
+        <button class="nice_button" v-if="!is_adding_message" v-on:click="toggle_is_adding_message()"><i class="fa fa-plus" style="padding-right: 5px;"></i> Add new message</button>
+        <button class="nice_button" v-if="is_adding_message" v-on:click="toggle_is_adding_message()"><i class="fa fa-times" style="padding-right: 5px;"></i> Cancel</button>
+        <span class="help-block"></span>
 
         <div v-if="is_adding_message">
             <form action="#" v-on:submit.prevent="post_message(reports[view_report].id)" class="form-horizontal" enctype="multipart/form-data" method="post">
                 <div class="form-group" id="no_table_content__row">
                     <div>
-                        <textarea class="form-control string" id="new-message" v-model="message_content" placeholder="Type message" type="text" rows="3"> </textarea>
+                        <textarea class="form-control string nice_form" id="new-message" v-model="message_content" placeholder="Type message" type="text" rows="3"> </textarea>
                         <span class="help-block"></span>
                     </div>
                 </div>
@@ -245,7 +250,7 @@
                     <div>
                         <!-- disable the button post, if 1) the content is null, 2) if the content only contains whitespace
                         For condition 2 code taken from https://goo.gl/dv8NrQ -->
-                        <button class="post-button" id="post-button" type="submit" v-on:click="toggle_is_adding_message()" style="background: #561c1c">Post </button>
+                        <button class="nice_button" id="post-button" type="submit" v-on:click="toggle_is_adding_message()"><i class="fa fa-plus" style="padding-right: 5px;"></i> Post </button>
                     </div>
                 </div>
 
