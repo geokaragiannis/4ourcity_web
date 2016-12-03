@@ -625,6 +625,71 @@ html, body {
   right: 0;
 }
 
+/* line 561, ../sass/_main.scss */
+.search_body {
+  background: #8e9eab;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #9ca5ab, #eef2f3);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #9ca5ab, #eef2f3);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+/* line 570, ../sass/_main.scss */
+.gradient-text {
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  padding: 20px;
+  overflow: hidden;
+  border: none;
+  font: normal 6em/1 "numans", Helvetica, sans-serif;
+  color: #a5a5a5;
+  text-shadow: 4px 4px 6px rgba(0, 0, 0, 0.5);
+  letter-spacing: 20px;
+  text-align: center;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  background: transparent;
+  -moz-transform: rotateX(-9.16732deg) rotateY(-1.14592deg);
+  -ms-transform: rotateX(-9.16732deg) rotateY(-1.14592deg);
+  -webkit-transform: rotateX(-9.16732deg) rotateY(-1.14592deg);
+  transform: rotateX(-9.16732deg) rotateY(-1.14592deg);
+}
+
+/* line 587, ../sass/_main.scss */
+.gradient-text::after {
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  box-sizing: content-box;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  content: "";
+  top: 0;
+  right: 0;
+  left: 0;
+  border: none;
+  font: normal 6em/1 "numans", Helvetica, sans-serif;
+  color: rgba(0, 0, 0, 0.9);
+  -o-text-overflow: clip;
+  text-overflow: clip;
+  background-position: 50% 50%;
+  -moz-background-origin: padding;
+  -o-background-origin: padding-box;
+  -webkit-background-origin: padding;
+  background-origin: padding-box;
+  -moz-background-clip: border;
+  -o-background-clip: border-box;
+  -webkit-background-clip: border;
+  background-clip: border-box;
+  -moz-background-size: auto auto;
+  -o-background-size: auto auto;
+  -webkit-background-size: auto auto;
+  background-size: auto auto;
+  text-shadow: none;
+}
+
 /*
  * The MIT License
  * Copyright (c) 2012 Matias Meno <m@tias.me>

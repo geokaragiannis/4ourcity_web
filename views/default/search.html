@@ -7,7 +7,7 @@
 </script>
 {{end}}
 
-<body class="body" style="overflow: hidden;"></body>
+<body class="search_body" style="overflow: hidden;"></body>
 
    <!--     <div class="container nopadding" style="height: 100%;">
   <div class="row nopadding" style="height: 100%">
@@ -21,26 +21,25 @@
       </div>
 </div> -->
 
-
-<div class="pgleft"></div>
-<div class="pgright"></div>
+<div class="gradient-text">4ourcity</div>
+<script type="text/javascript" script-name="numans" src="http://use.edgefonts.net/numans.js"></script>
 
 <div id="search-vue-div" style="z-index: 0;">
 
 
     <div id="gradient"></div>
-    <div class="text-center" style="opacity: 0.99;">
+    <div class="text-center">
         <form class="searchbox" v-on:submit.prevent="search()">
             <input type="search" placeholder="Search" v-model="search_query"/>
             <button type="button" value="search"  v-on:click="search()" v-bind:disabled="search_query === null || !(/\S/.test(search_query))">&nbsp;</button>
         </form>
     </div>
 
-    <div class="search_results text-center" style="opacity: 0.99;">
+    <div class="search_results text-center">
         <ul v-if="have_searched && search_completed" v-for="s in searched_results" >
             <li style="list-style-type: none;">
                 <!-- use v-bind to configure the href. Use the vue variable url, which is set in vue.js. Doesn't work with regular href -->
-                <a v-bind:href="url" id="lolo" v-on:click="give_to_next_page(s.county,s.latitude,s.longitude)" style="cursor:pointer;">${s.county}</a>
+                <a v-bind:href="url" id="lolo" v-on:click="give_to_next_page(s.county,s.latitude,s.longitude)" style="color: #faf7f4;font-size: 1.5em; cursor:pointer;">${s.county}</a>
             </li>
 
         </ul>
