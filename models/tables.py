@@ -16,6 +16,7 @@ db.define_table('municipalities',
 
 # check db.py for reputation table
 
+# not used for now
 db.define_table('employees',
                 Field('fname', 'string'),
                 Field('lname', 'string'),
@@ -64,7 +65,6 @@ db.define_table('reports',
 db.reports.mun_id.readable = db.reports.mun_id.writable = False
 db.reports.user_id.readable = db.reports.user_id.writable = False
 db.reports.user_id.default = auth.user_id
-#db.reports.user_id.requires = IS_IN_DB(db,'auth_user.id', '%(id)s', zero=T('choose one'))
 db.reports.cat_id.requires = IS_IN_DB(db,'categories.id', '%(cat_title)s', zero=T('choose one'))
 db.reports.mun_id.requires = IS_IN_DB(db,'municipalities.id', '%(mun_name)s', zero=T('choose one'))
 db.reports.status_id.requires = IS_IN_DB(db,'status.id', '%(status_title)s', zero=T('choose one'))
@@ -104,7 +104,6 @@ db.define_table('messages',
 
 
 
-#db.banana.insert(latitude=36.996164,longitude=-122.058640,map_popup='im here')
 
 
 #db.permissions.truncate()

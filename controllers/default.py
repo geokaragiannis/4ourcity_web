@@ -24,31 +24,13 @@ def index():
         redirect(URL('default', 'search'))
     return dict()
 
-# @auth.requires_login()
-# def submit():
-#
-#     db.reports.created_on.readable = db.reports.created_on.writable = False
-#     db.reports.status.readable = db.reports.status.writable = False
-#     db.reports.progress.readable = db.reports.progress.writable = False
-#
-#     form = SQLFORM(db.reports)
-#
-#
-#     if form.process().accepted:
-#         # At this point, the record has already been inserted.
-#         session.flash = T("cool")
-#         redirect(URL('default', 'index'))
-#     elif form.errors:
-#         session.flash = T('Please enter correct values.')
-#
-#     return dict(form=form)
-
 def search():
 
     return dict()
 
 @auth.requires_login()
 def admin_page():
+    # check permissions
     user_email = auth.user.email if auth.user else None
     if not can_go_to_admin_page(user_email):
         session.flash=T("not authorized to access admin page")

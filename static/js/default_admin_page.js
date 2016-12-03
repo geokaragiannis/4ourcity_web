@@ -113,8 +113,10 @@ var app = function(){
         self.vue.permissions[idx].changed = true;
     };
 
+    // submit status-progress changes
     self.submit_changes = function () {
 
+        // c is a list of dicts that contains all the changes made
         var c = [];
         for(var i=0;i<self.vue.reports.length;i++){
             if(self.vue.reports[i].changed === true){
@@ -126,8 +128,6 @@ var app = function(){
 
             }
         }
-
-        console.log(c);
 
         $.post(post_changes_url,{
 
@@ -145,6 +145,7 @@ var app = function(){
     };
 
     self.submit_permission_changes = function() {
+        // c is a list of dicts that contains all the changes made
         var c = [];
         for(var i=0;i<self.vue.permissions.length;i++){
             if(self.vue.permissions[i].changed === true){
@@ -155,8 +156,6 @@ var app = function(){
 
             }
         }
-
-        console.log(c);
 
         $.post(post_permission_changes_url,{
 
@@ -173,13 +172,14 @@ var app = function(){
         });
     };
 
+    // detailed view of a report
     self.show_view_report = function (idx) {
 
         self.vue.view_report = idx;
 
         var location = new google.maps.LatLng(self.vue.reports[idx].lat,self.vue.reports[idx].lgn);
 
-        // only way it works
+        // only way it works (hide map and show again)
         $("#map2").hide();
         $("#map2").show();
         google.maps.event.trigger(map,'resize');
@@ -192,7 +192,7 @@ var app = function(){
 
         self.vue.prev_marker = marker;
 
-        // se the center of the map to the location of the clicked report
+        // set the center of the map to the location of the clicked report
         map.setCenter(location);
         // draw the marker
         marker.setMap(map);
@@ -335,7 +335,6 @@ var app = function(){
 
             self.vue.reports[i].image_url = get_image_url + '?' + $.param({report_id: self.vue.reports[i].id});
 
-            // if (self.vue.reports[i].image_url )
         }
     };
 

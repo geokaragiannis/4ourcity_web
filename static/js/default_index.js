@@ -16,9 +16,6 @@ var app = function(){
 
     self.show_map = function() {
 
-         // if(!self.vue.have_searched)
-         //     $("#map").hide();
-
         for (var i = 0; i < self.vue.reports.length; i++) {
             var latLng = new google.maps.LatLng(self.vue.reports[i].lat, self.vue.reports[i].lgn);
 
@@ -48,7 +45,6 @@ var app = function(){
                 icon: icon
             });
         google.maps.event.addListener(marker,'click',function(){
-            //window.alert(marker.id);
             self.vue.set_display_selected_report(marker.id);
             self.vue.get_messages(self.vue.reports[self.vue.display_selected_report].id)
         });
@@ -79,7 +75,6 @@ var app = function(){
             if(idx !== -1) {
                 $("#map-plus-panel").removeClass("no-display");
                 $("#map-plus-panel").addClass("mobile_map");
-                //$("#floating_panel").addClass("mobile_panel");
                 google.maps.event.trigger(map, 'resize');
             } else{
                 $("#map-plus-panel").addClass("no-display");
@@ -139,7 +134,6 @@ var app = function(){
     self.toggle_have_searched = function() {
 
         self.vue.have_searched = !self.vue.have_searched;
-        //$("#map").show();
     };
 
     // when we click cancel_report, the marker in the map should be removed
@@ -260,12 +254,8 @@ var app = function(){
 
                 // do the image url
                 self.upload_url = upload_url + '?' + $.param({report_id: data.report_id});
+                // make dropzone call
                 myDropzone.processQueue();
-                // myDropzone.on("addedfile", function (file) {
-                //     $("#dz-message").text("OK");
-                // });
-
-
 
             });
     };
@@ -322,9 +312,7 @@ var app = function(){
         for(var k=0; k< self.vue.markers.length; k++){
             self.vue.markers[k].setMap(null);
         }
-
         self.vue.get_reports();
-
 
     };
 
@@ -348,16 +336,9 @@ var app = function(){
 
             self.vue.reports[i].image_url= get_image_url + '?' + $.param({report_id:self.vue.reports[i].id});
 
-            // if (self.vue.reports[i].image_url )
         }
 
-
-
-
-
     };
-
-
 
 
     self.vue = new Vue({
@@ -415,7 +396,6 @@ var app = function(){
     // initiate that in the beginning. Fetch the stuff from the server
     // happens once in the beginning.
     self.get_categories();
-    //self.get_reports();
     $("#vue-div").show();
 
 
@@ -426,13 +406,4 @@ var app = function(){
 
 var APP = null;
 
-// This will make everything accessible from the js console;
-// for instance, self.x above would be accessible as APP.x
-// 1 effect: everything i assign in function (starting at line 6)
-// , I will be able to access it in js console
-// 2 effect: create a private namespace, so that we don't get confused
-// by names from different libraries.
-
-// we wrap everything around jQuery(), because jQuery() returns
-// once everything has been loaded
 jQuery(function(){APP = app();});

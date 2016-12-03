@@ -1,8 +1,11 @@
+# checks if a user has the permission to do certain stuff (described by the functions)
+
+
 def can_go_to_admin_page(user_email=None):
     if user_email is None and auth.user:
         user_email=auth.user.email
 
-    # permission fror logged in user
+    # permission for logged in user
     pr = db(db.permissions.user_email == user_email).select().first()
     if pr == None:
         return False

@@ -8,6 +8,7 @@ import tempfile
 def index():
     pass
 
+
 def send_email(toaddr, subject, body):
     fromaddr = '4ourciti@gmail.com'
     toaddr = toaddr
@@ -37,6 +38,7 @@ def get_categories():
 
 def get_reports():
 
+    # from the client
     mun_name = request.vars.mun_name if request.vars.mun_name is not None else None
     start_idx = int(request.vars.start_idx) if request.vars.start_idx is not None else 0
     end_idx = int(request.vars.end_idx) if request.vars.end_idx is not None else 0
@@ -91,7 +93,6 @@ def get_reports():
     # we get the id of the requested municipality and return the list of reports that belong to it
     # change the status_id == 2 (do not hard code it)
     rows = db(ultimate_query).select(db.reports.ALL, limitby=(start_idx, end_idx + 1), orderby=~db.reports.created_on)
-    #rows = db().select(db.reports.ALL)
 
     for i,r in enumerate(rows):
         if i < end_idx - start_idx:
@@ -128,6 +129,7 @@ def get_reports():
 @auth.requires_signature()
 def add_report():
 
+    # from the client
     municipality = request.vars.municipality
     category = request.vars.category
 
@@ -138,9 +140,11 @@ def add_report():
     cat_id = cat_row.id
 
     mun_row = db(db.municipalities.mun_name == municipality).select(db.municipalities.id).first()
+    if mun_row is None:
+        response.flash = T('municipality not registered')
+        return 'nok'
     # mun_id of municipality specified
     mun_id = mun_row.id
-
 
     logger.info("2 cat id in api is: %r", cat_id)
     logger.info("2 mun_id in api: %r", mun_id)
@@ -153,13 +157,13 @@ def add_report():
         pretty_address=request.vars.pretty_address,
         want_updates=json.loads(request.vars.want_updates),
         mun_id=mun_id
-        #user_id=auth.user_id #if auth.user else None
     )
 
     logged_user = auth.user.email if auth.user else None
 
     logger.info('want updates : %r', json.loads(request.vars.want_updates))
 
+    # send email only if want_updates is true
     if json.loads(request.vars.want_updates):
         send_email(logged_user,"Your report has been added!",
                    'Thank you for submitting a report to ' + municipality + '. You will receive emails about the progress of your report')
@@ -187,11 +191,11 @@ def get_image():
     if t is None:
         redirect(URL('static/images', 'not_found.png'))
         return 'ko'
+    # taken from prof. Luca's code
     headers = {}
     headers['Content-Type'] = t.mime_type
     # Web2py is setup to stream a file, not a data blob.
     # So we create a temporary file and we stream it.
-    # f = tempfile.TemporaryFile()
     f = tempfile.NamedTemporaryFile()
     f.write(t.data_blob)
     f.seek(0)  # Rewind.
@@ -209,8 +213,6 @@ def get_reports_admin():
     query_category= json.loads(request.vars.query_category)
 
     auth_row = db(db.auth_user.email == logged_user).select().first()
-    #logger.info("reputation of logged user: %r", auth_row)
-    logger.info('aa')
     auth_rep = auth_row.reputation
     logger.info('rep %r', auth_rep)
     rep_row = db(db.reputation.reputation_scale == auth_rep).select().first()
@@ -302,13 +304,13 @@ def get_reports_admin():
         has_more=has_more
     ))
 
-# returns the progress, status tables
+# returns the progress and status tables
 def get_progress_status():
     progress = db(db.progress).select(db.progress.ALL)
     status = db(db.status).select(db.status.ALL)
     return response.json(dict(progress=progress, status=status))
 
-
+# changes made in admin page
 def post_backend_changes():
     backend_changes = json.loads(request.vars.backend_changes)
 
@@ -354,8 +356,6 @@ def post_backend_changes():
         logger.info('status: %r', status_row.status_title)
         logger.info('progress: %r', progress_row.progress_title)
 
-
-
         if report.want_updates:
             # send an email to the user
             toaddress = auth_row.email
@@ -364,9 +364,9 @@ def post_backend_changes():
                    ': ' + status_row.status_title + '  and the progress is now: ' + progress_row.progress_title
             send_email(toaddress,subject,body)
 
-
     return 'ok'
 
+# returns the permissions
 def get_permissions():
 
     user_email = auth.user.email if auth.user else None
@@ -390,6 +390,7 @@ def get_permissions():
     permission_types = db(db.permission_types).select(db.permission_types.ALL)
 
     return response.json(dict(permissions=permissions, permission_types=permission_types))
+
 
 def post_permission_changes():
     permission_changes = json.loads(request.vars.permission_changes)
@@ -483,17 +484,7 @@ def post_message():
     user_email = auth.user.email if auth.user else None
     # return it so we can display it
     user_name_row = db(db.auth_user.email == user_email).select(db.auth_user.first_name)
-    #user_name = user_name_row.first_name
     logger.info('user_name: %r', user_name_row)
-
-    # permission_rows = db().select(db.permissions.ALL)
-    # permission_dict = dict()
-    # for p in permission_rows:
-    #     permission_dict[p.user_email] = p.id
-    #
-    # # integer id, which is a fk to permissions (author which points to permissions table)
-    # author = permission_dict[user_email]
-    # logger.info("author id is: %r", author)
 
     permission_row = db(db.permissions.user_email == user_email).select(db.permissions.ALL).first()
 

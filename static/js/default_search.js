@@ -20,8 +20,8 @@ var app = function(){
             var small_list=[];
             for(var j=0; j<results[i].address_components.length; j++){
                 for(var k=0 ; k < results[i].address_components[j].types.length; k++){
+                    // administrative level 2 is the name of the county in google maps api
                     if(results[i].address_components[j].types[k] === "administrative_area_level_2") {
-                        //window.alert("municipality name: ", results[i].address_components[j].long_name);
                         self.vue.searched_results[n++] = {'county': results[i].address_components[j].long_name,
                                                   'latitude': results[i].geometry.location.lat(),
                                                     'longitude': results[i].geometry.location.lng()};
@@ -39,14 +39,12 @@ var app = function(){
           }
         });
 
-
         self.vue.have_searched = true;
 
     };
 
     self.give_to_next_page = function (county,lat,lgn) {
 
-        // vars list (come after the url)
         var pp = {
             county: county,
             lat: lat,
@@ -55,9 +53,6 @@ var app = function(){
 
         self.vue.url = next_page_url + "?" + $.param(pp);
     };
-
-
-
 
     self.vue = new Vue({
 
@@ -95,14 +90,5 @@ var app = function(){
 
 var APP2 = null;
 
-// This will make everything accessible from the js console;
-// for instance, self.x above would be accessible as APP.x
-// 1 effect: everything i assign in function (starting at line 6)
-// , I will be able to access it in js console
-// 2 effect: create a private namespace, so that we don't get confused
-// by names from different libraries.
-
-// we wrap everything around jQuery(), because jQuery() returns
-// once everything has been loaded
 jQuery(function(){APP2 = app();});
 
