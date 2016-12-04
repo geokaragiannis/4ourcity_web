@@ -145,6 +145,7 @@ var app = function(){
 
     self.get_reports = function(){
 
+        self.vue.county_name = parsed_county_name;
         $.post(reports_url, {
 
             mun_name: self.vue.county_name,
@@ -396,6 +397,7 @@ var app = function(){
     // initiate that in the beginning. Fetch the stuff from the server
     // happens once in the beginning.
     self.get_categories();
+    self.get_reports();
     $("#vue-div").show();
 
 

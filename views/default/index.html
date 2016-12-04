@@ -15,6 +15,34 @@
 
 <script src="{{=URL('static', 'js/dropzone.js')}}"></script>
 
+<script>
+
+    // taken from https://goo.gl/MxjyHd
+    // gets the vars from the url.
+    function getQueryVariable(variable) {
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return(false);
+    }
+
+    var unparsed_county_name = getQueryVariable("county");
+    unparsed_county_name = unparsed_county_name.split("+");
+    parsed_county_name = "";
+    for (var i = 0; i<unparsed_county_name.length; i++){
+      if(i === unparsed_county_name.length-1) {
+          parsed_county_name = parsed_county_name + unparsed_county_name[i];
+          break;
+      }
+      parsed_county_name = parsed_county_name + unparsed_county_name[i] + " ";
+    }
+
+
+
+</script>
 
 <script>
 function produce_upload_url (files) {
@@ -282,17 +310,7 @@ $(function() {
           // map with clat,clgn as the center.
           var clat = parseFloat(getQueryVariable("lat"));
           var clgn = parseFloat(getQueryVariable("lgn"));
-          var unparsed_county_name = getQueryVariable("county");
-          unparsed_county_name = unparsed_county_name.split("+");
-          var parsed_county_name = "";
-          for (var i = 0; i<unparsed_county_name.length; i++){
-              if(i === unparsed_county_name.length-1) {
-                  parsed_county_name = parsed_county_name + unparsed_county_name[i];
-                  break;
-              }
-              parsed_county_name = parsed_county_name + unparsed_county_name[i] + " ";
-          }
-          APP.vue.county_name = parsed_county_name;
+
           // make map obj global by not doing: var map = ...
           map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 13,
@@ -386,9 +404,6 @@ $(function() {
               reverse_geocoding(geocoder,map,infowindow,click_location,clicked_marker);
           });
 
-          // once the google maps api functions have returned, it's safe now to
-          // get the reports from api.py, since the vue object has been initialized
-          APP.vue.get_reports();
 
         }
 
@@ -455,7 +470,9 @@ $(function() {
                        if(pair[0] == variable){return pair[1];}
                }
                return(false);
-        }
+            }
+
+
 
     </script>
     <script async defer
